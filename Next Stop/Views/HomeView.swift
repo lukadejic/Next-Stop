@@ -18,7 +18,6 @@ struct ContentView: View {
                     .foregroundStyle(.red)
             }
             .navigationTitle("Next Stop")
-            
             .padding()
         }
     }
