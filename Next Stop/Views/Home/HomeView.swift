@@ -11,6 +11,17 @@ struct HomeView: View {
                 SearchBarView()
 
                 stayOptionsHeader
+                
+                ScrollView{
+                    LazyVStack(spacing: 30){
+                        ForEach(0..<5, id: \.self){listing in
+                            Rectangle()
+                                .frame(height: 400)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                    }
+                    .padding(.horizontal,10)
+                }
                 Spacer()
             }
         }
