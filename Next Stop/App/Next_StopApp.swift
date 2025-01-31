@@ -5,7 +5,7 @@ import SwiftUI
 struct Next_StopApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            MainTabView()
         }
     }
 }
