@@ -12,17 +12,8 @@ struct HomeView: View {
 
                 stayOptionsHeader
                 
-                ScrollView{
-                    LazyVStack(spacing: 30){
-                        ForEach(0..<5, id: \.self){listing in
-                            ListingItemView()
-                                .frame(height: 400)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                    }
-                    .padding(.horizontal,10)
-                }
-                Spacer()
+                listingList
+                
             }
         }
     }
@@ -72,6 +63,19 @@ private extension HomeView {
             withAnimation {
                 selectedStayOption = option
             }
+        }
+    }
+    
+    var listingList : some View {
+        ScrollView{
+            LazyVStack(spacing: 30){
+                ForEach(0..<5, id: \.self) { listing in
+                    ListingItemView()
+                        .frame(height: 400)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+            }
+            .padding(.horizontal,10)
         }
     }
 }
