@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct ListingItemView: View {
+    @State private var currentIndex = 0
+
     
-    var images = [
+    let images = [
         "image-1",
         "image-2",
         "image-3",
@@ -11,16 +13,20 @@ struct ListingItemView: View {
     
     var body: some View {
         VStack(alignment: .leading){
-            TabView{
-                ForEach(images, id: \.self){image in
-                    Image(image)
+            TabView(selection: $currentIndex){
+                ForEach(images.indices , id: \.self){ index in
+                    Image(images[index])
                         .resizable()
                         .scaledToFill()
+                        .tag(index)
                 }
             }
             .frame(height: 350)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .tabViewStyle(.page)
+            .onAppear{
+                startAutoScroll()
+            }
             
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5){
@@ -59,4 +65,14 @@ struct ListingItemView: View {
 
 #Preview {
     ListingItemView()
+}
+
+private extension ListingItemView {
+    func startAutoScroll(){
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
+            withAnimation {
+                currentIndex = (currentIndex + 1) % images.count
+            }
+        }
+    }
 }
