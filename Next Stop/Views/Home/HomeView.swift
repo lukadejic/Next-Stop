@@ -47,8 +47,9 @@ private extension HomeView {
                 .fill(Color.black)
                 .frame(width: 50, height: 3)
                 .padding(.top, 5)
-                .opacity(selectedStayOption == option ? 0.8 : 0)
+                .opacity(selectedStayOption == option ? 1 : 0)
         }
+        .frame(height: 102)
         .scaleEffect(
             withAnimation(.easeOut, {
                 selectedStayOption == option ? 1.2 : 1
