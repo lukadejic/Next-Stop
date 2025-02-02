@@ -6,19 +6,18 @@ struct HomeView: View {
     @State private var selectedStayOption: StayOptionType = .rooms
     
     var body: some View {
-        ZStack {
-            VStack {
-                SearchBarView()
-
-                stayOptionsHeader
-                
-                listingList
-                
-
+        NavigationStack{
+            ZStack {
+                VStack {
+                    SearchBarView()
+                    
+                    stayOptionsHeader
+                    
+                    listingList
+                }
             }
         }
     }
-
 }
 
 private extension HomeView {
@@ -71,7 +70,12 @@ private extension HomeView {
         ScrollView{
             LazyVStack(spacing: 30){
                 ForEach(0..<5, id: \.self) { listing in
-                    ListingItemView()
+                    NavigationLink {
+                        ListingDetailView()
+                    } label: {
+                        ListingItemView()
+                    }
+
                 }
             }
             .padding(.horizontal,10)
