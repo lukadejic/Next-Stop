@@ -35,6 +35,7 @@ struct ListingDetailView: View {
             
             map
         }
+        .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
         .overlay(alignment: .topLeading){
             BackButton()

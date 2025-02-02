@@ -34,7 +34,7 @@ struct ListingImageCarouselView: View {
     func startAutoScroll(){
         Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
             withAnimation {
-                currentIndex = (currentIndex + 1) % images.count
+                currentIndex = currentIndex + 1 
             }
         }
     }
