@@ -1,6 +1,6 @@
 import Foundation
 
-struct HotelModel : Codable {
+struct Destination : Codable {
     let destType, cc1, cityName, label: String?
     let longitude, latitude: Double?
     let type, region: String?
