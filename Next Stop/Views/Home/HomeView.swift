@@ -4,7 +4,7 @@ import SwiftUI
 struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
-
+    @StateObject private var vm = HomeViewModel(destinationService: DestinationsService())
     
     var body: some View {
         NavigationStack{
@@ -60,14 +60,9 @@ private extension HomeView {
                 })
                 
             )
-            .onAppear{
-                let queryKeyword = option.querryKeywords
-                print(queryKeyword)
-            }
             .opacity(selectedStayOption == option ? 1 : 0.5)
             .onTapGesture {
-                let queryKeyword = option.querryKeywords
-                print(queryKeyword)
+                vm.getDestinations(query: option.querryKeywords)
                 withAnimation {
                     selectedStayOption = option
                 }

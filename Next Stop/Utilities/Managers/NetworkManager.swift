@@ -23,7 +23,7 @@ class NetworkManager {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 10.0
-        request.addValue("aplication/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.addValue(APIKey, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("booking-com15.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
         
