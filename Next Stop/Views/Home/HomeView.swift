@@ -60,9 +60,15 @@ private extension HomeView {
                 })
                 
             )
+            .onAppear{
+                if(selectedStayOption == option){
+                    print(option.querryKeywords)
+                }
+            }
             .opacity(selectedStayOption == option ? 1 : 0.5)
             .onTapGesture {
-                vm.getDestinations(query: option.querryKeywords)
+                print(option.querryKeywords)
+                //vm.getDestinations(query: option.querryKeywords)
                 withAnimation {
                     selectedStayOption = option
                 }

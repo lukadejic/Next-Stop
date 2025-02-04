@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 class HomeViewModel : ObservableObject {
     @Published var destinations : [Destination] = []
     
@@ -12,9 +13,10 @@ class HomeViewModel : ObservableObject {
     func getDestinations(query: String) {
         Task{
             do{
-                print("fetching destinations")
-                destinations = try await destinationService.fetchDestinations(query: query)
-                print(destinations)
+                let fetchedDestinations = try await destinationService.fetchDestinations(query: query)
+                DispatchQueue.main.async {
+                    self.destinations = fetchedDestinations
+                }
             }catch{
                 throw error
             }
