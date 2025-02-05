@@ -1,10 +1,9 @@
-
 import SwiftUI
 
 struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
-    @StateObject private var vm = HomeViewModel(destinationService: DestinationsService())
+    @StateObject private var vm = HomeViewModel(hotelsService: HotelsService())
     
     var body: some View {
         NavigationStack{
@@ -16,6 +15,12 @@ struct HomeView: View {
                     
                     listingList
                 }
+            }
+            .onAppear{
+               // vm.getDestinations(query: selectedStayOption.querryKeywords)
+            }
+            .onChange(of: vm.destinations) {
+                vm.selectDestination(for: selectedStayOption.querryKeywords)
             }
         }
     }
@@ -68,7 +73,8 @@ private extension HomeView {
             .opacity(selectedStayOption == option ? 1 : 0.5)
             .onTapGesture {
                 print(option.querryKeywords)
-                //vm.getDestinations(query: option.querryKeywords)
+//                vm.getDestinations(query: option.querryKeywords)
+//                vm.selectDestination(for: option.querryKeywords)
                 withAnimation {
                     selectedStayOption = option
                 }
@@ -79,7 +85,7 @@ private extension HomeView {
     var listingList : some View {
         ScrollView{
             LazyVStack(spacing: 30){
-                ForEach(0..<5, id: \.self) { listing in
+                ForEach(vm.destinations) { listing in
                     NavigationLink {
                         ListingDetailView()
                     } label: {

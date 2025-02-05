@@ -14,7 +14,7 @@ class NetworkManager {
             throw URLError(.badURL)
         }
         
-        urlComponents.queryItems = parameters.map{URLQueryItem(name: $0.key, value: $0.value)}
+        urlComponents.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value)}
         
         guard let url = urlComponents.url else {
             throw URLError(.badURL)
