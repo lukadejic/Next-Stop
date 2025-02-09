@@ -1,47 +1,32 @@
-//
-//  ListingImageCarouselView.swift
-//  Next Stop
-//
-//  Created by MacBook on 1/31/25.
-//
-
 import SwiftUI
 
 struct ListingImageCarouselView: View {
     @State private var currentIndex = 0
-    
-    let images = [
-        "image-1",
-        "image-2",
-        "image-3",
-        "image-4"
-    ]
+    let images : [ImageModel]
     
     var body: some View {
         TabView(selection: $currentIndex){
-            ForEach(images.indices , id: \.self){ index in
-                Image(images[index])
-                    .resizable()
-                    .scaledToFill()
-                    .tag(index)
+            ForEach(images) { image in
+                AsyncImage(url: URL(string: image.url)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image.resizable().scaledToFill()
+                    case .failure:
+                        Image(systemName: "photo")
+                    @unknown default:
+                        EmptyView()
+                    }
+                }
             }
         }
         .tabViewStyle(.page)
-        .onAppear{
-            startAutoScroll()
-        }
-    }
-    func startAutoScroll(){
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { timer in
-            withAnimation {
-                currentIndex = currentIndex + 1 
-            }
-        }
     }
 }
 
 
 
 #Preview {
-    ListingImageCarouselView()
+    ListingImageCarouselView(images: MockData.mockHotelImages)
 }

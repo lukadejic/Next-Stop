@@ -19,16 +19,30 @@ class HotelsService {
         let departureDate = dateFormatter.string(from: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date())
         
         let parameters : [String: String] = [
-            "dest_id": "\(destination.destID)",
-            "search_type" : "\(destination.searchType)",
-            "arrival_date" : "\(arivalDate)",
-            "departure_date" : "\(departureDate)"
+            "dest_id": destination.destID,
+            "search_type" : destination.searchType,
+            "arrival_date" : arivalDate,
+            "departure_date" : departureDate
         ]
         
         let response : HotelsResponse = try await NetworkManager.shared.fetchData(
             endpoint: "hotels/searchHotels",
             parameters: parameters)
         
-        return response.data.hotels
+        print(response.data)
+        return response.data.hotels 
+    }
+    
+    func fetchHotelImages(hotelID: Int) async throws -> [ImageModel] {
+        
+        let parameters = ["hotel_id" : "\(hotelID)"]
+        
+        print("fetching data")
+        
+        let response : HotelImageResponse = try await NetworkManager.shared.fetchData(
+            endpoint: "hotels/getHotelPhotos",
+            parameters: parameters)
+        
+        return response.data
     }
 }

@@ -5,6 +5,7 @@ class HomeViewModel : ObservableObject {
     @Published var destinations : [Destination] = []
     @Published var hotels : [Hotel] = []
     @Published var selectedDestination : Destination? = nil
+    @Published var hotelImages : [Int : [ImageModel]] = [:]
     
     private let hotelsService : HotelsService
     
@@ -23,9 +24,8 @@ class HomeViewModel : ObservableObject {
                     return destinationWithQuery
                 }
                 
-                DispatchQueue.main.async {
-                    self.destinations = destinationsWithAddedQuery
-                }
+                self.destinations = destinationsWithAddedQuery
+                
             }catch{
                 throw error
             }
@@ -34,16 +34,23 @@ class HomeViewModel : ObservableObject {
     
     func getHotels(){
 
-        guard let destination = selectedDestination else { return }
+        guard let destination = selectedDestination else {
+            print("No selected destination, cannot fetch hotels")
+            return
+        }
 
         Task{
             do{
-                let fetchedHotels = try await hotelsService.fetchHotels(for: destination)
+                
+                let hotels = try await hotelsService.fetchHotels(for: destination)
+                print("Fetched hotels count: \(hotels.count)")
+                
                 DispatchQueue.main.async {
-                    self.hotels  = fetchedHotels
+                    self.hotels = hotels
+                    print("Updated hotels count: \(self.hotels.count)")
                 }
             }catch{
-                throw error
+                print("Error while fetching hotels: \(error.localizedDescription)")
             }
         }
     }
@@ -52,8 +59,26 @@ class HomeViewModel : ObservableObject {
         if let selectedDest = destinations.first(where: { $0.query?.lowercased() == query.lowercased() }) {
             self.selectedDestination = selectedDest
             self.getHotels()
+            print("Hotels count after fetching: \(self.hotels.count)")
         } else {
             print("Destination not found for query: \(query)")
+        }
+    }
+    
+    func getHotelImages(hotelID: Int) {
+        if hotelImages[hotelID] != nil { return }
+        
+        print("fetching the hotel images...")
+        Task{
+            do{
+                let images = try await hotelsService.fetchHotelImages(hotelID: hotelID)
+                print("fetched images count : \(images.count)")
+                
+                self.hotelImages[hotelID] = images
+                
+            }catch{
+                print("Error while fetching the images for hotelID: \(hotelID) : \(error.localizedDescription)" )
+            }
         }
     }
 }

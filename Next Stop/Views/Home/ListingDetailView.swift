@@ -6,7 +6,7 @@ struct ListingDetailView: View {
     var body: some View {
         ScrollView {
             
-            ListingImageCarouselView()
+            ListingImageCarouselView(images: MockData.mockHotelImages)
                 .frame(height: 300)
             
             accomodationHeader

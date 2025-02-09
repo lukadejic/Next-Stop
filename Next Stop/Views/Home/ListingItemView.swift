@@ -1,14 +1,22 @@
 import SwiftUI
 
 struct ListingItemView: View {
-
+    let hotelID : Int
+    @EnvironmentObject var vm : HomeViewModel
+    
     var body: some View {
         VStack(alignment: .leading){
             
-            ListingImageCarouselView()
-            .frame(height: 350)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .tabViewStyle(.page)
+            if let images = vm.hotelImages[hotelID], !images.isEmpty {
+                ListingImageCarouselView(images: images)
+                    .frame(height: 350)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            } else {
+                ProgressView()
+                    .frame(height: 350)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .offset(x: 160)
+            }
             
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5){
@@ -42,10 +50,16 @@ struct ListingItemView: View {
             }
         }
         .padding()
+        .onAppear{
+            if vm.hotelImages[hotelID] == nil {
+                vm.getHotelImages(hotelID: hotelID)
+            }
+        }
     }
 }
 
 #Preview {
-    ListingItemView()
+    ListingItemView(hotelID: 1)
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 

@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
-    @StateObject private var vm = HomeViewModel(hotelsService: HotelsService())
+    @EnvironmentObject var vm : HomeViewModel
     
     var body: some View {
         NavigationStack{
@@ -17,9 +17,9 @@ struct HomeView: View {
                 }
             }
             .onAppear{
-               // vm.getDestinations(query: selectedStayOption.querryKeywords)
+                vm.getDestinations(query: selectedStayOption.querryKeywords)
             }
-            .onChange(of: vm.destinations) {
+            .onChange(of: vm.destinations) {                
                 vm.selectDestination(for: selectedStayOption.querryKeywords)
             }
         }
@@ -72,26 +72,26 @@ private extension HomeView {
             }
             .opacity(selectedStayOption == option ? 1 : 0.5)
             .onTapGesture {
-                print(option.querryKeywords)
-//                vm.getDestinations(query: option.querryKeywords)
-//                vm.selectDestination(for: option.querryKeywords)
+                print("Fetching destinations for: \(option.querryKeywords)")
+                
                 withAnimation {
                     selectedStayOption = option
                 }
+                
+                vm.getDestinations(query: option.querryKeywords)
             }
         }
     }
     
     var listingList : some View {
         ScrollView{
-            LazyVStack(spacing: 30){
-                ForEach(vm.destinations) { listing in
+            LazyVStack(spacing: 30) {
+                ForEach(vm.hotels) { hotel in
                     NavigationLink {
                         ListingDetailView()
                     } label: {
-                        ListingItemView()
+                        ListingItemView(hotelID: hotel.hotelID ?? 1)
                     }
-
                 }
             }
             .padding(.horizontal,10)
@@ -101,4 +101,5 @@ private extension HomeView {
 
 #Preview {
     HomeView()
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
