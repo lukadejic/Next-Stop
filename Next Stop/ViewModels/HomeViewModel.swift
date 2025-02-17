@@ -1,4 +1,6 @@
 import Foundation
+import SwiftUI
+import SwiftData
 
 @MainActor
 class HomeViewModel : ObservableObject {
@@ -6,6 +8,7 @@ class HomeViewModel : ObservableObject {
     @Published var hotels : [Hotel] = []
     @Published var selectedDestination : Destination? = nil
     @Published var hotelImages : [Int : [ImageModel]] = [:]
+    @Published var hotelDetail : HotelDetailData? = nil
     
     private let hotelsService : HotelsService
     
@@ -14,6 +17,7 @@ class HomeViewModel : ObservableObject {
     }
     
     func getDestinations(query: String) {
+        
         Task{
             do{
                 let fetchedDestinations = try await hotelsService.fetchDestinations(query: query)
@@ -78,6 +82,20 @@ class HomeViewModel : ObservableObject {
                 
             }catch{
                 print("Error while fetching the images for hotelID: \(hotelID) : \(error.localizedDescription)" )
+            }
+        }
+    }
+    
+    func getHotelDetails(hotelId : Int) {
+        Task{
+            do{
+                let hotelDetails = try await hotelsService.fetchHotelDetails(hotelId: hotelId)
+                
+                self.hotelDetail = hotelDetails
+                
+                print("succesfully fetched the details for the hotel")
+            }catch{
+                print("error while fetching hotel details : \(error.localizedDescription)")
             }
         }
     }

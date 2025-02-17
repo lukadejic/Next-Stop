@@ -1,12 +1,15 @@
 import SwiftUI
+import SwiftData
 
 struct MainTabView: View {
+    
     var body: some View {
         TabView {
             HomeView()
                 .tabItem {
                     Label("Explore", systemImage:"magnifyingglass")
                 }
+                
             
             WishlistView()
                 .tabItem {

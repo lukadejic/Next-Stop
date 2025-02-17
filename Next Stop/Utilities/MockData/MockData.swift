@@ -7,4 +7,6 @@ struct MockData {
         .init(id: 2,
               url: "https://cf.bstatic.com/xdata/images/hotel/square1024/613758080.jpg?k=a5e48375f5f377df7813999021f662da2e8d67ce3bcd692f3032adb1524c4165&o=")
     ]
+    
+    static let mockHotel : Hotel = .init(hotelID: 1, accessibilityLabel: "", property: nil)
 }

@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 class HotelsService {
     func fetchDestinations(query:String) async throws -> [Destination] {
@@ -44,5 +45,25 @@ class HotelsService {
             parameters: parameters)
         
         return response.data
+    }
+    
+    func fetchHotelDetails(hotelId : Int) async throws -> HotelDetailData {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let arivalDate = dateFormatter.string(from: Date())
+        let departureDate = dateFormatter.string(from: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date())
+        
+        let parameters : [String: String] = [
+            "hotel_id": "\(hotelId)",
+            "arrival_date" : arivalDate,
+            "departure_date" : departureDate
+        ]
+        
+        let response : HotelDetailResponse = try await NetworkManager.shared.fetchData(
+            endpoint: "hotels/getHotelDetails",
+            parameters: parameters)
+        
+        return response.data!
     }
 }

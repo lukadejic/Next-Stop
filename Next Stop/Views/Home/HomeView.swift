@@ -4,6 +4,7 @@ struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
     @EnvironmentObject var vm : HomeViewModel
+    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationStack{
@@ -90,7 +91,7 @@ private extension HomeView {
                     NavigationLink {
                         ListingDetailView()
                     } label: {
-                        ListingItemView(hotelID: hotel.hotelID ?? 1)
+                        ListingItemView(hotel: hotel)
                     }
                 }
             }
@@ -99,7 +100,7 @@ private extension HomeView {
     }
 }
 
-#Preview {
-    HomeView()
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
-}
+//#Preview {
+//    HomeView()
+//        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+//}
