@@ -11,6 +11,7 @@ struct HotelDetailData: Codable {
     let hotel_id: Int?
     let hotel_name: String?
     let url : String?
+    let review_nr: Int?
     let arrival_date: String?
     let departure_date: String?
     let latitude: Double?

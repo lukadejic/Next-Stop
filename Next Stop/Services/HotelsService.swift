@@ -47,7 +47,7 @@ class HotelsService {
         return response.data
     }
     
-    func fetchHotelDetails(hotelId : Int) async throws -> HotelDetailData {
+    func fetchHotelDetails(hotelId : Int) async throws -> HotelDetailData? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
@@ -64,6 +64,6 @@ class HotelsService {
             endpoint: "hotels/getHotelDetails",
             parameters: parameters)
         
-        return response.data!
+        return response.data
     }
 }

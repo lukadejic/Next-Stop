@@ -3,11 +3,20 @@ import MapKit
 
 struct ListingDetailView: View {
     
+    let hotel: Hotel
+    @EnvironmentObject private var vm :HomeViewModel
+    
     var body: some View {
         ScrollView {
             
-            ListingImageCarouselView(images: MockData.mockHotelImages)
-                .frame(height: 300)
+            if let images = vm.hotelImages[hotel.hotelID ?? 0], !images.isEmpty {
+                ListingImageCarouselView(images: images)
+                    .frame(height: 350)
+            } else {
+                ProgressView()
+                    .frame(height: 350)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
             
             accomodationHeader
             
@@ -51,14 +60,15 @@ struct ListingDetailView: View {
 }
 
 #Preview {
-    ListingDetailView()
+    ListingDetailView(hotel: MockData.mockHotel)
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 
 private extension ListingDetailView {
     var accomodationHeader : some View {
         VStack(alignment: .leading){
             
-            Text("Miami Villa")
+            Text(vm.hotelDetail?.hotel_name ?? "Mock Hotel")
                 .font(.title)
                 .fontWeight(.semibold)
             
@@ -66,13 +76,15 @@ private extension ListingDetailView {
                 HStack{
                     Image(systemName: "star.fill")
                     
-                    Text("4.86")
+                    Text(String(format: "$%.2f", vm.hotelDetail?.product_price_breakdown?.charges_details?.amount?.value ?? 0.0))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
                     
-                    Text("28 reviews")
+                    Text(String("\(vm.hotelDetail?.review_nr ?? 1) reviews"))
                         .underline()
                         .fontWeight(.semibold)
                 }
-                Text("Miami, Florida")
+                Text(String("\(vm.hotelDetail?.city ?? "Miami"), \(vm.hotelDetail?.country_trans ?? "Florida")"))
             }
             .font(.caption)
         }
@@ -87,13 +99,8 @@ private extension ListingDetailView {
                     .font(.headline)
                     .frame(width: 250,alignment: .leading)
                 
-                HStack(spacing: 4){
-                    Text("4 guests -")
-                    Text("4 bedrooms -")
-                    Text("4 beds -")
-                    Text("3 baths")
-                }
-                .font(.caption)
+                Text(extractRoomInfo())
+                   .font(.caption)
             }
             .frame(width: 300,alignment: .leading)
             
@@ -140,18 +147,8 @@ private extension ListingDetailView {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 20){
-                    ForEach(0..<5, id: \.self) {item in
-                        VStack{
-                            Image(systemName: "bed.double")
-                            
-                            Text("Bedroom")
-                        }
-                        .frame(width: 132, height: 100)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(lineWidth: 1)
-                                .foregroundStyle(.gray)
-                        }
+                    ForEach(0..<2, id: \.self) { image in
+                        
                     }
                 }
             }
@@ -164,13 +161,14 @@ private extension ListingDetailView {
             Text("What this place offers")
                 .font(.headline)
             
-            ForEach(0..<5,id: \.self){ feature in
-                HStack(spacing: 10){
-                    Image(systemName: "wifi")
-                    
-                    Text("Wifi")
-                    
-                    Spacer()
+            if let benefits = vm.hotelDetail?.top_ufi_benefits {
+                ForEach(benefits, id: \.icon) { benefit in
+                    HStack(spacing: 10) {
+                        
+                        Text(benefit.translated_name ?? "")
+                        
+                        Spacer()
+                    }
                 }
             }
         
@@ -230,4 +228,37 @@ private extension ListingDetailView {
         
 
     }
+    
+    func extractRoomInfo() -> String {
+        guard let text = hotel.accessibilityLabel else { return "No data" }
+        
+        let regexPattern = #"(\d+)\s*beds?(?:\s*•\s*(\d+)\s*bedrooms?)?(?:\s*•\s*(\d+)\s*living rooms?)?(?:\s*•\s*(\d+)\s*bathrooms?)?|Hotel\s*room\s*:\s*(\d+)\s*bed"#
+
+        if let regex = try? NSRegularExpression(pattern: regexPattern, options: []) {
+            let range = NSRange(text.startIndex..<text.endIndex, in: text)
+            
+            if let match = regex.firstMatch(in: text, options: [], range: range) {
+                let nsText = text as NSString
+                
+                // Ako pronađe format "X beds • Y bedrooms • Z living rooms • W bathrooms"
+                if match.range(at: 1).location != NSNotFound {
+                    let beds = nsText.substring(with: match.range(at: 1))
+                    let bedrooms = match.range(at: 2).location != NSNotFound ? nsText.substring(with: match.range(at: 2)) : "0"
+                    let livingRooms = match.range(at: 3).location != NSNotFound ? nsText.substring(with: match.range(at: 3)) : "0"
+                    let bathrooms = match.range(at: 4).location != NSNotFound ? nsText.substring(with: match.range(at: 4)) : "0"
+                    
+                    return "\(beds) beds • \(bedrooms) bedrooms • \(livingRooms) living rooms • \(bathrooms) bathrooms"
+                }
+
+                // Ako pronađe format "Hotel room: X bed"
+                if match.range(at: 5).location != NSNotFound {
+                    let singleBed = nsText.substring(with: match.range(at: 5))
+                    return "Hotel room: \(singleBed) bed"
+                }
+            }
+        }
+        
+        return "Room info not found"
+    }
+    
 }

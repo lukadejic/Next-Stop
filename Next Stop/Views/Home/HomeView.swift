@@ -89,7 +89,7 @@ private extension HomeView {
             LazyVStack(spacing: 30) {
                 ForEach(vm.hotels) { hotel in
                     NavigationLink {
-                        ListingDetailView()
+                        ListingDetailView(hotel: hotel)
                     } label: {
                         ListingItemView(hotel: hotel)
                     }
