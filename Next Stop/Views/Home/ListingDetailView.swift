@@ -18,22 +18,14 @@ struct ListingDetailView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
             
-            accomodationHeader
+            hotelName
             
             Divider()
                 .padding(.horizontal)
             
-            hostHeader
+            accomodationInfo
             
-            Divider()
-                .padding(.horizontal)
-            
-            hostBadges
-            
-            Divider()
-                .padding(.horizontal)
-            
-            sleepOptions
+            reviews
             
             Divider()
             
@@ -65,79 +57,93 @@ struct ListingDetailView: View {
 }
 
 private extension ListingDetailView {
-    var accomodationHeader : some View {
+    var hotelName : some View {
         VStack(alignment: .leading){
             
             Text(vm.hotelDetail?.hotel_name ?? "Mock Hotel")
                 .font(.title)
                 .fontWeight(.semibold)
-            
-            VStack(alignment: .leading){
-                HStack{
-                    Image(systemName: "star.fill")
-                    
-                    Text(String(format: "$%.2f", vm.hotelDetail?.product_price_breakdown?.charges_details?.amount?.value ?? 0.0))
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    
-                    Text(String("\(vm.hotelDetail?.review_nr ?? 1) reviews"))
-                        .underline()
-                        .fontWeight(.semibold)
-                }
-                Text(String("\(vm.hotelDetail?.city ?? "Miami"), \(vm.hotelDetail?.country_trans ?? "Florida")"))
-            }
-            .font(.caption)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
     }
     
-    var hostHeader : some View {
-        HStack{
-            VStack(alignment: .leading){
-                Text("Large villa hosted by Sean Allen")
-                    .font(.headline)
-                    .frame(width: 250,alignment: .leading)
-                
-                Text(extractRoomInfo())
-                   .font(.caption)
-            }
-            .frame(width: 300,alignment: .leading)
+    var accomodationInfo : some View {
+        
+        VStack(alignment: .leading ,spacing: 10) {
+            Text(String("\(vm.hotelDetail?.city ?? "Miami"), \(vm.hotelDetail?.country_trans ?? "Florida")"))
             
-            Spacer()
-            
-            Image("person-1")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 64, height: 64)
-                .clipShape(Ellipse())
+            Text(extractRoomInfo())
+                .fontWeight(.regular)
+                .font(.caption)
         }
-        .padding(.horizontal,10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
     }
     
-    var hostBadges : some View {
-        VStack(alignment: .leading, spacing: 10){
-            ForEach(0..<2, id:\.self) { feature in
+    var reviews: some View {
+        HStack(spacing: 10) {
+            Spacer()
+            
+            VStack {
+                Text(String(format: "%.2f", hotel.property?.reviewScore ?? 4.99))
                 
-                HStack(spacing: 12){
-                    Image(systemName: "medal")
-                    
-                    VStack(alignment: .leading){
-                        Text("Superhost")
-                            .font(.footnote)
-                            .fontWeight(.semibold)
-                        
-                        Text("Superhosts are expirienced, highly rated hosts who are commited for providing great stars for the guests")
-                            .font(.caption)
-                            .foregroundStyle(.black.opacity(0.7))
+                let score = Int(hotel.property?.reviewScore ?? 4)
+                
+                HStack(spacing: 1) {
+                    ForEach(0..<score, id: \.self) { _ in
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 6))
                     }
-                    
-                    Spacer()
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            Divider()
+                .frame(height: 30)
+
+            VStack {
+                HStack {
+                    Image(systemName: "sparkles")
+                        .foregroundStyle(.yellow)
+                    
+                    Text("\(hotel.property?.reviewScoreWord ?? "Guest favourite")")
+                        .font(.system(size: 10))
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: 70)
+                        .lineLimit(2)
+                        .underline()
+                    
+                    Image(systemName: "sparkles")
+                        .foregroundStyle(.yellow)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            
+            Divider()
+                .frame(height: 30)
+
+            VStack(spacing:1) {
+                Text(String(format: "%.f", hotel.property?.reviewScore ?? 10))
+                    .font(.footnote)
+                    .fontWeight(.semibold)
+                
+                Text("Reviews")
+                    .underline()
+                    .font(.caption)
+            }
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding()
+            Spacer()
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .stroke(lineWidth: 0.2)
         }
         .padding(.horizontal,10)
     }
+
     
     var sleepOptions : some View {
         VStack(alignment: .leading){
@@ -173,7 +179,12 @@ private extension ListingDetailView {
             }
         
         }
+        .frame(maxWidth: .infinity,alignment: .leading)
         .padding(.horizontal)
+    }
+    
+    var description : some View {
+        Text("")
     }
     
     var map : some View {
@@ -194,17 +205,19 @@ private extension ListingDetailView {
             
             HStack{
                 VStack(alignment:.leading){
-                    Text("$500")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
+                    HStack{
+                        Text(String(format: "$%.2f", vm.hotelDetail?.product_price_breakdown?.charges_details?.amount?.value ?? 100.0))
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                        
+                        Text("night")
+                    }
+                    .underline()
                     
-                    Text("Total before taxes")
-                        .font(.footnote)
+                    Text(stayDate(arrivalDate: vm.hotelDetail?.arrival_date, departureDate: vm.hotelDetail?.departure_date))
+                        .font(.caption)
+                        .foregroundStyle(.black.opacity(0.7))
                     
-                    Text("Oct 15 - 20")
-                        .font(.footnote)
-                        .fontWeight(.semibold)
-                        .underline()
                 }
                 .padding(.horizontal)
                 Spacer()
@@ -239,8 +252,7 @@ private extension ListingDetailView {
             
             if let match = regex.firstMatch(in: text, options: [], range: range) {
                 let nsText = text as NSString
-                
-                // Ako pronađe format "X beds • Y bedrooms • Z living rooms • W bathrooms"
+
                 if match.range(at: 1).location != NSNotFound {
                     let beds = nsText.substring(with: match.range(at: 1))
                     let bedrooms = match.range(at: 2).location != NSNotFound ? nsText.substring(with: match.range(at: 2)) : "0"
@@ -249,8 +261,7 @@ private extension ListingDetailView {
                     
                     return "\(beds) beds • \(bedrooms) bedrooms • \(livingRooms) living rooms • \(bathrooms) bathrooms"
                 }
-
-                // Ako pronađe format "Hotel room: X bed"
+                
                 if match.range(at: 5).location != NSNotFound {
                     let singleBed = nsText.substring(with: match.range(at: 5))
                     return "Hotel room: \(singleBed) bed"

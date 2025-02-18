@@ -23,10 +23,7 @@ struct ListingItemView: View {
                     Text(vm.hotelDetail?.hotel_name ?? "Unknown")
                         .font(.footnote)
                         .fontWeight(.semibold)
-                    
-                    Text("Stay with Lena - Hosting for 8 years")
-                        .font(.caption)
-                        .foregroundStyle(.black.opacity(0.7))
+                        .multilineTextAlignment(.leading)
                     
                     Text(stayDate(arrivalDate: vm.hotelDetail?.arrival_date, departureDate: vm.hotelDetail?.departure_date))
                         .font(.caption)
@@ -63,34 +60,4 @@ struct ListingItemView: View {
 #Preview {
     ListingItemView(hotel: MockData.mockHotel)
         .environmentObject(HomeViewModel(hotelsService: HotelsService()))
-}
-
-
-private extension ListingItemView {
-    func stayDate(arrivalDate: String?, departureDate: String?) -> String {
-        
-        guard let arrival = arrivalDate, let departure = departureDate else { return "unknow"}
-        
-        let inputFormater = DateFormatter()
-        inputFormater.dateFormat = "yyyy-MM-dd"
-        inputFormater.locale = Locale(identifier: "en_US_POSIX")
-        
-        let outputFormater = DateFormatter()
-        outputFormater.dateFormat = "d"
-        
-        let monthFormater = DateFormatter()
-        monthFormater.dateFormat = "MMM"
-        
-        if let arrivalDate = inputFormater.date(from: arrival),
-           let departureDate = inputFormater.date(from: departure){
-            
-            let arrivalDay = outputFormater.string(from: arrivalDate)
-            let departureDay = outputFormater.string(from: departureDate)
-            let month = monthFormater.string(from: departureDate)
-            
-            return "\(arrivalDay) - \(departureDay) \(month)"
-        }
-
-        return "unknown"
-    }
 }
