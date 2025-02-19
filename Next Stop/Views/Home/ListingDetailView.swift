@@ -5,6 +5,7 @@ struct ListingDetailView: View {
     
     let hotel: Hotel
     @EnvironmentObject private var vm :HomeViewModel
+    @State private var showFullDescription : Bool = false
     
     var body: some View {
         ScrollView {
@@ -27,6 +28,8 @@ struct ListingDetailView: View {
             
             reviews
             
+            description
+            
             Divider()
             
             amenities
@@ -35,6 +38,9 @@ struct ListingDetailView: View {
                 .padding(.horizontal)
             
             map
+        }
+        .onAppear{
+            vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
@@ -174,7 +180,36 @@ private extension ListingDetailView {
     }
     
     var description : some View {
-        Text("")
+        VStack(alignment: .leading){
+            Text("About this place")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            VStack(alignment:.leading,spacing: 10) {
+                ForEach(vm.hotelDescription, id: \.self) {description in
+                    Text(description.description ?? "unknown description")
+                        .lineLimit(5)
+                }
+                
+                Button{
+                    showFullDescription.toggle()
+                }label: {
+                    HStack{
+                        Text("Show more")
+                            .underline()
+                            .fontWeight(.semibold)
+                        Text(">")
+                            .fontWeight(.semibold)
+                    }
+                }
+                .foregroundStyle(.black)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .sheet(isPresented: $showFullDescription) {
+            descriptionView
+        }
     }
     
     var map : some View {
@@ -262,4 +297,26 @@ private extension ListingDetailView {
         return "Room info not found"
     }
     
+    var descriptionView : some View {
+        ScrollView{
+            VStack(alignment: .leading,spacing: 10){
+                Text("About this place")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.bottom, 10)
+                
+                ForEach(vm.hotelDescription, id: \.self) {description in
+                    Text(description.description ?? "unknown description")
+                        .multilineTextAlignment(.leading)
+                        .font(.title3)
+                    
+                    Divider()
+                }
+                
+                Spacer()
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .padding()
+        }
+    }
 }

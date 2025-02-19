@@ -9,6 +9,8 @@ class HomeViewModel : ObservableObject {
     @Published var selectedDestination : Destination? = nil
     @Published var hotelImages : [Int : [ImageModel]] = [:]
     @Published var hotelDetail : HotelDetailData? = nil
+    @Published var hotelDescription: [HotelDescriptionData] = []
+    
     
     private let hotelsService : HotelsService
     
@@ -96,6 +98,19 @@ class HomeViewModel : ObservableObject {
                 print("succesfully fetched the details for the hotel")
             }catch{
                 print("error while fetching hotel details : \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func getHotelDescription(hotelId: Int) {
+        Task{
+            do{
+                guard let hotelDescriptions = try await hotelsService.fetchHotelDescription(hotelId: hotelId) else { return }
+                
+                self.hotelDescription = hotelDescriptions
+                
+            }catch{
+                print("Failed to fetch hotel description data: \(error.localizedDescription)")
             }
         }
     }

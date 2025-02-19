@@ -66,4 +66,17 @@ class HotelsService {
         
         return response.data
     }
+    
+    func fetchHotelDescription(hotelId: Int) async throws -> [HotelDescriptionData]? {
+        
+        let parameters: [String : String] = [
+            "hotel_id": "\(hotelId)"
+        ]
+        
+        let response : HotelDescriptionResponse = try await NetworkManager.shared.fetchData(
+            endpoint: "hotels/getDescriptionAndInfo",
+            parameters: parameters)
+        
+        return response.data
+    }
 }
