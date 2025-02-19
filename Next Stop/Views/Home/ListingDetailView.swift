@@ -57,6 +57,7 @@ struct ListingDetailView: View {
 }
 
 private extension ListingDetailView {
+    
     var hotelName : some View {
         VStack(alignment: .leading){
             
@@ -143,24 +144,6 @@ private extension ListingDetailView {
         }
         .padding(.horizontal,10)
     }
-
-    
-    var sleepOptions : some View {
-        VStack(alignment: .leading){
-            Text("Where you`ll sleep")
-                .font(.headline)
-                .fontWeight(.semibold)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 20){
-                    ForEach(0..<2, id: \.self) { image in
-                        
-                    }
-                }
-            }
-        }
-        .padding(.horizontal)
-    }
     
     var amenities : some View {
         VStack(alignment: .leading, spacing: 16){
@@ -168,10 +151,17 @@ private extension ListingDetailView {
                 .font(.headline)
             
             if let benefits = vm.hotelDetail?.top_ufi_benefits {
-                ForEach(benefits, id: \.icon) { benefit in
+                let uniqueBenefits = Array(Set(benefits.map{$0.translated_name}))
+                
+                ForEach(uniqueBenefits, id: \.self) { benefit in
                     HStack(spacing: 10) {
                         
-                        Text(benefit.translated_name ?? "")
+                        Image(benefit ?? "")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 30)
+                        
+                        Text(benefit ?? "")
                         
                         Spacer()
                     }
