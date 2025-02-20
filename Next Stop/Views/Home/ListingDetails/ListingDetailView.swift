@@ -217,7 +217,7 @@ private extension ListingDetailView {
             Text("Where you`ll be")
                 .font(.headline)
             
-            Map()
+            MapView(latitude: 37.347730, longitude: -122.018715, annotationName: "Panama Park")
                 .frame(height: 200)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
         }

@@ -4,7 +4,6 @@ struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
     @EnvironmentObject var vm : HomeViewModel
-    @Environment(\.modelContext) private var modelContext
     
     var body: some View {
         NavigationStack{
