@@ -5,6 +5,7 @@ import MapKit
 struct LocationDetailsView: View {
     @Binding var mapSelection: MKMapItem?
     @Binding var show: Bool
+    @Binding var getDirections: Bool
     @State private var lookAroundScene: MKLookAroundScene?
     
     var body: some View {
@@ -42,6 +43,37 @@ struct LocationDetailsView: View {
             }else{
                 ContentUnavailableView("No preview available", systemImage: "eye.slash")
             }
+            
+            HStack(spacing: 24){
+                Button{
+                    if let mapSelection  {
+                        mapSelection.openInMaps()
+                    }
+                }label: {
+                    Text("Open in maps")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(width: 170, height: 48)
+                        .background(.green)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+                
+                Button{
+                    getDirections = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        getDirections = true
+                    }
+                    show = false
+                }label: {
+                    Text("Get directions")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .frame(width: 170, height: 48)
+                        .background(.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                }
+            }
+            .padding(.horizontal)
         }
         .onAppear{
             fetchLookAroundView()
@@ -54,7 +86,7 @@ struct LocationDetailsView: View {
 }
 
 #Preview {
-    LocationDetailsView(mapSelection: .constant(nil), show: .constant(false))
+    LocationDetailsView(mapSelection: .constant(nil), show: .constant(false), getDirections: .constant(false))
 }
 
 private extension LocationDetailsView{

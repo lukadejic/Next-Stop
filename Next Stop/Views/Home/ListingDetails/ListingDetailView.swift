@@ -6,6 +6,7 @@ struct ListingDetailView: View {
     let hotel: Hotel
     @EnvironmentObject private var vm :HomeViewModel
     @State private var showFullDescription : Bool = false
+    @State private var isFullMapScreen : Bool = false
     
     var body: some View {
         ScrollView {
@@ -216,10 +217,17 @@ private extension ListingDetailView {
         VStack(alignment: .leading, spacing: 16){
             Text("Where you`ll be")
                 .font(.headline)
-            
-            MapView(latitude: 37.347730, longitude: -122.018715, annotationName: "Panama Park")
-                .frame(height: 200)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+            VStack{
+                MapView(latitude: vm.hotelDetail?.latitude ?? 37.347730, longitude: vm.hotelDetail?.longitude ?? -122.018715, annotationName: vm.hotelDetail?.hotel_name ?? "Panama Park")
+                    .frame(height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .onTapGesture {
+                        isFullMapScreen = true
+                    }
+            }
+            .fullScreenCover(isPresented: $isFullMapScreen) {
+                FullMapView(latitude: vm.hotelDetail?.latitude ?? 37.347730, longitude: vm.hotelDetail?.longitude ?? -122.018715, annotationName: vm.hotelDetail?.hotel_name ?? "Panama Park")
+            }
         }
         .padding(.horizontal)
     }
