@@ -39,9 +39,14 @@ struct ListingDetailView: View {
                 .padding(.horizontal)
             
             map
+            
+            Divider()
+                .padding(.horizontal)
+            
+            cancelationPolicy
         }
         .onAppear{
-            vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
+           // vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
@@ -221,6 +226,13 @@ private extension ListingDetailView {
                 MapView(latitude: vm.hotelDetail?.latitude ?? 37.347730, longitude: vm.hotelDetail?.longitude ?? -122.018715, annotationName: vm.hotelDetail?.hotel_name ?? "Panama Park")
                     .frame(height: 200)
                     .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .overlay(alignment: .topTrailing, content: {
+                        Image(systemName: "square.dashed")
+                            .frame(width: 30, height: 30)
+                            .background(in: Circle())
+                            .shadow(radius: 7)
+                            .padding(10)
+                    })
                     .onTapGesture {
                         isFullMapScreen = true
                     }
@@ -229,6 +241,29 @@ private extension ListingDetailView {
                 FullMapView(latitude: vm.hotelDetail?.latitude ?? 37.347730, longitude: vm.hotelDetail?.longitude ?? -122.018715, annotationName: vm.hotelDetail?.hotel_name ?? "Panama Park")
             }
         }
+        .padding(.horizontal)
+    }
+    
+    var cancelationPolicy : some View {
+        VStack(alignment: .leading){
+                Text("Cancellation policy")
+                    .font(.headline)
+            HStack{
+                VStack(alignment: .leading){
+                    Text("Free cancellation for 24 hours.Cancel before 7 Mar for partial refound")
+                    
+                    Text("Review this hotels full policy for details.")
+                }
+                .font(.callout)
+                .foregroundStyle(.gray)
+                
+                Spacer()
+                
+                Text(">")
+                    .fontWeight(.semibold)
+            }
+        }
+        .frame(maxWidth: .infinity,alignment: .leading)
         .padding(.horizontal)
     }
     
