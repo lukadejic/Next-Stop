@@ -46,6 +46,11 @@ struct ListingDetailView: View {
             Divider()
                 .padding(.horizontal)
             
+            availability
+            
+            Divider()
+                .padding(.horizontal)
+            
             cancelationPolicy
         }
         .onAppear{
@@ -284,6 +289,24 @@ private extension ListingDetailView {
         .padding(.horizontal)
     }
     
+    var availability : some View {
+        VStack(alignment: .leading,spacing: 10){
+            Text("Availability")
+                .font(.headline)
+            HStack{
+                Text(stayDate(arrivalDate: hotel.property?.checkinDate,
+                              departureDate: hotel.property?.checkoutDate))
+                .foregroundStyle(.gray)
+                
+                Spacer()
+                
+                Text(">")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal)
+    }
+    
     var reserveSection : some View {
         VStack{
             Divider()
@@ -323,8 +346,6 @@ private extension ListingDetailView {
         }
         .background(.white)
         .padding(.horizontal)
-        
-
     }
     
     func extractRoomInfo() -> String {
