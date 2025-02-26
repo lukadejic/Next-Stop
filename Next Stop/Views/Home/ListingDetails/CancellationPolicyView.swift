@@ -1,96 +1,88 @@
 import SwiftUI
 
 struct CancellationPolicyView: View {
+    @Environment(\.dismiss) var dismiss
+    let arrival: String
+    
     var body: some View {
-        ScrollView{
-            VStack(alignment: .leading){
-                Text("Cancellation policy")
-                    .font(.title)
-                    .fontWeight(.semibold)
-                    .padding(.bottom, 10)
-                    .padding(.top,50)
-                Text("Make sure you're comfortable with this Host's policy.In rare cases, you may be eligible for a refund outside of this policy under NextStop's policy")
-                    .font(.subheadline)
-                    .padding(.bottom, 50)
-                
-                VStack(spacing: 30) {
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                Text("Within")
-                                    .fontWeight(.semibold)
-                                Text("24 hours \nof booking")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            VStack(alignment: .leading) {
-                                Text("Full refund")
-                                    .fontWeight(.semibold)
-                                Text("Get back 100% of what you paid.")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        
-                        Divider()
-                    }
-                    .padding(.trailing,20)
+        NavigationView {
+            ScrollView{
+                VStack(alignment: .leading){
                     
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                Text("Before")
-                                    .fontWeight(.semibold)
-                                Text("7 Mar \n16:00")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            VStack(alignment: .leading) {
-                                Text("Partial refund")
-                                    .fontWeight(.semibold)
-                                
-                                Text("Get back 50% of every night.")
-                        
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        
-                        Divider()
-                    }
-                    .padding(.trailing,20)
+                    Text("Make sure you're comfortable with this Host's policy.In rare cases, you may be eligible for a refund outside of this policy under NextStop's policy")
+                        .font(.subheadline)
+                        .padding(.bottom, 50)
+                        .padding(.top,20)
                     
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                Text("After")
-                                    .fontWeight(.semibold)
-                                Text("7 Mar \n16:00")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            
-                            VStack(alignment: .leading) {
-                                Text("No refund")
-                                    .fontWeight(.semibold)
-                                Text("This reservation is non-refundable")
-                            }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
+                    VStack(spacing: 30) {
                         
-                        Divider()
+                        CancellationPolicySection(time: "Within",
+                                                  date: "24 hours\nof booking",
+                                                  refund: "Full refund",
+                                                  refundDescription: "Get back 100% of what you paid")
+                        
+                        CancellationPolicySection(time: "Before",
+                                                  date: arrival,
+                                                  refund: "Partial refund",
+                                                  refundDescription: "Get back 50% of what you paid")
+                        
+                        CancellationPolicySection(time: "After",
+                                                  date: arrival,
+                                                  refund: "No refund",
+                                                  refundDescription: "This reservation is non-refundable")
+                        
+                        Text("Cleaning fees are refunded if you cancel before check-in.")
                     }
-                    .padding(.trailing,20)
                     
-                    Text("Cleaning fees are refunded if you cancel before check-in.")
+                    Spacer()
                 }
-
-                
-                
-                Spacer()
+                .frame(maxWidth: .infinity,alignment: .leading)
+                .padding(.horizontal)
             }
-            .frame(maxWidth: .infinity,alignment: .leading)
-            .padding(.horizontal)
+            .navigationTitle("Cacellation policy")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading) {
+                    Button{
+                        dismiss()
+                    }label: {
+                        BackButton()
+                    }
+                }
+            }
         }
     }
 }
 #Preview {
-    CancellationPolicyView()
+    CancellationPolicyView(arrival: "7 Mar\n16:00")
+}
+
+struct CancellationPolicySection : View {
+    let time: String
+    let date: String
+    let refund: String
+    let refundDescription: String
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack(alignment: .leading) {
+                    Text(time)
+                        .fontWeight(.semibold)
+                    Text(date)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                VStack(alignment: .leading) {
+                    Text(refund)
+                        .fontWeight(.semibold)
+                    Text(refundDescription)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            
+            Divider()
+        }
+        .padding(.trailing,20)
+    }
 }

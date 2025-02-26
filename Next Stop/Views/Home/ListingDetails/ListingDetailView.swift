@@ -4,9 +4,12 @@ import MapKit
 struct ListingDetailView: View {
     
     let hotel: Hotel
+    
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var vm :HomeViewModel
     @State private var showFullDescription : Bool = false
     @State private var isFullMapScreen : Bool = false
+    @State private var isFullCancellationPolicy: Bool = false
     
     var body: some View {
         ScrollView {
@@ -51,7 +54,12 @@ struct ListingDetailView: View {
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
         .overlay(alignment: .topLeading){
-            BackButton()
+            Button{
+                dismiss()
+            }label: {
+                BackButton()
+                    .padding(32)
+            }
         }
         .padding(.bottom, 64)
         .ignoresSafeArea()
@@ -250,7 +258,8 @@ private extension ListingDetailView {
                     .font(.headline)
             HStack{
                 VStack(alignment: .leading){
-                    Text("Free cancellation for 24 hours.Cancel before 7 Mar for partial refound")
+                    let arrival = String(arrivalDateConverted(arrivalDate: hotel.property?.checkinDate ?? "10 Mar"))
+                    Text("Free cancellation for 24 hours.Cancel before \(arrival) for partial refound")
                     
                     Text("Review this hotels full policy for details.")
                 }
@@ -262,6 +271,14 @@ private extension ListingDetailView {
                 Text(">")
                     .fontWeight(.semibold)
             }
+        }
+        .onTapGesture {
+            isFullCancellationPolicy = true
+        }
+        .fullScreenCover(isPresented: $isFullCancellationPolicy) {
+            let arrival = String(arrivalDateConverted(arrivalDate: hotel.property?.checkinDate ?? "10 Mar") + "\n\(hotel.property?.checkin?.fromTime ?? "14:00")")
+            
+            CancellationPolicyView(arrival: arrival)
         }
         .frame(maxWidth: .infinity,alignment: .leading)
         .padding(.horizontal)

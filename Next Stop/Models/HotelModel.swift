@@ -26,6 +26,7 @@ struct Hotel: Identifiable, Codable {
 struct Property: Codable {
     let checkinDate: String?
     let isPreferred: Bool?
+    let checkin: CheckIn?
     let wishlistName: String?
     let photoUrls: [String]?
     let rankingPosition, mainPhotoID, reviewCount: Int?
@@ -47,11 +48,16 @@ struct Property: Codable {
     let optOutFromGalleryChanges: Int?
 
     enum CodingKeys: String, CodingKey {
-        case checkinDate, isPreferred, wishlistName, photoUrls, rankingPosition
+        case checkinDate, isPreferred, checkin,wishlistName, photoUrls, rankingPosition
         case mainPhotoID = "mainPhotoId"
         case reviewCount, currency, reviewScoreWord, latitude, propertyClass, isFirstPage, position, checkoutDate, ufi, name, qualityClass, longitude,
              accuratePropertyClass, id, reviewScore
         case blockIDS = "blockIds"
         case isPreferredPlus, countryCode, optOutFromGalleryChanges
     }
+}
+
+struct CheckIn : Codable {
+    let untilTime: String?
+    let fromTime: String?
 }

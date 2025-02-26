@@ -25,4 +25,25 @@ func stayDate(arrivalDate: String?, departureDate: String?) -> String {
     }
 
     return "unknown"
+    
+}
+func arrivalDateConverted(arrivalDate: String?) -> String {
+    guard let arrival = arrivalDate else { return "unknown" }
+    
+    let inputFormatter = DateFormatter()
+    inputFormatter.dateFormat = "yyyy-MM-dd"
+    inputFormatter.locale = Locale(identifier: "en_US_POSIX")
+    
+    let outputFormatter = DateFormatter()
+    outputFormatter.dateFormat = "d MMM"
+    
+    if let arrivalDate = inputFormatter.date(from: arrival) {
+        let adjustedDate = Calendar.current.date(byAdding: .day, value: -7, to: arrivalDate)
+        
+        if let adjustedDate = adjustedDate {
+            return outputFormatter.string(from: adjustedDate)
+        }
+    }
+    
+    return "unknown"
 }
