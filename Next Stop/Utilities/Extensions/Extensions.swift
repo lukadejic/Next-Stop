@@ -17,6 +17,7 @@ class CalendarColorSettins {
     var monthHeaderColor = Color.primary
     var monthHeaderBackColor = Color.clear
     var monthBackColor = Color.clear
+    var weekdayHeaderBackColor = Color.clear
 }
 
 class CalendarFontSettings {
@@ -97,7 +98,12 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
     
-    
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
 }
 
 let daysPerWeek = 7

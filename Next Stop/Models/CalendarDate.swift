@@ -3,6 +3,7 @@ import SwiftUI
 
 struct CalendarDate {
     var date: Date
+    var manager : CalendarManager
     var isDisabled = false
     var isToday = false
     var isSelected = false
@@ -10,8 +11,9 @@ struct CalendarDate {
     var endDate: Date?
     var startDate : Date?
     
-    init(date: Date, isDisabled: Bool = false, isToday: Bool = false, isSelected: Bool = false, isBetweenStartAndEnd: Bool = false, endDate: Date?, startDate: Date?) {
+    init(date: Date, manager: CalendarManager, isDisabled: Bool = false, isToday: Bool = false, isSelected: Bool = false, isBetweenStartAndEnd: Bool = false, endDate: Date?, startDate: Date?) {
         self.date = date
+        self.manager = manager
         self.isDisabled = isDisabled
         self.isToday = isToday
         self.isSelected = isSelected
@@ -33,7 +35,48 @@ struct CalendarDate {
         return day
     }
     
-//    func getTextColor() -> Color {
-//        
-//    }
+    func getTextColor() -> Color {
+        var textColor = manager.colors.textColor
+        
+        if isDisabled {
+            textColor = manager.colors.disabledColor
+        }else if isSelected {
+            textColor = manager.colors.selectedColor
+        }else if isToday {
+            textColor = manager.colors.todayColor
+        }else if isBetweenStartAndEnd {
+            textColor = manager.colors.betweenStartAndEndColor
+        }
+        
+        return textColor
+    }
+    
+    func getTextFont() -> Font {
+        var fontWeight = manager.font.cellUnselectedFont
+        
+        if isDisabled {
+            fontWeight = manager.font.cellDisabledFont
+        }else if isSelected {
+            fontWeight = manager.font.cellSelectedFont
+        }else if isToday {
+            fontWeight = manager.font.cellTodayFont
+        }else if isBetweenStartAndEnd {
+            fontWeight = manager.font.cellBetweenStartAndEndFont
+        }
+        return fontWeight
+    }
+    
+    func getBackgroundColor() -> Color {
+        var backGroundColor = manager.colors.textBackColor
+        
+        if isBetweenStartAndEnd {
+            backGroundColor = manager.colors.betweenStartAndEndBackColor
+        }else if isDisabled {
+            backGroundColor = manager.colors.disabledBackColor
+        }else if isSelected {
+            backGroundColor = manager.colors.selectedBackColor
+        }
+        
+        return backGroundColor
+    }
 }
