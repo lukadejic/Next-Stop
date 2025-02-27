@@ -109,4 +109,3 @@ extension View {
 let daysPerWeek = 7
 var CalendarCellWidth: CGFloat = 32
 
-
