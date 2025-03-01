@@ -11,7 +11,7 @@ struct CalendarDate {
     var endDate: Date?
     var startDate : Date?
     
-    init(date: Date, manager: CalendarManager, isDisabled: Bool = false, isToday: Bool = false, isSelected: Bool = false, isBetweenStartAndEnd: Bool = false, endDate: Date?, startDate: Date?) {
+    init(date: Date, manager: CalendarManager, isDisabled: Bool = false, isToday: Bool = false, isSelected: Bool = false, isBetweenStartAndEnd: Bool = false, endDate: Date? = nil, startDate: Date? = nil) {
         self.date = date
         self.manager = manager
         self.isDisabled = isDisabled

@@ -10,8 +10,8 @@ class CalendarColorSettins {
     var todayBackColor = Color.gray
     var textBackColor = Color.clear
     var disabledBackColor = Color.clear
-    var selectedBackColor = Color.blue
-    var betweenStartAndEndBackColor = Color.init(.systemGray3)
+    var selectedBackColor = Color.black
+    var betweenStartAndEndBackColor = Color.init(.systemGray3).opacity(0.8)
     var calendarBackColor = Color.init(.systemGray6)
     var weekdayHeaderColor = Color.secondary
     var monthHeaderColor = Color.primary
@@ -85,6 +85,27 @@ class CalendarHelpers {
         
         return calendar.date(byAdding: .month, value: 1, to: startOfMonth)?.addingTimeInterval(-86500) ?? startOfMonth
     }
+    
+    static func formattedRangeDate(startDate: Date?, endDate: Date?) -> String {
+        guard let startDate = startDate, let endDate = endDate else { return "" }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US") 
+        dateFormatter.dateFormat = "E, d MMM"
+       
+        let start = dateFormatter.string(from: startDate)
+        let end = dateFormatter.string(from: endDate)
+        
+        return "\(start) - \(end)"
+    }
+    
+    static func covnertDateToString(date: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.date(from: date)
+    }
+    
 }
 
 struct RoundedCorner: Shape {

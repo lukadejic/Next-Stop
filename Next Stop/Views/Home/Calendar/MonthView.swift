@@ -25,7 +25,7 @@ struct MonthView: View {
                     .padding(.leading)
                 
                 VStack(alignment: .leading, spacing: 5){
-                    ForEach(monthArray(), id: \.self) { row in
+                    ForEach(monthsArray, id: \.self) { row in
                         HStack(spacing: 0) {
                             ForEach(row, id: \.self){ date in
                                 cellView(date)
@@ -34,7 +34,7 @@ struct MonthView: View {
                     }
                 }
             }
-            .background(manager.colors.monthBackColor)
+            
         }
     }
 }
@@ -60,13 +60,13 @@ private extension MonthView {
     func firstOfMonthOffset() -> Date {
         var offset = DateComponents()
         offset.month = monthOffset
-        return manager.calendar.date(byAdding: offset, to: firstDateMonth()) ?? Date()
+        return manager.calendar.date(byAdding: offset, to: firstDateMonth())!
     }
     
     func formatDate(date: Date) -> Date {
         let compoments = manager.calendar.dateComponents(calendarUnitYMD,
                                                          from: date)
-        return manager.calendar.date(from: compoments) ?? Date()
+        return manager.calendar.date(from: compoments)!
     }
     
     func formatAndCompareDate(date: Date, referenceDate: Date) -> Bool {
@@ -80,7 +80,10 @@ private extension MonthView {
         let rangeOfWeeks = manager.calendar.range(of: .weekOfMonth,
                                                   in: .month,
                                                   for: firstOfMonth)
-        return (rangeOfWeeks?.count)! * daysPerWeek
+        guard let count = rangeOfWeeks?.count else {
+            fatalError("Cant get range of weeks")
+        }
+        return count * daysPerWeek
     }
     
     func isStartDate(date: Date) -> Bool {
@@ -154,7 +157,9 @@ private extension MonthView {
     }
     
     func isSpecialDate(date: Date) -> Bool {
-        return isSelectedDate(date: date)
+        return isSelectedDate(date: date) ||
+        isStartDate(date: date) ||
+        isEndDate(date: date)
     }
     
     func isSelectedDate(date: Date) -> Bool {
@@ -191,7 +196,7 @@ private extension MonthView {
         var dateComponents = DateComponents()
         dateComponents.day = index - startOffset
         
-        return manager.calendar.date(byAdding: dateComponents, to: firstOfMonth)!
+        return manager.calendar.date(byAdding: dateComponents, to: firstOfMonth) ?? Date()
     }
     
     func monthArray() -> [[Date]] {
@@ -221,6 +226,7 @@ private extension MonthView {
                                              manager: manager,
                                              isDisabled: !isEnabled(date: date),
                                              isToday: isToday(date: date),
+                                             isSelected: isSpecialDate(date: date),
                                              isBetweenStartAndEnd: isBetweenStartAndEnd(date: date),
                                              endDate: manager.endDate, startDate:
                                                 manager.startDate),

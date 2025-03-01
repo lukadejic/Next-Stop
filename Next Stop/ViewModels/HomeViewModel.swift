@@ -6,11 +6,19 @@ import SwiftData
 class HomeViewModel : ObservableObject {
     @Published var destinations : [Destination] = []
     @Published var hotels : [Hotel] = []
-    @Published var selectedDestination : Destination? = nil
+    @Published var selectedDestination: Destination? {
+        didSet {
+            if oldValue?.id != selectedDestination?.id {
+                fetchHotelsIfNeeded()
+            }
+        }
+    }
+
     @Published var hotelImages : [Int : [ImageModel]] = [:]
     @Published var hotelDetail : HotelDetailData? = nil
     @Published var hotelDescription: [HotelDescriptionData] = []
-    
+    @Published var startDate: Date? = nil
+    @Published var endDate: Date? = nil
     
     private let hotelsService : HotelsService
     
@@ -61,11 +69,15 @@ class HomeViewModel : ObservableObject {
         }
     }
     
+    
+    
     func selectDestination(for query: String) {
         if let selectedDest = destinations.first(where: { $0.query?.lowercased() == query.lowercased() }) {
-            self.selectedDestination = selectedDest
-            self.getHotels()
-            print("Hotels count after fetching: \(self.hotels.count)")
+            if selectedDestination?.id != selectedDest.id { // Proveri da li je već ista
+                self.selectedDestination = selectedDest
+                self.getHotels()
+                print("Hotels count after fetching: \(self.hotels.count)")
+            }
         } else {
             print("Destination not found for query: \(query)")
         }
@@ -113,6 +125,17 @@ class HomeViewModel : ObservableObject {
                 print("Failed to fetch hotel description data: \(error.localizedDescription)")
             }
         }
+    }
+    private func fetchHotelsIfNeeded() {
+        guard let destination = selectedDestination, hotels.isEmpty else { return }
+        print(destination)
+        getHotels()
+    }
+    
+    func saveAvailibilyDate(startDate: Date? , endDate: Date?) {
+        guard let startDate = startDate, let endDate = endDate else { return }
+        self.startDate = startDate
+        self.endDate = endDate
     }
 
 }

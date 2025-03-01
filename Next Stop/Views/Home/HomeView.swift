@@ -16,11 +16,19 @@ struct HomeView: View {
                     listingList
                 }
             }
-            .onAppear{
-                vm.getDestinations(query: selectedStayOption.querryKeywords)
+            .onAppear {
+                if vm.destinations.isEmpty {
+                    vm.getDestinations(query: selectedStayOption.querryKeywords)
+                }
             }
-            .onChange(of: vm.destinations) {                
-                vm.selectDestination(for: selectedStayOption.querryKeywords)
+            .onChange(of: selectedStayOption) { odlValue, newValue in
+                vm.getDestinations(query: newValue.querryKeywords)
+            }
+            .onChange(of: vm.destinations) { oldValue,newValue in
+                guard !newValue.isEmpty else { return }
+                if vm.selectedDestination == nil || !newValue.contains(where: { $0.id == vm.selectedDestination?.id }) {
+                    vm.selectDestination(for: selectedStayOption.querryKeywords)
+                }
             }
         }
     }

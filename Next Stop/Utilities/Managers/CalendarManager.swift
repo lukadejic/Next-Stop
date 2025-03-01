@@ -55,4 +55,10 @@ class CalendarManager {
         return calendar.date(from: compoments) ?? Date()
     }
     
+    func selectedNumberOfDays() -> Int {
+        guard let startDate, let endDate else { return 0 }
+        return calendar.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+    }
+    
+    
 }

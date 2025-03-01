@@ -6,10 +6,11 @@ struct ListingDetailView: View {
     let hotel: Hotel
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject private var vm :HomeViewModel
+    @EnvironmentObject private var vm : HomeViewModel
     @State private var showFullDescription : Bool = false
     @State private var isFullMapScreen : Bool = false
     @State private var isFullCancellationPolicy: Bool = false
+    @State private var showCalendarView: Bool = false
     
     var body: some View {
         ScrollView {
@@ -55,6 +56,7 @@ struct ListingDetailView: View {
         }
         .onAppear{
            // vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
+            
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
@@ -294,14 +296,22 @@ private extension ListingDetailView {
             Text("Availability")
                 .font(.headline)
             HStack{
-                Text(stayDate(arrivalDate: hotel.property?.checkinDate,
-                              departureDate: hotel.property?.checkoutDate))
-                .foregroundStyle(.gray)
-                
+                Text(CalendarHelpers.formattedRangeDate(
+                    startDate: vm.startDate,
+                    endDate: vm.endDate))
                 Spacer()
                 
                 Text(">")
             }
+        }
+        .onAppear{
+            loadDates()
+        }
+        .onTapGesture {
+            showCalendarView = true
+        }
+        .fullScreenCover(isPresented: $showCalendarView) {
+            CalendarView(hotel: hotel)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)
@@ -376,6 +386,16 @@ private extension ListingDetailView {
         }
         
         return "Room info not found"
+    }
+    
+    func loadDates() {
+        if let arrival = hotel.property?.checkinDate {
+            vm.startDate = CalendarHelpers.covnertDateToString(date: arrival)
+        }
+        
+        if let departure = hotel.property?.checkoutDate {
+            vm.endDate = CalendarHelpers.covnertDateToString(date: departure)
+        }
     }
     
     var descriptionView : some View {

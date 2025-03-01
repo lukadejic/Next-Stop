@@ -11,7 +11,7 @@ struct CalendarWeekdayHeaderView: View {
         HStack{ 
             ForEach(weekdays, id: \.self) { weekDay in
                 Text(weekDay)
-                    .font(manager.font.weekdayHeaderFont)
+                    .font(.callout)
                     .fontWeight(.semibold)
                     .frame(maxWidth: .infinity)
             }

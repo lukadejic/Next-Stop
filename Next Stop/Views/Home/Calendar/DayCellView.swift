@@ -3,6 +3,7 @@ import SwiftUI
 struct DayCellView: View {
     var calendarDate: CalendarDate
     var cellWidth: CGFloat
+    var manager = CalendarManager()
     
     var body: some View {
         Text(calendarDate.getText())
@@ -11,7 +12,7 @@ struct DayCellView: View {
             .frame(height: cellWidth)
             .frame(maxWidth: .infinity,alignment: .center)
             .font(.system(size: 20))
-            .background(calendarDate.getBackgroundColor())
+            .background(getCellBackgroundColor())
             .cornerRadius(radius, corners: corners)
     }
 }
@@ -40,5 +41,20 @@ private extension DayCellView {
     
     var radius: CGFloat {
         calendarDate.isEndDate || calendarDate.isStartDate ? cellWidth / 2 : 0
+    }
+    func getCellBackgroundColor() -> Color {
+        if calendarDate.isStartDate || calendarDate.isEndDate {
+            return manager.colors.selectedBackColor
+        } else if calendarDate.isBetweenStartAndEnd {
+            return manager.colors.betweenStartAndEndBackColor
+        } else if calendarDate.isSelected {
+            return manager.colors.selectedBackColor
+        } else {
+            return calendarDate.getBackgroundColor()
+        }
+    }
+    
+    var isStartOrEndDate: Bool {
+        return calendarDate.isStartDate || calendarDate.isEndDate
     }
 }
