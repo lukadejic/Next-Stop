@@ -358,36 +358,6 @@ private extension ListingDetailView {
         .padding(.horizontal)
     }
     
-    func extractRoomInfo() -> String {
-        guard let text = hotel.accessibilityLabel else { return "No data" }
-        
-        let regexPattern = #"(\d+)\s*beds?(?:\s*•\s*(\d+)\s*bedrooms?)?(?:\s*•\s*(\d+)\s*living rooms?)?(?:\s*•\s*(\d+)\s*bathrooms?)?|Hotel\s*room\s*:\s*(\d+)\s*bed"#
-
-        if let regex = try? NSRegularExpression(pattern: regexPattern, options: []) {
-            let range = NSRange(text.startIndex..<text.endIndex, in: text)
-            
-            if let match = regex.firstMatch(in: text, options: [], range: range) {
-                let nsText = text as NSString
-
-                if match.range(at: 1).location != NSNotFound {
-                    let beds = nsText.substring(with: match.range(at: 1))
-                    let bedrooms = match.range(at: 2).location != NSNotFound ? nsText.substring(with: match.range(at: 2)) : "0"
-                    let livingRooms = match.range(at: 3).location != NSNotFound ? nsText.substring(with: match.range(at: 3)) : "0"
-                    let bathrooms = match.range(at: 4).location != NSNotFound ? nsText.substring(with: match.range(at: 4)) : "0"
-                    
-                    return "\(beds) beds • \(bedrooms) bedrooms • \(livingRooms) living rooms • \(bathrooms) bathrooms"
-                }
-                
-                if match.range(at: 5).location != NSNotFound {
-                    let singleBed = nsText.substring(with: match.range(at: 5))
-                    return "Hotel room: \(singleBed) bed"
-                }
-            }
-        }
-        
-        return "Room info not found"
-    }
-    
     func loadDates() {
         if let arrival = hotel.property?.checkinDate {
             vm.startDate = CalendarHelpers.covnertDateToString(date: arrival)
