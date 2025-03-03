@@ -13,12 +13,12 @@ class HomeViewModel : ObservableObject {
             }
         }
     }
-
     @Published var hotelImages : [Int : [ImageModel]] = [:]
     @Published var hotelDetail : HotelDetailData? = nil
     @Published var hotelDescription: [HotelDescriptionData] = []
     @Published var startDate: Date? = nil
     @Published var endDate: Date? = nil
+    @Published var arrivalDay: Date? = nil
     
     private let hotelsService : HotelsService
     
@@ -47,12 +47,12 @@ class HomeViewModel : ObservableObject {
     }
     
     func getHotels(){
-
+        
         guard let destination = selectedDestination else {
             print("No selected destination, cannot fetch hotels")
             return
         }
-
+        
         Task{
             do{
                 
@@ -137,5 +137,10 @@ class HomeViewModel : ObservableObject {
         self.startDate = startDate
         self.endDate = endDate
     }
-
+    
+    func saveArrivalDay(arrivalDay: Date?) {
+        guard let arrivalDay = arrivalDay else { return }
+        self.arrivalDay = arrivalDay
+    }
+    
 }

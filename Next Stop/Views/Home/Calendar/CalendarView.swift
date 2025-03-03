@@ -4,7 +4,6 @@ struct CalendarView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject private var vm : HomeViewModel
     let hotel: Hotel
-
     
     @State private var manager = CalendarManager (
         calendar: Calendar.current,
@@ -52,11 +51,15 @@ struct CalendarView: View {
                 }
             }
         }
+        .onAppear{
+            setSelectedDates()
+        }
         .overlay(alignment: .bottom){
             PriceSectionView(price: vm.hotelDetail?.product_price_breakdown?.charges_details?.amount?.value,
                              rating: hotel.property?.reviewScore,
                              buttonText: "Save") {
-                save()
+                saveSelectedDate()
+                saveArrivalDay()
             }
         }
     }
@@ -73,8 +76,25 @@ private extension CalendarView {
         manager.endDate = nil
     }
     
-    func save() {
+    func saveSelectedDate() {
         vm.saveAvailibilyDate(startDate: manager.startDate, endDate: manager.endDate)
         dismiss()
+    }
+    
+    func saveArrivalDay() {
+        vm.saveArrivalDay(arrivalDay: manager.startDate)
+    }
+    
+    func setSelectedDates() {
+        if vm.startDate == nil {
+            vm.startDate = CalendarHelpers.convertStringToDate(date: hotel.property?.checkinDate)
+        }
+        
+        if vm.endDate == nil {
+            vm.endDate = CalendarHelpers.convertStringToDate(date: hotel.property?.checkoutDate)
+        }
+        
+        manager.startDate = vm.startDate
+        manager.endDate = vm.endDate
     }
 }

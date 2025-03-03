@@ -1,35 +1,47 @@
 import SwiftUI
 
 struct HomeView: View {
+
+    @EnvironmentObject var vm : HomeViewModel
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
-    @EnvironmentObject var vm : HomeViewModel
+    @State private var showDestinationSearchView = false
     
     var body: some View {
         NavigationStack{
-            ZStack {
-                VStack {
-                    SearchBarView()
-                    
-                    stayOptionsHeader
-                    
-                    listingList
+            if showDestinationSearchView {
+                DestinationSearchView(show: $showDestinationSearchView)
+            }else{
+                ZStack {
+                    VStack {
+                        SearchBarView()
+                            .onTapGesture {
+                                withAnimation(.snappy) {
+                                    showDestinationSearchView.toggle()
+                                }
+                            }
+                        
+                        stayOptionsHeader
+                        
+                        listingList
+                    }
                 }
+    //            .onAppear {
+    //                if vm.destinations.isEmpty {
+    //                    vm.getDestinations(query: selectedStayOption.querryKeywords)
+    //                }
+    //            }
+    //            .onChange(of: selectedStayOption) { odlValue, newValue in
+    //                vm.getDestinations(query: newValue.querryKeywords)
+    //            }
+    //            .onChange(of: vm.destinations) { oldValue,newValue in
+    //                guard !newValue.isEmpty else { return }
+    //                if vm.selectedDestination == nil || !newValue.contains(where: { $0.id == vm.selectedDestination?.id }) {
+    //                    vm.selectDestination(for: selectedStayOption.querryKeywords)
+    //                }
+    //            }
             }
-            .onAppear {
-                if vm.destinations.isEmpty {
-                    vm.getDestinations(query: selectedStayOption.querryKeywords)
-                }
-            }
-            .onChange(of: selectedStayOption) { odlValue, newValue in
-                vm.getDestinations(query: newValue.querryKeywords)
-            }
-            .onChange(of: vm.destinations) { oldValue,newValue in
-                guard !newValue.isEmpty else { return }
-                if vm.selectedDestination == nil || !newValue.contains(where: { $0.id == vm.selectedDestination?.id }) {
-                    vm.selectDestination(for: selectedStayOption.querryKeywords)
-                }
-            }
+
         }
     }
 }
@@ -107,7 +119,7 @@ private extension HomeView {
     }
 }
 
-//#Preview {
-//    HomeView()
-//        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
-//}
+#Preview {
+    HomeView()
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+}

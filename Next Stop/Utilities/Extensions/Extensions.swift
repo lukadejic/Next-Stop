@@ -99,10 +99,13 @@ class CalendarHelpers {
         return "\(start) - \(end)"
     }
     
-    static func covnertDateToString(date: String) -> Date? {
+    static func convertStringToDate(date: String?) -> Date? {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         formatter.locale = Locale(identifier: "en_US_POSIX")
+        
+        guard let date = date else { return nil }
+        
         return formatter.date(from: date)
     }
     

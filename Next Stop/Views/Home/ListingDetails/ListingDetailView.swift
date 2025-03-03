@@ -55,8 +55,7 @@ struct ListingDetailView: View {
             cancelationPolicy
         }
         .onAppear{
-           // vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
-            
+            //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
@@ -66,6 +65,7 @@ struct ListingDetailView: View {
             }label: {
                 BackButton()
                     .padding(32)
+                    .padding(.top, 20)
             }
         }
         .padding(.bottom, 64)
@@ -264,8 +264,9 @@ private extension ListingDetailView {
                 Text("Cancellation policy")
                     .font(.headline)
             HStack{
-                VStack(alignment: .leading){
-                    let arrival = String(arrivalDateConverted(arrivalDate: hotel.property?.checkinDate ?? "10 Mar"))
+                VStack(alignment: .leading) {
+                    let arrival = arrivalDayFormater(date: vm.arrivalDay)
+                    
                     Text("Free cancellation for 24 hours.Cancel before \(arrival) for partial refound")
                     
                     Text("Review this hotels full policy for details.")
@@ -279,16 +280,25 @@ private extension ListingDetailView {
                     .fontWeight(.semibold)
             }
         }
+        .onAppear{
+            loadArrivalDay()
+        }
         .onTapGesture {
             isFullCancellationPolicy = true
         }
         .fullScreenCover(isPresented: $isFullCancellationPolicy) {
-            let arrival = String(arrivalDateConverted(arrivalDate: hotel.property?.checkinDate ?? "10 Mar") + "\n\(hotel.property?.checkin?.fromTime ?? "14:00")")
+            let arrival = String(arrivalDayConverter(arrivalDate: hotel.property?.checkinDate ?? "10 Mar") + "\n\(hotel.property?.checkin?.fromTime ?? "14:00")")
             
             CancellationPolicyView(arrival: arrival)
         }
         .frame(maxWidth: .infinity,alignment: .leading)
         .padding(.horizontal)
+    }
+    
+    func loadArrivalDay() {
+        if let arrivalDay = hotel.property?.checkinDate {
+            vm.arrivalDay = CalendarHelpers.convertStringToDate(date: arrivalDay)
+        }
     }
     
     var availability : some View {
@@ -348,7 +358,7 @@ private extension ListingDetailView {
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .frame(width: 140, height: 40)
-                        .background(.pink)
+                        .background(.black)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .padding(.horizontal)
@@ -360,11 +370,11 @@ private extension ListingDetailView {
     
     func loadDates() {
         if let arrival = hotel.property?.checkinDate {
-            vm.startDate = CalendarHelpers.covnertDateToString(date: arrival)
+            vm.startDate = CalendarHelpers.convertStringToDate(date: arrival)
         }
         
         if let departure = hotel.property?.checkoutDate {
-            vm.endDate = CalendarHelpers.covnertDateToString(date: departure)
+            vm.endDate = CalendarHelpers.convertStringToDate(date: departure)
         }
     }
     

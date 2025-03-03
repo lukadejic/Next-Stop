@@ -27,7 +27,21 @@ func stayDate(arrivalDate: String?, departureDate: String?) -> String {
     return "unknown"
     
 }
-func arrivalDateConverted(arrivalDate: String?) -> String {
+
+func arrivalDayFormater(date: Date?) -> String {
+    let outputFormatter = DateFormatter()
+    outputFormatter.dateFormat = "d MMM"
+    
+    guard let date = date else { return "" }
+    
+    if let adjustedDate = Calendar.current.date(byAdding: .day, value: -7, to: date) {
+        return outputFormatter.string(from: adjustedDate)
+    }
+    
+    return "Unknown date"
+}
+
+func arrivalDayConverter(arrivalDate: String?) -> String {
     guard let arrival = arrivalDate else { return "unknown" }
     
     let inputFormatter = DateFormatter()
