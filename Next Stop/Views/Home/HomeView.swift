@@ -10,13 +10,13 @@ struct HomeView: View {
     var body: some View {
         NavigationStack{
             if showDestinationSearchView {
-                DestinationSearchView(show: $showDestinationSearchView)
+//                DestinationSearchView(show: $showDestinationSearchView)
             }else{
                 ZStack {
                     VStack {
                         SearchBarView()
                             .onTapGesture {
-                                withAnimation(.snappy) {
+                                withAnimation(.easeIn(duration: 0.3)) {
                                     showDestinationSearchView.toggle()
                                 }
                             }
