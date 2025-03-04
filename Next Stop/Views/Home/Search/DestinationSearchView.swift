@@ -21,7 +21,9 @@ struct DestinationSearchView: View {
             
             Spacer()
         }
-       
+        .overlay(alignment: .bottom) {
+            searchSection
+        }
     }
 }
 
@@ -120,14 +122,6 @@ private extension DestinationSearchView {
             
             Spacer()
             
-            if !search.isEmpty {
-                Button("Clear") {
-                    search = ""
-                }
-                .foregroundStyle(.black)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-            }
         }
         .padding()
     }
@@ -176,7 +170,7 @@ private extension DestinationSearchView {
             }
         }
         .modifier(CollapsibleDestinationViewModifier())
-        .frame(height: selectedOption == .dates ? 600 : 64)
+        .frame(height: selectedOption == .dates ? 450 : 64)
         .onTapGesture {
             withAnimation(.snappy) { selectedOption = .dates}
         }
@@ -216,5 +210,38 @@ private extension DestinationSearchView {
         .onTapGesture {
             withAnimation(.snappy) { selectedOption = .guests}
         }
+    }
+    
+    var searchSection : some View {
+        HStack{
+            Button{
+                search = ""
+                vm.numberOfGuests = 0
+            }label: {
+                Text("Clear all")
+                    .fontWeight(.semibold)
+                    .underline()
+            }
+            .tint(.black)
+            
+            Spacer()
+            
+            Button{
+                
+            }label: {
+                HStack(spacing: 10){
+                    Image(systemName: "magnifyingglass")
+                    Text("Search")
+                }
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
+                .frame(width: 130, height: 45)
+                .background(.pink.opacity(0.9))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .shadow(radius: 7)
+            }
+        }
+        .padding(.horizontal)
+        .padding()
     }
 }
