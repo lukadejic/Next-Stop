@@ -241,3 +241,14 @@ extension GuestsSelectionView {
         }
     }
 }
+
+struct CollapsibleDestinationViewModifier : ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .shadow(radius: 10)
+            .padding()
+    }
+}
