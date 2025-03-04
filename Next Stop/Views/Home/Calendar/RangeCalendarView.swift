@@ -22,7 +22,6 @@ struct RangeCalendarView: View {
 
                         }
                     }
-                    .padding()
                 }
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {

@@ -7,20 +7,35 @@ enum DestinationSearchOption {
 }
 
 struct DestinationSearchView: View {
+    
     @Binding var show: Bool
     @State private var search: String = ""
     @State private var selectedOption : DestinationSearchOption = .destination
     
     var body: some View {
         VStack{
-            Button{
-                withAnimation(.easeOut(duration: 0.3)){
-                    show.toggle()
+            HStack{
+                Button{
+                    withAnimation(.easeOut(duration: 0.3)){
+                        show.toggle()
+                    }
+                }label: {
+                    Image(systemName: "xmark.circle")
+                        .foregroundStyle(.black)
                 }
-            }label: {
-                Image(systemName: "xmark.circle")
+                
+                Spacer()
+                
+                if !search.isEmpty {
+                    Button("Clear") {
+                        search = ""
+                    }
                     .foregroundStyle(.black)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                }
             }
+            .padding()
             
             VStack(alignment:.leading) {
                 if selectedOption == .destination {
@@ -43,36 +58,25 @@ struct DestinationSearchView: View {
                             .foregroundStyle(Color(.systemGray4))
                     }
                 }else{
-                    CollapsedPickerView(title: "Where to?", description: "Add destination")
+                    CollapsedPickerView(title: "Where to?",
+                                        description: "Add destination")
                 }
             }
-            .padding()
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
-            .padding()
+            .modifier(CollapsibleDestinationViewModifier())
             .onTapGesture {
                 withAnimation(.snappy) { selectedOption = .destination}
             }
             
             VStack {
                 if selectedOption == .dates {
-                    HStack{
-                        Text("Expanded View")
-                        
-                        Spacer()
-                    }
+                    SearchCalendarView()
                 }else{
                     CollapsedPickerView(title: "When",
                                         description: "Add dates")
                 }
             }
-            .padding()
-            .frame(height: selectedOption == .dates ? 120 : 64)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
-            .padding()
+            .modifier(CollapsibleDestinationViewModifier())
+            .frame(height: selectedOption == .dates ? 600 : 64)
             .onTapGesture {
                 withAnimation(.snappy) { selectedOption = .dates}
             }
@@ -89,15 +93,13 @@ struct DestinationSearchView: View {
                                         description: "Add guests")
                 }
             }
-            .padding()
-            .frame(height: selectedOption == .guests ? 120 : 64)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .shadow(radius: 10)
-            .padding()
+            .frame(height: selectedOption == .guests ? 120 : 34)
+            .modifier(CollapsibleDestinationViewModifier())
             .onTapGesture {
                 withAnimation(.snappy) { selectedOption = .guests}
             }
+            
+            Spacer()
         }
        
     }
@@ -126,3 +128,15 @@ struct CollapsedPickerView : View {
         }
     }
 }
+
+struct CollapsibleDestinationViewModifier : ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .shadow(radius: 10)
+            .padding()
+    }
+}
+    
