@@ -164,3 +164,80 @@ extension ListingDetailView {
         return "Room info not found"
     }
 }
+
+extension GuestsSelectionView {
+    func isMinusDisabled() -> Bool {
+           switch guestsSelection {
+           case .adults:
+               return vm.numberOfAdults == 0
+           case .childred:
+               return vm.numberOfChildred == 0
+           case .infants:
+               return vm.numberOfInfants == 0
+           case .pets:
+               return vm.numberOfPets == 0
+           }
+       }
+    
+    func isPlusDisabled() -> Bool {
+        switch guestsSelection {
+        case .adults:
+            return vm.numberOfAdults == 10
+        case .childred:
+            return vm.numberOfChildred == 10
+        case .infants:
+            return vm.numberOfInfants == 10
+        case .pets:
+            return vm.numberOfPets == 10
+        }
+    }
+    
+    func increaseCount() {
+        switch guestsSelection {
+        case .adults:
+            guard vm.numberOfAdults < 10 else { return }
+            vm.numberOfAdults += 1
+        case .childred:
+            guard vm.numberOfChildred < 4 else { return }
+            vm.numberOfChildred += 1
+        case .infants:
+            guard vm.numberOfInfants < 2 else { return }
+            vm.numberOfInfants += 1
+        case .pets:
+            guard vm.numberOfPets < 2 else { return }
+            vm.numberOfPets += 1
+        }
+        vm.numberOfGuests += 1
+    }
+    
+    func decreaseCount() {
+        switch guestsSelection {
+        case .adults:
+            guard vm.numberOfAdults > 0 else { return }
+            vm.numberOfAdults -= 1
+        case .childred:
+            guard vm.numberOfChildred > 0 else { return }
+            vm.numberOfChildred -= 1
+        case .infants:
+            guard vm.numberOfInfants > 0 else { return }
+            vm.numberOfInfants -= 1
+        case .pets:
+            guard vm.numberOfPets > 0 else { return }
+            vm.numberOfPets -= 1
+        }
+        vm.numberOfGuests -= 1
+    }
+    
+    func numberOfGuestsForSelection() -> Int {
+        switch guestsSelection {
+        case .adults:
+            return vm.numberOfAdults
+        case .childred:
+            return vm.numberOfChildred
+        case .infants:
+            return vm.numberOfInfants
+        case .pets:
+            return vm.numberOfPets
+        }
+    }
+}
