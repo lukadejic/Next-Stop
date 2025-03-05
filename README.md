@@ -1,3 +1,5 @@
+This application is still in development, you can see the most recent updates on the development branch.
+
 The pictures are slightly blurry because I reduced their size; they were too large. :)
 
 ![HomeViewPage1](https://github.com/user-attachments/assets/bef28ae3-e761-4c59-9ed2-bf3d133ef055)
