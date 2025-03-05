@@ -1,12 +1,13 @@
 import SwiftUI
 
 struct DestinationSearchView: View {
-    @StateObject private var vm = SearchDestinationsViewModel()
+    @StateObject private var vm = SearchDestinationsViewModel(searchService: LocationSearchService())
     
     @Binding var show: Bool
     
     @State  private var search: String = ""
-    @State  private var selectedOption : DestinationSearchOption = .destination
+    @State  private var selectedOption :
+    DestinationSearchOption = .destination
     
     var body: some View {
         VStack{
@@ -130,29 +131,34 @@ private extension DestinationSearchView {
         
         VStack(alignment:.leading) {
             if selectedOption == .destination {
-                Text("Where to?")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                
-                HStack {
-                    Image(systemName: "magnifyingglass")
-                        .imageScale(.small)
+                VStack(alignment: .leading){
+                    Text("Where to?")
+                        .font(.title2)
+                        .fontWeight(.semibold)
                     
-                    TextField("Search Destinations", text: $search)
-                        .font(.subheadline)
-                }
-                .frame(height: 44)
-                .padding(.horizontal)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(lineWidth: 1)
-                        .foregroundStyle(Color(.systemGray4))
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .imageScale(.small)
+                        
+                        TextField("Search Destinations", text: $search)
+                            .font(.subheadline)
+                    }
+                    .frame(height: 44)
+                    .padding(.horizontal)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(lineWidth: 1)
+                            .foregroundStyle(Color(.systemGray4))
+                    }
+
+                    Spacer()
                 }
             }else{
                 CollapsedPickerView(title: "Where to?",
                                     description: "Add destination")
             }
         }
+        .frame(height: selectedOption == .destination ? 300 : 30)
         .modifier(CollapsibleDestinationViewModifier())
         .onTapGesture {
             withAnimation(.snappy) { selectedOption = .destination}

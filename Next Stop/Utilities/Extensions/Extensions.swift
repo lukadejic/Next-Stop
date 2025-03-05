@@ -1,4 +1,5 @@
 import Foundation
+import MapKit
 import SwiftUI
 
 class CalendarColorSettins {
@@ -250,5 +251,19 @@ struct CollapsibleDestinationViewModifier : ViewModifier {
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .shadow(radius: 10)
             .padding()
+    }
+}
+
+extension LocationSearchService : MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        results = completer.results.map({result in
+            LocationModel(title: result.title, subtitle: result.subtitle)
+        })
+        
+        status = .result
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: any Error) {
+        status = .error(error.localizedDescription)
     }
 }

@@ -21,10 +21,18 @@ class SearchDestinationsViewModel : ObservableObject {
     @Published var numberOfInfants: Int = 0
     @Published var numberOfPets : Int = 0
     
+    private let searchService: LocationSearchService
+    
+    init(searchService: LocationSearchService) {
+        self.searchService = searchService
+    }
+    
     let guestDetails: [(guest: String, age: String, selection: GuestsSelection)] = [
         ("Adults", "Age 13 or above", .adults),
         ("Children", "Ages 2-12", .childred),
         ("Infants", "Under 2", .infants),
         ("Pets", "", .pets)
     ]
+    
+    
 }
