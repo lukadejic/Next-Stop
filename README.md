@@ -1,4 +1,4 @@
-This application is still in development, you can see the most recent updates on the development branch.
+NextStop app allows you to choose your favorite vacation spot, with data collected through RapidAPI. It enables searching, filtering, and booking hotels.(The app is still under development)
 
 The pictures are slightly blurry because I reduced their size; they were too large. :)
 
