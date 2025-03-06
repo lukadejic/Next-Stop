@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct DestinationSearchView: View {
-    @StateObject private var vm = SearchDestinationsViewModel(searchService: LocationSearchService())
+    @StateObject private var vm = SearchDestinationsViewModel(
+        searchService: LocationSearchService(),
+        hotelSerice: HotelsService())
     
     @Binding var show: Bool
-    
-    @State  private var search: String = ""
-    @State  private var selectedOption :
-    DestinationSearchOption = .destination
+    @State private var buttonText: String = "Next"
+    @State private var showButton : Bool = false
     
     var body: some View {
         VStack{
@@ -23,7 +23,10 @@ struct DestinationSearchView: View {
             Spacer()
         }
         .overlay(alignment: .bottom) {
-            searchSection
+            if !vm.search.isEmpty{
+                SearchView(vm: vm,
+                           selectedOption: $vm.searchOption)
+            }
         }
     }
 }
@@ -109,6 +112,47 @@ struct GuestsSelectionView: View {
 
 }
     
+struct SearchView: View {
+    let vm: SearchDestinationsViewModel
+    @Binding var selectedOption: DestinationSearchOption
+    
+    var body: some View {
+        HStack {
+            Button {
+                moveToNextOption()
+            } label: {
+                Text(selectedOption == .destination || selectedOption == .dates ? "Skip" : "Clear all")
+                    .fontWeight(.semibold)
+                    .underline()
+            }
+            .tint(.black)
+            
+            Spacer()
+            
+            Button {
+                handleNextOrSearch()
+            } label: {
+                HStack(spacing: 10) {
+                    if selectedOption == .guests || selectedOption == .none {
+                        Image(systemName: "magnifyingglass")
+                    }
+
+                    Text(isSearchButton ? "Next" : "Search")
+                }
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
+                .frame(width: 130, height: 45)
+                .background(isSearchButton ? Color.black :
+                                Color.pink.opacity(0.9))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .shadow(radius: 7)
+            }
+        }
+        .padding(.horizontal)
+        .padding()
+    }
+}
+
 private extension DestinationSearchView {
     var hearder : some View {
         HStack{
@@ -127,127 +171,112 @@ private extension DestinationSearchView {
         .padding()
     }
     
-    var whereToSection : some View {
-        
-        VStack(alignment:.leading) {
-            if selectedOption == .destination {
-                VStack(alignment: .leading){
-                    Text("Where to?")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    HStack {
-                        Image(systemName: "magnifyingglass")
-                            .imageScale(.small)
+    var whereToSection: some View {
+            VStack(alignment: .leading) {
+                if vm.searchOption == .destination {
+                    VStack(alignment: .leading) {
+                        Text("Where to?")
+                            .font(.title2)
+                            .fontWeight(.semibold)
                         
-                        TextField("Search Destinations", text: $search)
-                            .font(.subheadline)
-                    }
-                    .frame(height: 44)
-                    .padding(.horizontal)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(lineWidth: 1)
-                            .foregroundStyle(Color(.systemGray4))
-                    }
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .imageScale(.small)
+                            
+                            TextField("Search Destinations", text: $vm.searchService.query)
+                                .font(.subheadline)
+                        }
+                        .frame(height: 44)
+                        .padding(.horizontal)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(lineWidth: 1)
+                                .foregroundStyle(Color(.systemGray4))
+                        }
 
-                    Spacer()
+                        if vm.searchService.results.isEmpty {
+                            ContentUnavailableView("No Results", image: "")
+                        } else {
+                            List(vm.searchService.results) { result in
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text(result.title)
+                                    Text(result.subtitle)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .onTapGesture {
+                                    vm.search = result.title
+                                    withAnimation(.snappy) {
+                                        vm.searchOption = .dates
+                                        showButton = true
+                                    }
+                                }
+                            }
+                            .listStyle(.plain)
+                        }
+                        
+                        Spacer()
+                    }
+                } else {
+                    CollapsedPickerView(
+                        title: vm.search.isEmpty ? "Where to?" : "Selected Location",
+                        description: vm.search.isEmpty ? "Add destination" : vm.search)
                 }
-            }else{
-                CollapsedPickerView(title: "Where to?",
-                                    description: "Add destination")
+            }
+            .frame(height: vm.searchOption == .destination ? 400 : 30)
+            .modifier(CollapsibleDestinationViewModifier())
+            .onTapGesture {
+                withAnimation(.snappy) { vm.searchOption = .destination }
             }
         }
-        .frame(height: selectedOption == .destination ? 300 : 30)
-        .modifier(CollapsibleDestinationViewModifier())
-        .onTapGesture {
-            withAnimation(.snappy) { selectedOption = .destination}
-        }
-
-    }
     
     var arrivalSection : some View {
         VStack {
-            if selectedOption == .dates {
-                SearchCalendarView()
+            if vm.searchOption == .dates {
+                SearchCalendarView(vm: vm)
             }else{
                 CollapsedPickerView(title: "When",
-                                    description: "Add dates")
+                                    description: vm.startDate != nil &&
+                                    vm.endDate != nil ? CalendarHelpers.formattedRangeDate(startDate: vm.startDate, endDate: vm.endDate) : "Add dates")
             }
         }
         .modifier(CollapsibleDestinationViewModifier())
-        .frame(height: selectedOption == .dates ? 450 : 64)
+        .frame(height: vm.searchOption == .dates ? 450 : 64)
         .onTapGesture {
-            withAnimation(.snappy) { selectedOption = .dates}
+            withAnimation(.snappy) { vm.searchOption = .dates}
         }
     }
     
-    var guestsSection : some View {
-        VStack {
-            if selectedOption == .guests {
-                VStack(alignment: .leading) {
-                    Text("Who's coming?")
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .padding(.top,10)
-                    Spacer()
-                    
-                    VStack(spacing: 15) {
-                        ForEach(vm.guestDetails, id: \.guest) { guestDetail in
-                            GuestsSelectionView(vm: vm,
-                                                guest: guestDetail.guest,
-                                                age: guestDetail.age,
-                                                guestsSelection: guestDetail.selection)
-                            
-                            if guestDetail != vm.guestDetails.last! {
-                                Divider()
+    var guestsSection: some View {
+            VStack {
+                if vm.searchOption == .guests {
+                    VStack(alignment: .leading) {
+                        Text("Who's coming?")
+                            .font(.title)
+                            .fontWeight(.semibold)
+                            .padding(.top, 10)
+                        Spacer()
+                        
+                        VStack(spacing: 15) {
+                            ForEach(vm.guestDetails, id: \.guest) { guestDetail in
+                                GuestsSelectionView(vm: vm, guest: guestDetail.guest, age: guestDetail.age, guestsSelection: guestDetail.selection)
+                                
+                                if guestDetail != vm.guestDetails.last! {
+                                    Divider()
+                                }
                             }
                         }
                     }
+                } else {
+                    CollapsedPickerView(title: "Who", description: vm.numberOfGuests == 0 ? "Add guests" : "\(vm.numberOfGuests) guests")
                 }
-                
-            }else{
-                CollapsedPickerView(title: "Who",
-                                    description: vm.numberOfGuests == 0 ? "Add guests" : "\(vm.numberOfGuests) guests")
+            }
+            .frame(height: vm.searchOption == .guests ? 300 : 34)
+            .modifier(CollapsibleDestinationViewModifier())
+            .onTapGesture {
+                withAnimation(.snappy) { vm.searchOption = .guests }
+                buttonText = "Search"
             }
         }
-        .frame(height: selectedOption == .guests ? 300 : 34)
-        .modifier(CollapsibleDestinationViewModifier())
-        .onTapGesture {
-            withAnimation(.snappy) { selectedOption = .guests}
-        }
-    }
-    
-    var searchSection : some View {
-        HStack{
-            Button{
-                search = ""
-                vm.numberOfGuests = 0
-            }label: {
-                Text("Clear all")
-                    .fontWeight(.semibold)
-                    .underline()
-            }
-            .tint(.black)
-            
-            Spacer()
-            
-            Button{
-                
-            }label: {
-                HStack(spacing: 10){
-                    Image(systemName: "magnifyingglass")
-                    Text("Search")
-                }
-                .fontWeight(.semibold)
-                .foregroundStyle(.white)
-                .frame(width: 130, height: 45)
-                .background(.pink.opacity(0.9))
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .shadow(radius: 7)
-            }
-        }
-        .padding(.horizontal)
-        .padding()
-    }
+
 }

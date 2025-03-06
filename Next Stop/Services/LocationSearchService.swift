@@ -7,7 +7,7 @@ enum SearchStatus : Equatable {
     case error(String)
     case result
 }
-
+@Observable
 class LocationSearchService : NSObject {
     
     var query: String = "" {
@@ -27,7 +27,9 @@ class LocationSearchService : NSObject {
         
         completer = MKLocalSearchCompleter()
         
-        //completer.delegate = self
+        super.init()
+        
+        completer.delegate = self
         completer.pointOfInterestFilter = filter
         completer.region = region
         completer.resultTypes = types

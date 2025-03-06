@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SearchCalendarView: View {
     @Environment(\.dismiss) var dismiss
+    @StateObject var vm: SearchDestinationsViewModel
     
     @State private var manager = CalendarManager (
         calendar: Calendar.current,
@@ -25,28 +26,30 @@ struct SearchCalendarView: View {
                 
                 RangeCalendarView(manager: manager)
             }
-//            .overlay(alignment: .bottomTrailing){
-//                Button {
-//                    print("Tapped")
-//                } label: {
-//                    Text("Save")
-//                        .foregroundStyle(.white)
-//                        .font(.subheadline)
-//                        .fontWeight(.semibold)
-//                        .frame(width: 140, height: 40)
-//                        .background(.black)
-//                        .clipShape(RoundedRectangle(cornerRadius: 10))
-//                }
-//            }
-//            .padding(.trailing)
+            .onAppear {
+                manager.startDate = vm.startDate
+                manager.endDate = vm.endDate
+            }
+            .onDisappear {
+                setSelectedDates()
+            }
+            .padding(.trailing)
         }
     }
 }
 
 
 #Preview {
-    SearchCalendarView()
+    SearchCalendarView(vm: SearchDestinationsViewModel(
+        searchService: LocationSearchService(),
+        hotelSerice: HotelsService()))
 }
 
 private extension SearchCalendarView {
+    func setSelectedDates() {
+        vm.saveAvailibilyDate(startDate: manager.startDate,
+                              endDate: manager.endDate)
+        
+        vm.saveArrivalDay(arrivalDay: manager.startDate)
+    }
 }

@@ -267,3 +267,43 @@ extension LocationSearchService : MKLocalSearchCompleterDelegate {
         status = .error(error.localizedDescription)
     }
 }
+
+extension SearchView {
+    var isSearchButton : Bool {
+        return selectedOption == .destination || selectedOption == .dates && !vm.search.isEmpty
+    }
+    
+    func clear() {
+        vm.search = ""
+        vm.numberOfGuests = 0
+        vm.numberOfPets = 0
+        vm.numberOfAdults = 0
+        vm.numberOfChildred = 0
+        vm.numberOfInfants = 0
+    }
+    
+    func moveToNextOption() {
+        withAnimation(.snappy) {
+            switch selectedOption {
+            case .destination: selectedOption = .dates
+            case .dates: selectedOption = .guests
+            case .guests: clear()
+            default: break
+            }
+        }
+    }
+    
+    func handleNextOrSearch() {
+        withAnimation(.snappy) {
+            if selectedOption == .destination {
+                selectedOption = .dates
+            } else if selectedOption == .dates {
+                selectedOption = .guests
+            } else if selectedOption == .guests {
+                print("Search")
+            }
+        }
+    }
+
+
+}
