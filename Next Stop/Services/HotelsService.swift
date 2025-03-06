@@ -64,7 +64,7 @@ class HotelsService {
             "arrival_date" : arrival_date,
             "departure_date" : departure_date,
             "adults": "\(adults)",
-            "children_age" : "\(String(describing: childredAge))",
+            "children_age" : "1",
             "room_qty" : "\(roomQty)"
         ]
         

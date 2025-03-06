@@ -2,13 +2,13 @@ import SwiftUI
 
 struct DestinationSearchView: View {
     @StateObject private var vm = SearchDestinationsViewModel(
-        searchService: LocationSearchService(),
-        hotelSerice: HotelsService())
+        searchService: LocationSearchService())
+    @EnvironmentObject private var homeVm : HomeViewModel
     
     @Binding var show: Bool
     @State private var buttonText: String = "Next"
     @State private var showButton : Bool = false
-    
+    @State private var showListings: Bool = false
     var body: some View {
         VStack{
            
@@ -25,14 +25,21 @@ struct DestinationSearchView: View {
         .overlay(alignment: .bottom) {
             if !vm.search.isEmpty{
                 SearchButtonView(vm: vm,
-                           selectedOption: $vm.searchOption)
+                                 selectedOption: $vm.searchOption,
+                                 show: $showListings,
+                                 homeVM: homeVm)
             }
+        }
+        .fullScreenCover(isPresented: $showListings) {
+            ListingsAfterSearchView(homeVM: homeVm,
+                                    vm: vm)
         }
     }
 }
 
 #Preview {
     DestinationSearchView(show: .constant(false))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 
 struct CollapsedPickerView : View {
@@ -115,6 +122,8 @@ struct GuestsSelectionView: View {
 struct SearchButtonView: View {
     let vm: SearchDestinationsViewModel
     @Binding var selectedOption: DestinationSearchOption
+    @Binding var show: Bool
+    let homeVM : HomeViewModel
     
     var body: some View {
         HStack {

@@ -110,6 +110,14 @@ class CalendarHelpers {
         return formatter.date(from: date)
     }
     
+    static func convertDateToString(date: Date) -> String {
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "yyyy-MM-dd"
+        outputFormatter.locale = Locale(identifier: "en_US_POSIX")
+        outputFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return outputFormatter.string(from: date)
+    }
+    
 }
 
 struct RoundedCorner: Shape {
@@ -299,6 +307,9 @@ extension SearchButtonView {
         vm.numberOfChildred = 0
         vm.numberOfInfants = 0
         vm.numberOfRooms = 0
+        vm.startDate = nil
+        vm.endDate = nil
+        vm.searchOption = .none
     }
     
     func moveToNextOption() {
@@ -319,9 +330,11 @@ extension SearchButtonView {
             } else if selectedOption == .dates {
                 selectedOption = .guests
             } else if selectedOption == .guests {
-              //  vm.searchHotels()
+                withAnimation(.snappy) {
+                    show.toggle()
+                }
             }
         }
     }
-
+    
 }

@@ -69,11 +69,50 @@ class HomeViewModel : ObservableObject {
         }
     }
     
-    
+    func searchHotels(location: String,
+                      arrivalDate: Date?,
+                      departureDate:Date?,
+                      adults: Int? ,
+                      childredAge: Int?,
+                      roomQty: Int?) {
+        Task{
+            do{
+                guard let destination = try await hotelsService.fetchDestinations(query: location).first else {
+                    return
+                }
+                
+                print(destination.name)
+                
+                let arrivalDateToUse = arrivalDate ?? Date()
+                let departureDateToUse = departureDate ?? Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
+                
+                let arrivalDate = CalendarHelpers.convertDateToString(date: arrivalDateToUse)
+                let departureDate = CalendarHelpers.convertDateToString(date: departureDateToUse)
+                            
+                
+                let hotels = try await hotelsService.fetchHotelsWithFilters(
+                    destination: destination,
+                    location: location,
+                    arrivalDate: arrivalDate,
+                    departureDate: departureDate,
+                    adults: adults,
+                    childredAge: childredAge,
+                    roomQty: roomQty)
+                
+                DispatchQueue.main.async {
+                    self.hotels = hotels
+                    print("Succesfully fetched \(hotels.count) hotels")
+                }
+            }catch {
+                print("Error while fetching hotels with filters \(error.localizedDescription)")
+            }
+        }
+       
+    }
     
     func selectDestination(for query: String) {
         if let selectedDest = destinations.first(where: { $0.query?.lowercased() == query.lowercased() }) {
-            if selectedDestination?.id != selectedDest.id { // Proveri da li je već ista
+            if selectedDestination?.id != selectedDest.id {
                 self.selectedDestination = selectedDest
                 self.getHotels()
                 print("Hotels count after fetching: \(self.hotels.count)")

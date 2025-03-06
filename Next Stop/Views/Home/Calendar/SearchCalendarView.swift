@@ -41,8 +41,7 @@ struct SearchCalendarView: View {
 
 #Preview {
     SearchCalendarView(vm: SearchDestinationsViewModel(
-        searchService: LocationSearchService(),
-        hotelSerice: HotelsService()))
+        searchService: LocationSearchService()))
 }
 
 private extension SearchCalendarView {

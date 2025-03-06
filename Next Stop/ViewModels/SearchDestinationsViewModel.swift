@@ -25,7 +25,6 @@ class SearchDestinationsViewModel : ObservableObject {
     @Published var numberOfInfants: Int = 0
     @Published var numberOfPets : Int = 0
     
-    
     @Published var startDate: Date? = nil
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
@@ -35,11 +34,9 @@ class SearchDestinationsViewModel : ObservableObject {
     @Published var searchOption : DestinationSearchOption = .none
     
     var searchService: LocationSearchService
-    private let hotelService : HotelsService
     
-    init(searchService: LocationSearchService, hotelSerice: HotelsService) {
+    init(searchService: LocationSearchService) {
         self.searchService = searchService
-        self.hotelService = hotelSerice
     }
     
     let guestDetails: [(guest: String, age: String, selection: GuestsSelection)] = [
@@ -59,19 +56,5 @@ class SearchDestinationsViewModel : ObservableObject {
         self.arrivalDay = arrivalDay
     }
     
-    func searchHotels(location: String,
-                      destId: Int,
-                      searchType: String,
-                      arrivalDate: String,
-                      departureDate:String,
-                      adults: Int? ,
-                      childredAge: Int?,
-                      roomQty: Int?) async throws {
-        Task{
-            let destination = try await hotelService.fetchDestinations(query: location).first
-            
-            
-        }
-       
-    }
+
 }
