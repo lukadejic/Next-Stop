@@ -177,6 +177,8 @@ extension GuestsSelectionView {
                return vm.numberOfInfants == 0
            case .pets:
                return vm.numberOfPets == 0
+           case .rooms:
+               return vm.numberOfRooms == 0
            }
        }
     
@@ -190,6 +192,8 @@ extension GuestsSelectionView {
             return vm.numberOfInfants == 10
         case .pets:
             return vm.numberOfPets == 10
+        case .rooms:
+            return vm.numberOfRooms == 10
         }
     }
     
@@ -198,17 +202,23 @@ extension GuestsSelectionView {
         case .adults:
             guard vm.numberOfAdults < 10 else { return }
             vm.numberOfAdults += 1
+            vm.numberOfGuests += 1
         case .childred:
             guard vm.numberOfChildred < 4 else { return }
             vm.numberOfChildred += 1
+            vm.numberOfGuests += 1
         case .infants:
             guard vm.numberOfInfants < 2 else { return }
             vm.numberOfInfants += 1
+            vm.numberOfGuests += 1
         case .pets:
             guard vm.numberOfPets < 2 else { return }
             vm.numberOfPets += 1
+            vm.numberOfGuests += 1
+        case .rooms:
+            guard vm.numberOfRooms < 10 else { return }
+            vm.numberOfRooms += 1
         }
-        vm.numberOfGuests += 1
     }
     
     func decreaseCount() {
@@ -216,17 +226,23 @@ extension GuestsSelectionView {
         case .adults:
             guard vm.numberOfAdults > 0 else { return }
             vm.numberOfAdults -= 1
+            vm.numberOfGuests -= 1
         case .childred:
             guard vm.numberOfChildred > 0 else { return }
             vm.numberOfChildred -= 1
+            vm.numberOfGuests -= 1
         case .infants:
             guard vm.numberOfInfants > 0 else { return }
             vm.numberOfInfants -= 1
+            vm.numberOfGuests -= 1
         case .pets:
             guard vm.numberOfPets > 0 else { return }
             vm.numberOfPets -= 1
+            vm.numberOfGuests -= 1
+        case .rooms:
+            guard vm.numberOfRooms < 10 else { return }
+            vm.numberOfRooms -= 1
         }
-        vm.numberOfGuests -= 1
     }
     
     func numberOfGuestsForSelection() -> Int {
@@ -239,6 +255,8 @@ extension GuestsSelectionView {
             return vm.numberOfInfants
         case .pets:
             return vm.numberOfPets
+        case .rooms:
+            return vm.numberOfRooms
         }
     }
 }
@@ -268,7 +286,7 @@ extension LocationSearchService : MKLocalSearchCompleterDelegate {
     }
 }
 
-extension SearchView {
+extension SearchButtonView {
     var isSearchButton : Bool {
         return selectedOption == .destination || selectedOption == .dates && !vm.search.isEmpty
     }
@@ -280,6 +298,7 @@ extension SearchView {
         vm.numberOfAdults = 0
         vm.numberOfChildred = 0
         vm.numberOfInfants = 0
+        vm.numberOfRooms = 0
     }
     
     func moveToNextOption() {
@@ -300,10 +319,9 @@ extension SearchView {
             } else if selectedOption == .dates {
                 selectedOption = .guests
             } else if selectedOption == .guests {
-                print("Search")
+              //  vm.searchHotels()
             }
         }
     }
-
 
 }

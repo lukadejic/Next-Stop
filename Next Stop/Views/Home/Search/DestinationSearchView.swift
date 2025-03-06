@@ -24,7 +24,7 @@ struct DestinationSearchView: View {
         }
         .overlay(alignment: .bottom) {
             if !vm.search.isEmpty{
-                SearchView(vm: vm,
+                SearchButtonView(vm: vm,
                            selectedOption: $vm.searchOption)
             }
         }
@@ -112,7 +112,7 @@ struct GuestsSelectionView: View {
 
 }
     
-struct SearchView: View {
+struct SearchButtonView: View {
     let vm: SearchDestinationsViewModel
     @Binding var selectedOption: DestinationSearchOption
     
