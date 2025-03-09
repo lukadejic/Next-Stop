@@ -31,8 +31,9 @@ struct DestinationSearchView: View {
             }
         }
         .fullScreenCover(isPresented: $showListings) {
-            ListingsAfterSearchView(homeVM: homeVm,
-                                    vm: vm)
+            NavigationStack{
+                ListingsAfterSearchView(homeVM: homeVm, vm: vm)
+            }
         }
     }
 }
@@ -123,7 +124,7 @@ struct SearchButtonView: View {
     let vm: SearchDestinationsViewModel
     @Binding var selectedOption: DestinationSearchOption
     @Binding var show: Bool
-    let homeVM : HomeViewModel
+    @ObservedObject var homeVM : HomeViewModel
     
     var body: some View {
         HStack {
@@ -246,7 +247,7 @@ private extension DestinationSearchView {
             }else{
                 CollapsedPickerView(title: "When",
                                     description: vm.startDate != nil &&
-                                    vm.endDate != nil ? CalendarHelpers.formattedRangeDate(startDate: vm.startDate, endDate: vm.endDate) : "Add dates")
+                                    vm.endDate != nil ? CalendarHelpers.formattedRangeDate(startDate: vm.startDate, endDate: vm.endDate) ?? "" : "Add dates")
             }
         }
         .modifier(CollapsibleDestinationViewModifier())

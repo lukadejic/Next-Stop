@@ -87,7 +87,7 @@ class CalendarHelpers {
         return calendar.date(byAdding: .month, value: 1, to: startOfMonth)?.addingTimeInterval(-86500) ?? startOfMonth
     }
     
-    static func formattedRangeDate(startDate: Date?, endDate: Date?) -> String {
+    static func formattedRangeDate(startDate: Date?, endDate: Date?) -> String? {
         guard let startDate = startDate, let endDate = endDate else { return "" }
         
         let dateFormatter = DateFormatter()
@@ -330,6 +330,13 @@ extension SearchButtonView {
             } else if selectedOption == .dates {
                 selectedOption = .guests
             } else if selectedOption == .guests {
+                homeVM.searchHotels(
+                    location: vm.search,
+                    arrivalDate: vm.manager.startDate,
+                    departureDate: vm.manager.endDate,
+                    adults: vm.numberOfAdults,
+                    childredAge: 1,
+                    roomQty: vm.numberOfRooms)
                 withAnimation(.snappy) {
                     show.toggle()
                 }

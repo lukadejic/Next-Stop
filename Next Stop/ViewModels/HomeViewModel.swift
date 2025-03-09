@@ -46,6 +46,7 @@ class HomeViewModel : ObservableObject {
         }
     }
     
+    
     func getHotels(){
         
         guard let destination = selectedDestination else {
