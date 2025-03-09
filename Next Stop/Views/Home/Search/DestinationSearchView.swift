@@ -9,6 +9,7 @@ struct DestinationSearchView: View {
     @State private var buttonText: String = "Next"
     @State private var showButton : Bool = false
     @State private var showListings: Bool = false
+    @State private var showPicker: Bool = false
     
     var body: some View {
         VStack{
@@ -38,6 +39,9 @@ struct DestinationSearchView: View {
                                         showHomeView: $show,
                                         showSearchView: $showListings)
             }
+        }
+        .sheet(isPresented: $showPicker) {
+            PickerView(child: 1, vm: vm)
         }
     }
 }
@@ -262,7 +266,8 @@ private extension DestinationSearchView {
     }
     
     var guestsSection: some View {
-            VStack {
+        VStack {
+            ScrollView{
                 if vm.searchOption == .guests {
                     VStack(alignment: .leading) {
                         Text("Who's coming?")
@@ -280,11 +285,23 @@ private extension DestinationSearchView {
                                 }
                             }
                         }
+                        
+                        Divider()
+                            .padding(.top,10)
+                        
+                        VStack(alignment: .leading) {
+                            ForEach(0..<vm.numberOfChildred, id: \.self) { child in
+                                ChildPickerView(child: child,
+                                                showPicker: $showPicker)
+                            }
+                            
+                        }
                     }
                 } else {
                     CollapsedPickerView(title: "Who", description: vm.numberOfGuests == 0 ? "Add guests" : "\(vm.numberOfGuests) guests")
                 }
             }
+            .scrollIndicators(.hidden)
             .frame(height: vm.searchOption == .guests ? 300 : 34)
             .modifier(CollapsibleDestinationViewModifier())
             .onTapGesture {
@@ -292,5 +309,6 @@ private extension DestinationSearchView {
                 buttonText = "Search"
             }
         }
-
+        
+    }
 }

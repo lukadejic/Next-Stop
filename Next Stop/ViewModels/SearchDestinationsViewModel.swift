@@ -29,9 +29,13 @@ class SearchDestinationsViewModel : ObservableObject {
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
     
+    @Published var selectedOption = "Opcija 1"
+    
+    let options = ["< 1 year old", "1 year old", "2 years old", "3 years old", "4 years old", "5 years old", "6 years old", "7 years old", "8 years old", "9 years old", "10 years old", "11 years old", "12 years old", "13 years old", "14 years old", "15 years old", "16 years old", "17 years old"]
+
     
     let manager = CalendarManager()
-    @Published var searchOption : DestinationSearchOption = .none
+    @Published var searchOption : DestinationSearchOption = .guests
     
     var searchService: LocationSearchService
     
@@ -41,7 +45,7 @@ class SearchDestinationsViewModel : ObservableObject {
     
     let guestDetails: [(guest: String, age: String, selection: GuestsSelection)] = [
         ("Adults", "Age 13 or above", .adults),
-        ("Children", "Ages 2-12", .childred),
+        ("Children", "Ages 0-17", .childred),
         ("Rooms", "", .rooms)
     ]
     
