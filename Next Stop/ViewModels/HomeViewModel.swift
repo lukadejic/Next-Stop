@@ -19,6 +19,7 @@ class HomeViewModel : ObservableObject {
     @Published var startDate: Date? = nil
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
+    @Published var isLoading : Bool = false
     
     private let hotelsService : HotelsService
     
@@ -78,6 +79,7 @@ class HomeViewModel : ObservableObject {
                       roomQty: Int?) {
         Task{
             do{
+                isLoading = true
                 guard let destination = try await hotelsService.fetchDestinations(query: location).first else {
                     return
                 }
@@ -102,10 +104,12 @@ class HomeViewModel : ObservableObject {
                 
                 DispatchQueue.main.async {
                     self.hotels = hotels
+                    self.isLoading = false
                     print("Succesfully fetched \(hotels.count) hotels")
                 }
             }catch {
                 print("Error while fetching hotels with filters \(error.localizedDescription)")
+                isLoading = false
             }
         }
        

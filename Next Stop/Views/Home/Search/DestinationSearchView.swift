@@ -9,6 +9,7 @@ struct DestinationSearchView: View {
     @State private var buttonText: String = "Next"
     @State private var showButton : Bool = false
     @State private var showListings: Bool = false
+    
     var body: some View {
         VStack{
            
@@ -32,7 +33,10 @@ struct DestinationSearchView: View {
         }
         .fullScreenCover(isPresented: $showListings) {
             NavigationStack{
-                ListingsAfterSearchView(homeVM: homeVm, vm: vm)
+                ListingsAfterSearchView(homeVM: homeVm,
+                                        vm: vm,
+                                        showHomeView: $show,
+                                        showSearchView: $showListings)
             }
         }
     }
