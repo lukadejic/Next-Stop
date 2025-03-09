@@ -30,7 +30,7 @@ class SearchDestinationsViewModel : ObservableObject {
     @Published var arrivalDay: Date? = nil
     
     @Published var selectedOption : AgeOption? = nil
-    
+    @Published var childrenAges : [Int] = []
     let options = AgeOption.allCases
 
     

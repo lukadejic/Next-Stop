@@ -5,6 +5,7 @@ struct ChildPickerView: View {
     
     @State private var showPicker: Bool = false
     @State private var selectedOption: AgeOption = .lessThanOne
+    @ObservedObject var vm : SearchDestinationsViewModel
     
     var body: some View {
         VStack(alignment: .leading){
@@ -37,11 +38,14 @@ struct ChildPickerView: View {
         }
         .sheet(isPresented: $showPicker) {
             PickerView(child: child,
-                       selectedOption: $selectedOption)
+                       selectedOption: $selectedOption,
+                       vm: vm)
         }
     }
 }
 
 #Preview {
-    ChildPickerView(child: 1)
+    ChildPickerView(child: 1,
+                    vm: SearchDestinationsViewModel(
+                        searchService: LocationSearchService()))
 }

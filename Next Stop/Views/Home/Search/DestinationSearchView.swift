@@ -23,6 +23,7 @@ struct DestinationSearchView: View {
             
             Spacer()
         }
+        .toolbar(.hidden, for: .tabBar)
         .overlay(alignment: .bottom) {
             if !vm.search.isEmpty{
                 SearchButtonView(vm: vm,
@@ -287,7 +288,8 @@ private extension DestinationSearchView {
                         
                         VStack(alignment: .leading) {
                             ForEach(0..<vm.numberOfChildred, id: \.self) { child in
-                                ChildPickerView(child: child)
+                                ChildPickerView(child: child,
+                                                vm: vm)
                             }
                             
                         }
@@ -296,6 +298,7 @@ private extension DestinationSearchView {
                     CollapsedPickerView(title: "Who", description: vm.numberOfGuests == 0 ? "Add guests" : "\(vm.numberOfGuests) guests")
                 }
             }
+            .padding(.bottom)
             .scrollIndicators(.hidden)
             .frame(height: vm.searchOption == .guests ? 300 : 34)
             .modifier(CollapsibleDestinationViewModifier())

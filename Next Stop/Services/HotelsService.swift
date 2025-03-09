@@ -38,7 +38,7 @@ class HotelsService {
                                 arrivalDate: String?,
                                 departureDate:String?,
                                 adults: Int? ,
-                                childredAge: Int?,
+                                childrenAge: [Int]?,
                                 roomQty: Int?) async throws -> [Hotel] {
         
         let dateFormatter = DateFormatter()
@@ -57,6 +57,7 @@ class HotelsService {
 
         let adults = adults ?? 1
         let roomQty = roomQty ?? 1
+        let childrenAgeJoined = childrenAge?.compactMap { "\($0)" }.joined(separator: ", ") ?? ""
         
         let parameters : [String: String] = [
             "dest_id": destination.destID,
@@ -64,7 +65,7 @@ class HotelsService {
             "arrival_date" : arrival_date,
             "departure_date" : departure_date,
             "adults": "\(adults)",
-            "children_age" : "1",
+            "children_age" : "\(childrenAgeJoined)",
             "room_qty" : "\(roomQty)"
         ]
         

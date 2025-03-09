@@ -330,12 +330,14 @@ extension SearchButtonView {
             } else if selectedOption == .dates {
                 selectedOption = .guests
             } else if selectedOption == .guests {
+                let children = vm.childrenAges
+                print(children)
                 homeVM.searchHotels(
                     location: vm.search,
                     arrivalDate: vm.manager.startDate,
                     departureDate: vm.manager.endDate,
                     adults: vm.numberOfAdults,
-                    childredAge: 1,
+                    childredAge: children,
                     roomQty: vm.numberOfRooms)
                 withAnimation(.snappy) {
                     show.toggle()

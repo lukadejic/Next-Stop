@@ -75,7 +75,7 @@ class HomeViewModel : ObservableObject {
                       arrivalDate: Date?,
                       departureDate:Date?,
                       adults: Int? ,
-                      childredAge: Int?,
+                      childredAge: [Int]?,
                       roomQty: Int?) {
         Task{
             do{
@@ -99,7 +99,7 @@ class HomeViewModel : ObservableObject {
                     arrivalDate: arrivalDate,
                     departureDate: departureDate,
                     adults: adults,
-                    childredAge: childredAge,
+                    childrenAge: childredAge,
                     roomQty: roomQty)
                 
                 DispatchQueue.main.async {

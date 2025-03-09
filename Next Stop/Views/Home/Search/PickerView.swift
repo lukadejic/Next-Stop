@@ -5,13 +5,16 @@ struct PickerView: View {
     let child: Int
     @Environment(\.dismiss) var dismiss
     @Binding var selectedOption: AgeOption
-    
+    @ObservedObject var vm: SearchDestinationsViewModel
     @State private var tempOption: AgeOption
     
-    init(child: Int, selectedOption: Binding<AgeOption>) {
+    init(child: Int,
+         selectedOption: Binding<AgeOption>,
+         vm: SearchDestinationsViewModel) {
         self.child = child
         self._selectedOption = selectedOption
         self._tempOption = State(initialValue: selectedOption.wrappedValue)
+        self.vm = vm
     }
     
     var body: some View {
@@ -40,6 +43,7 @@ struct PickerView: View {
                 
                 Button {
                     selectedOption = tempOption
+                    vm.childrenAges.append(selectedOption.age)
                     dismiss()
                 } label: {
                     Text("Done")
@@ -62,7 +66,9 @@ struct PickerView: View {
 
 #Preview {
     PickerView(child: 1,
-               selectedOption: .constant(.eight))
+               selectedOption: .constant(.eight),
+               vm: SearchDestinationsViewModel(
+                searchService: LocationSearchService()))
 }
 
 private extension PickerView {
