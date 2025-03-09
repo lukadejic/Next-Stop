@@ -2,17 +2,20 @@ import SwiftUI
 
 struct ChildPickerView: View {
     let child: Int
-    @Binding var showPicker: Bool
+    
+    @State private var showPicker: Bool = false
+    @State private var selectedOption: AgeOption = .lessThanOne
     
     var body: some View {
         VStack(alignment: .leading){
             Text("Child \(child + 1)")
             
             HStack{
-                Text("8 years old")
+                Text(selectedOption.rawValue)
                     .font(.footnote)
                     .foregroundStyle(.black.opacity(0.8))
                     .padding(10)
+                
                 Spacer()
                 
                 Button{
@@ -32,9 +35,13 @@ struct ChildPickerView: View {
                 .stroke(lineWidth: 0.5))
             .frame(maxWidth: .infinity)
         }
+        .sheet(isPresented: $showPicker) {
+            PickerView(child: child,
+                       selectedOption: $selectedOption)
+        }
     }
 }
 
 #Preview {
-    ChildPickerView(child: 1, showPicker: .constant(false))
+    ChildPickerView(child: 1)
 }

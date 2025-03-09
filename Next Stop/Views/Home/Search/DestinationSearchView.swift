@@ -9,7 +9,6 @@ struct DestinationSearchView: View {
     @State private var buttonText: String = "Next"
     @State private var showButton : Bool = false
     @State private var showListings: Bool = false
-    @State private var showPicker: Bool = false
     
     var body: some View {
         VStack{
@@ -39,9 +38,6 @@ struct DestinationSearchView: View {
                                         showHomeView: $show,
                                         showSearchView: $showListings)
             }
-        }
-        .sheet(isPresented: $showPicker) {
-            PickerView(child: 1, vm: vm)
         }
     }
 }
@@ -291,8 +287,7 @@ private extension DestinationSearchView {
                         
                         VStack(alignment: .leading) {
                             ForEach(0..<vm.numberOfChildred, id: \.self) { child in
-                                ChildPickerView(child: child,
-                                                showPicker: $showPicker)
+                                ChildPickerView(child: child)
                             }
                             
                         }

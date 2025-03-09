@@ -1,8 +1,18 @@
 import SwiftUI
 
 struct PickerView: View {
+    
     let child: Int
-    @ObservedObject var vm : SearchDestinationsViewModel
+    @Environment(\.dismiss) var dismiss
+    @Binding var selectedOption: AgeOption
+    
+    @State private var tempOption: AgeOption
+    
+    init(child: Int, selectedOption: Binding<AgeOption>) {
+        self.child = child
+        self._selectedOption = selectedOption
+        self._tempOption = State(initialValue: selectedOption.wrappedValue)
+    }
     
     var body: some View {
         VStack(alignment: .leading){
@@ -10,9 +20,10 @@ struct PickerView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            Picker("", selection: $vm.selectedOption) {
-                ForEach(vm.options, id: \.self){ option in
-                    Text(option).tag(option)
+            Picker("", selection: $tempOption) {
+                ForEach(AgeOption.allCases, id: \.self){ option in
+                    Text(option.rawValue)
+                        .tag(option)
                 }
             }
             .pickerStyle(WheelPickerStyle())
@@ -28,7 +39,8 @@ struct PickerView: View {
                 Divider()
                 
                 Button {
-                    print(vm.selectedOption)
+                    selectedOption = tempOption
+                    dismiss()
                 } label: {
                     Text("Done")
                         .foregroundStyle(.white)
@@ -50,5 +62,11 @@ struct PickerView: View {
 
 #Preview {
     PickerView(child: 1,
-               vm: SearchDestinationsViewModel(searchService: LocationSearchService()))
+               selectedOption: .constant(.eight))
+}
+
+private extension PickerView {
+    func saveChoice() {
+        
+    }
 }
