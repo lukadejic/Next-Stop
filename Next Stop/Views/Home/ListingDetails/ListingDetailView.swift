@@ -308,7 +308,7 @@ private extension ListingDetailView {
             HStack{
                 Text(CalendarHelpers.formattedRangeDate(
                     startDate: vm.startDate,
-                    endDate: vm.endDate))
+                    endDate: vm.endDate) ?? "Any day")
                 Spacer()
                 
                 Text(">")

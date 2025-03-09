@@ -21,7 +21,7 @@ struct CalendarView: View {
                             .fontWeight(.semibold)
                     }
                     
-                    Text(CalendarHelpers.formattedRangeDate(startDate: manager.startDate, endDate: manager.endDate))
+                    Text(CalendarHelpers.formattedRangeDate(startDate: manager.startDate, endDate: manager.endDate) ?? "")
                 }
                 .frame(maxWidth: .infinity, maxHeight: 80,alignment: .leading)
                 .padding(.leading)

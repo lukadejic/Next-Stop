@@ -1,4 +1,5 @@
 import Foundation
+import MapKit
 import SwiftUI
 
 class CalendarColorSettins {
@@ -86,7 +87,7 @@ class CalendarHelpers {
         return calendar.date(byAdding: .month, value: 1, to: startOfMonth)?.addingTimeInterval(-86500) ?? startOfMonth
     }
     
-    static func formattedRangeDate(startDate: Date?, endDate: Date?) -> String {
+    static func formattedRangeDate(startDate: Date?, endDate: Date?) -> String? {
         guard let startDate = startDate, let endDate = endDate else { return "" }
         
         let dateFormatter = DateFormatter()
@@ -107,6 +108,14 @@ class CalendarHelpers {
         guard let date = date else { return nil }
         
         return formatter.date(from: date)
+    }
+    
+    static func convertDateToString(date: Date) -> String {
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "yyyy-MM-dd"
+        outputFormatter.locale = Locale(identifier: "en_US_POSIX")
+        outputFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return outputFormatter.string(from: date)
     }
     
 }
@@ -176,6 +185,8 @@ extension GuestsSelectionView {
                return vm.numberOfInfants == 0
            case .pets:
                return vm.numberOfPets == 0
+           case .rooms:
+               return vm.numberOfRooms == 0
            }
        }
     
@@ -189,6 +200,8 @@ extension GuestsSelectionView {
             return vm.numberOfInfants == 10
         case .pets:
             return vm.numberOfPets == 10
+        case .rooms:
+            return vm.numberOfRooms == 10
         }
     }
     
@@ -197,17 +210,23 @@ extension GuestsSelectionView {
         case .adults:
             guard vm.numberOfAdults < 10 else { return }
             vm.numberOfAdults += 1
+            vm.numberOfGuests += 1
         case .childred:
             guard vm.numberOfChildred < 4 else { return }
             vm.numberOfChildred += 1
+            vm.numberOfGuests += 1
         case .infants:
             guard vm.numberOfInfants < 2 else { return }
             vm.numberOfInfants += 1
+            vm.numberOfGuests += 1
         case .pets:
             guard vm.numberOfPets < 2 else { return }
             vm.numberOfPets += 1
+            vm.numberOfGuests += 1
+        case .rooms:
+            guard vm.numberOfRooms < 10 else { return }
+            vm.numberOfRooms += 1
         }
-        vm.numberOfGuests += 1
     }
     
     func decreaseCount() {
@@ -215,17 +234,23 @@ extension GuestsSelectionView {
         case .adults:
             guard vm.numberOfAdults > 0 else { return }
             vm.numberOfAdults -= 1
+            vm.numberOfGuests -= 1
         case .childred:
             guard vm.numberOfChildred > 0 else { return }
             vm.numberOfChildred -= 1
+            vm.numberOfGuests -= 1
         case .infants:
             guard vm.numberOfInfants > 0 else { return }
             vm.numberOfInfants -= 1
+            vm.numberOfGuests -= 1
         case .pets:
             guard vm.numberOfPets > 0 else { return }
             vm.numberOfPets -= 1
+            vm.numberOfGuests -= 1
+        case .rooms:
+            guard vm.numberOfRooms < 10 else { return }
+            vm.numberOfRooms -= 1
         }
-        vm.numberOfGuests -= 1
     }
     
     func numberOfGuestsForSelection() -> Int {
@@ -238,6 +263,8 @@ extension GuestsSelectionView {
             return vm.numberOfInfants
         case .pets:
             return vm.numberOfPets
+        case .rooms:
+            return vm.numberOfRooms
         }
     }
 }
@@ -251,4 +278,70 @@ struct CollapsibleDestinationViewModifier : ViewModifier {
             .shadow(radius: 10)
             .padding()
     }
+}
+
+extension LocationSearchService : MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        results = completer.results.map({result in
+            LocationModel(title: result.title, subtitle: result.subtitle)
+        })
+        
+        status = .result
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: any Error) {
+        status = .error(error.localizedDescription)
+    }
+}
+
+extension SearchButtonView {
+    var isSearchButton : Bool {
+        return selectedOption == .destination || selectedOption == .dates && !vm.search.isEmpty
+    }
+    
+    func clear() {
+        vm.search = ""
+        vm.numberOfGuests = 0
+        vm.numberOfPets = 0
+        vm.numberOfAdults = 0
+        vm.numberOfChildred = 0
+        vm.numberOfInfants = 0
+        vm.numberOfRooms = 0
+        vm.startDate = nil
+        vm.endDate = nil
+        vm.searchOption = .none
+    }
+    
+    func moveToNextOption() {
+        withAnimation(.snappy) {
+            switch selectedOption {
+            case .destination: selectedOption = .dates
+            case .dates: selectedOption = .guests
+            case .guests: clear()
+            default: break
+            }
+        }
+    }
+    
+    func handleNextOrSearch() {
+        withAnimation(.snappy) {
+            if selectedOption == .destination {
+                selectedOption = .dates
+            } else if selectedOption == .dates {
+                selectedOption = .guests
+            } else if selectedOption == .guests {
+                homeVM.searchHotels(
+                    location: vm.search,
+                    arrivalDate: vm.manager.startDate,
+                    departureDate: vm.manager.endDate,
+                    adults: vm.numberOfAdults,
+                    childredAge: vm.childrenAges,
+                    roomQty: vm.numberOfRooms)
+                withAnimation(.snappy) {
+                    show.toggle()
+                }
+            }
+        }
+    }
+    
 }

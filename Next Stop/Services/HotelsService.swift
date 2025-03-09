@@ -30,8 +30,50 @@ class HotelsService {
             endpoint: "hotels/searchHotels",
             parameters: parameters)
         
-        print(response.data)
         return response.data.hotels 
+    }
+    
+    func fetchHotelsWithFilters(destination: Destination,
+                                location: String,
+                                arrivalDate: String?,
+                                departureDate:String?,
+                                adults: Int? ,
+                                childrenAge: [Int]?,
+                                roomQty: Int?) async throws -> [Hotel] {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let arrival_date : String
+        let departure_date: String
+        
+        if let arrival = arrivalDate, let departure = departureDate {
+            arrival_date = arrival
+            departure_date = departure
+        }else {
+            arrival_date = dateFormatter.string(from: Date())
+            departure_date = dateFormatter.string(from: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date())
+        }
+
+        let adults = adults ?? 1
+        let roomQty = roomQty ?? 1
+        let childrenAgeJoined = childrenAge?.compactMap { "\($0)" }.joined(separator: ", ") ?? ""
+        
+        let parameters : [String: String] = [
+            "dest_id": destination.destID,
+            "search_type" : destination.searchType,
+            "arrival_date" : arrival_date,
+            "departure_date" : departure_date,
+            "adults": "\(adults)",
+            "children_age" : "\(childrenAgeJoined)",
+            "room_qty" : "\(roomQty)"
+        ]
+        
+        let response : HotelsResponse = try await NetworkManager.shared.fetchData(
+            endpoint: "hotels/searchHotels",
+            parameters: parameters)
+        
+        return response.data.hotels
     }
     
     func fetchHotelImages(hotelID: Int) async throws -> [ImageModel] {
