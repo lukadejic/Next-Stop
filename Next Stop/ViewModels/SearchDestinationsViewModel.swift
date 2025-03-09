@@ -35,7 +35,7 @@ class SearchDestinationsViewModel : ObservableObject {
 
     
     let manager = CalendarManager()
-    @Published var searchOption : DestinationSearchOption = .guests
+    @Published var searchOption : DestinationSearchOption = .none
     
     var searchService: LocationSearchService
     
