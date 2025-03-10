@@ -55,7 +55,7 @@ struct ListingDetailView: View {
             cancelationPolicy
         }
         .onAppear{
-            vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
+            //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
