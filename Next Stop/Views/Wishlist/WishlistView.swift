@@ -9,6 +9,7 @@ struct WishlistView: View {
     var body: some View {
         NavigationView {
             VStack{
+                Text("New feature in builing")
                 if !vm.wishlist.isEmpty{
                     ScrollView {
                         LazyVGrid(columns: columns,spacing: 32) {
