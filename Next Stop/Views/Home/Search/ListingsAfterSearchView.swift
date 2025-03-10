@@ -6,6 +6,7 @@ struct ListingsAfterSearchView: View {
     @State private var noResults = false
     @Binding var showHomeView: Bool
     @Binding var showSearchView: Bool
+    @State private var isLiked = false
     
     var body: some View {
         VStack{
@@ -31,9 +32,11 @@ struct ListingsAfterSearchView: View {
                     LazyVStack(spacing: 30) {
                         ForEach(homeVM.hotels) { hotel in
                             NavigationLink {
-                                ListingDetailView(hotel: hotel)
+                                ListingDetailView(hotel: hotel,
+                                                  isLiked: $isLiked)
                             } label: {
-                                ListingItemView(hotel: hotel)
+                                ListingItemView(hotel: hotel,
+                                                isLiked: $isLiked)
                             }
                         }
                     }

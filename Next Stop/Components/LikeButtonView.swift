@@ -7,12 +7,11 @@ struct LikeButtonView: View {
     
     var body: some View {
         Button{
-            withAnimation(.snappy){
-                isLiked.toggle()
+            withAnimation(.snappy) {
+                toggleWishlist()
             }
-            addToWishlist()
         }label: {
-            Image(isLiked ? "heartLike" : "heartUnlike")
+            Image(vm.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 30, height: 30)
@@ -37,6 +36,14 @@ private extension LikeButtonView {
         }else{
             vm.wishlist.removeAll(where: {$0.hotelID == hotel.hotelID})
             print("deleted")
+        }
+    }
+    
+    func toggleWishlist() {
+        if vm.isHotelLiked(hotel) {
+            vm.removeFromWishlist(hotel)
+        } else {
+            vm.addToWishlist(hotel)
         }
     }
 }

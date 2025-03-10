@@ -11,6 +11,7 @@ struct ListingDetailView: View {
     @State private var isFullMapScreen : Bool = false
     @State private var isFullCancellationPolicy: Bool = false
     @State private var showCalendarView: Bool = false
+    @Binding var isLiked: Bool
     
     var body: some View {
         ScrollView {
@@ -68,6 +69,12 @@ struct ListingDetailView: View {
                     .padding(.top, 20)
             }
         }
+        .overlay(alignment: .topTrailing){
+            LikeButtonView(isLiked: $isLiked,
+                           hotel: hotel)
+            .padding(32)
+            .padding(.top, 10)
+        }
         .padding(.bottom, 64)
         .ignoresSafeArea()
         .padding(.bottom, 10)
@@ -79,7 +86,8 @@ struct ListingDetailView: View {
 }
 
 #Preview {
-    ListingDetailView(hotel: MockData.mockHotel)
+    ListingDetailView(hotel: MockData.mockHotel,
+                      isLiked: .constant(false))
         .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 

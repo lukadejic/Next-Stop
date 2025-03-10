@@ -6,6 +6,7 @@ struct HomeView: View {
     
     @State private var selectedStayOption: StayOptionType = .lakeFront
     @State private var showDestinationSearchView = false
+    @State private var isLiked = false
     
     var body: some View {
         NavigationStack{
@@ -109,9 +110,11 @@ private extension HomeView {
             LazyVStack(spacing: 30) {
                 ForEach(vm.hotels) { hotel in
                     NavigationLink {
-                        ListingDetailView(hotel: hotel)
+                        ListingDetailView(hotel: hotel,
+                                          isLiked: $isLiked)
                     } label: {
-                        ListingItemView(hotel: hotel)
+                        ListingItemView(hotel: hotel,
+                                        isLiked: $isLiked)
                     }
                 }
             }
