@@ -188,4 +188,18 @@ class HomeViewModel : ObservableObject {
         self.arrivalDay = arrivalDay
     }
     
+    func isHotelLiked(_ hotel: Hotel) -> Bool {
+        wishlist.contains { $0.hotelID == hotel.hotelID }
+    }
+    
+    func addToWishlist(_ hotel: Hotel) {
+        if !isHotelLiked(hotel) {
+            wishlist.append(hotel)
+        }
+    }
+    
+    func removeFromWishlist(_ hotel: Hotel) {
+        wishlist.removeAll { $0.hotelID == hotel.hotelID }
+    }
+    
 }

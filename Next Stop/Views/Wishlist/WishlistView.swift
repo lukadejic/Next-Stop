@@ -18,10 +18,12 @@ struct WishlistView: View {
                                         ListingImageCarouselView(images: images)
                                             .frame(width: 170, height: 170)
                                             .clipShape(RoundedRectangle(cornerRadius: 10))
-                                            .overlay(alignment: .topTrailing) {
+                                            .overlay(alignment: .topLeading) {
                                                 if isLiked {
-                                                    LikeButtonView(isLiked: $isLiked,
-                                                                   hotel: hotel)
+                                                    RemoveButtonView(){
+                                                        vm.removeFromWishlist(hotel)
+                                                    }
+                                                    .padding()
                                                 }
                                             }
                                     } else {
@@ -37,12 +39,17 @@ struct WishlistView: View {
                                 .frame(width: 170, height: 170)
                             }
                         }
+                        .padding(.top)
+                        
                         Spacer()
                     }
                 }else{
                     ContentUnavailableView("Wishlist is empty",
                                            systemImage: "house.fill")
                 }
+            }
+            .onAppear{
+                isLiked = false
             }
             .navigationTitle("Wishlists")
             .toolbar{

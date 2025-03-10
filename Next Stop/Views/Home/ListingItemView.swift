@@ -3,7 +3,7 @@ import SwiftUI
 struct ListingItemView: View {
     let hotel : Hotel
     @EnvironmentObject var vm : HomeViewModel
-    @State private var isLiked = false
+    @Binding var isLiked: Bool
     
     var body: some View {
         VStack(alignment: .leading){
@@ -64,6 +64,7 @@ struct ListingItemView: View {
 }
 
 #Preview {
-    ListingItemView(hotel: MockData.mockHotel)
+    ListingItemView(hotel: MockData.mockHotel,
+                    isLiked: .constant(false))
         .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
