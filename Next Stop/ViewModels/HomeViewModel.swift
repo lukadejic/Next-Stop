@@ -20,6 +20,7 @@ class HomeViewModel : ObservableObject {
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
     @Published var isLoading : Bool = false
+    @Published var wishlist: [Hotel] = []
     
     private let hotelsService : HotelsService
     

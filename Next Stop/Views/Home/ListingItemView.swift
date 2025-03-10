@@ -9,19 +9,20 @@ struct ListingItemView: View {
         VStack(alignment: .leading){
             
             if let images = vm.hotelImages[hotel.hotelID ?? 0], !images.isEmpty {
+                ListingImageCarouselView(images: images)
+                    .frame(height: 350)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .overlay(alignment: .topTrailing) {
+                        LikeButtonView(isLiked: $isLiked,
+                                       hotel: hotel)
+                    }
+            } else {
+                ProgressView()
+                    .frame(height: 350)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .offset(x: 160)
             }
-//            else {
-//                ProgressView()
-//                    .frame(height: 350)
-//                    .clipShape(RoundedRectangle(cornerRadius: 10))
-//                    .offset(x: 160)
-//            }
-            ListingImageCarouselView(images: MockData.mockHotelImages)
-                .frame(height: 350)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(alignment: .topTrailing) {
-                    LikeButtonView(isLiked: $isLiked)
-                }
+
             
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5){
@@ -54,10 +55,10 @@ struct ListingItemView: View {
         }
         .padding()
         .onAppear{
-//            if vm.hotelImages[hotel.hotelID ?? 0] == nil {
-//                vm.getHotelImages(hotelID: hotel.hotelID ?? 0)
-//            }
-//            vm.getHotelDetails(hotelId: hotel.hotelID ?? 0)
+            if vm.hotelImages[hotel.hotelID ?? 0] == nil {
+                vm.getHotelImages(hotelID: hotel.hotelID ?? 0)
+            }
+            vm.getHotelDetails(hotelId: hotel.hotelID ?? 0)
         }
     }
 }
