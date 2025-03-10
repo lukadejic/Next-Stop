@@ -27,4 +27,6 @@ struct MainTabView: View {
 
 #Preview {
     MainTabView()
+        .environmentObject(HomeViewModel(
+            hotelsService: HotelsService()))
 }
