@@ -58,8 +58,10 @@ struct ListingDetailView: View {
             cancelationPolicy
         }
         .overlay(alignment: .bottom) {
-            LikeNotificationView(showNotification: $showNotification)
-            UnlikeNotificationView(showNotification: $showUnlikeNoticifation)
+            LikeNotificationView(showNotification: $showNotification,
+                                 hotel: hotel)
+            UnlikeNotificationView(showNotification: $showUnlikeNoticifation,
+                                   hotel: hotel)
         }
         .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
             if newValue {

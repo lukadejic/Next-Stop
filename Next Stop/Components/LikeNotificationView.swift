@@ -2,32 +2,43 @@ import SwiftUI
 
 struct LikeNotificationView: View {
     @Binding var showNotification: Bool
+    @EnvironmentObject var vm : HomeViewModel
+    let hotel: Hotel
+    
     var body: some View {
         
         VStack {
-            HStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .frame(width: 55, height: 55)
+            HStack(spacing: 32){
                 
-                Spacer()
-                
-                HStack(alignment: .center) {
-                    Text("Saved")
-                        .layoutPriority(1)
-                    
-                    Text("Hotel name testda d adada dada")
-                        .fontWeight(.semibold)
-                        .truncationMode(.tail)
-                        .lineLimit(1)
-                        .multilineTextAlignment(.leading)
-                    
-                    Text("to the wishlist.")
-                        .layoutPriority(1)
-                        .truncationMode(.tail)
+                if let image = vm.hotelImages[hotel.hotelID ?? 1]?.first {
+                    ListingImageCarouselView(images: [image])
+                        .scaledToFill()
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                        .frame(width: 55, height: 55)
+                }else {
+                    ProgressView()
+                        .frame(width: 55, height: 55)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Spacer()
+                
+                VStack(alignment: .leading,spacing: -20) {
+                    HStack{
+                        
+                        Text("Saved")
+                        
+                        Text(hotel.property?.name ?? "")
+                            .lineLimit(1)
+                            .fontWeight(.semibold)
+                            .multilineTextAlignment(.leading)
+                        
+                        }
+                        Text("\nto the wishlist.")
+                            .truncationMode(.tail)
+                    
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                
             }
             .padding(10)
         }
@@ -43,5 +54,7 @@ struct LikeNotificationView: View {
 }
 
 #Preview {
-    LikeNotificationView(showNotification: .constant(false))
+    LikeNotificationView(showNotification: .constant(false),
+                         hotel: MockData.mockHotel)
+        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
