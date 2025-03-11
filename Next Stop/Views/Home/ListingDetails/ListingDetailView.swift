@@ -2,11 +2,10 @@ import SwiftUI
 import MapKit
 
 struct ListingDetailView: View {
-    
+    @EnvironmentObject private var vm : HomeViewModel
     let hotel: Hotel
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject private var vm : HomeViewModel
     @State private var showFullDescription : Bool = false
     @State private var isFullMapScreen : Bool = false
     @State private var isFullCancellationPolicy: Bool = false
@@ -65,22 +64,7 @@ struct ListingDetailView: View {
                                    hotel: hotel)
         }
         .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
-            if newValue {
-                showLikeNotification = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    withAnimation {
-                        showLikeNotification = false
-                    }
-                }
-            }
-            if oldValue {
-                showUnlikeNoticifation = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    withAnimation {
-                        showUnlikeNoticifation = false
-                    }
-                }
-            }
+            showNotification(oldValue, newValue)
         })
         .onAppear{
             //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
@@ -437,6 +421,25 @@ private extension ListingDetailView {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding()
+        }
+    }
+    
+    func showNotification(_ oldValue: Bool, _ newValue: Bool) {
+        if newValue {
+            showLikeNotification = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showLikeNotification = false
+                }
+            }
+        }
+        if oldValue {
+            showUnlikeNoticifation = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showUnlikeNoticifation = false
+                }
+            }
         }
     }
 }

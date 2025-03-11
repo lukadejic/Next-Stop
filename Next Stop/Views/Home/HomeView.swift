@@ -7,6 +7,9 @@ struct HomeView: View {
     @State private var selectedStayOption: StayOptionType = .lakeFront
     @State private var showDestinationSearchView = false
     @State private var isLiked = false
+    @State var showLikeNotification = false
+    @State var showUnlikeNotification = false
+    @State var wishlistChangedHotel: Hotel? = nil
     
     var body: some View {
         NavigationStack{
@@ -27,6 +30,9 @@ struct HomeView: View {
                         listingList
                     }
                 }
+                .onChange(of: vm.wishlist) { oldValue, newValue in
+                    showNotification(oldValue,newValue)
+                }
                 .onAppear {
                     if vm.destinations.isEmpty {
                         vm.getDestinations(query: selectedStayOption.querryKeywords)
@@ -41,7 +47,18 @@ struct HomeView: View {
                         vm.selectDestination(for: selectedStayOption.querryKeywords)
                     }
                 }
+                .overlay(alignment: .bottom) {
+                    if let hotel = wishlistChangedHotel {
+                        LikeNotificationView(
+                            showNotification: $showLikeNotification,
+                            hotel: hotel)
+                        UnlikeNotificationView(
+                            showNotification: $showUnlikeNotification,
+                            hotel: hotel)
+                    }
+                }
             }
+            
 
         }
         .tint(.black)
