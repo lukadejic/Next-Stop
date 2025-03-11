@@ -12,6 +12,8 @@ struct ListingDetailView: View {
     @State private var isFullCancellationPolicy: Bool = false
     @State private var showCalendarView: Bool = false
     @Binding var isLiked: Bool
+    @State private var showNotification = false
+    @State private var showUnlikeNoticifation = false
     
     var body: some View {
         ScrollView {
@@ -55,6 +57,28 @@ struct ListingDetailView: View {
             
             cancelationPolicy
         }
+        .overlay(alignment: .bottom) {
+            LikeNotificationView(showNotification: $showNotification)
+            UnlikeNotificationView(showNotification: $showUnlikeNoticifation)
+        }
+        .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
+            if newValue {
+                showNotification = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    withAnimation {
+                        showNotification = false
+                    }
+                }
+            }
+            if oldValue {
+                showUnlikeNoticifation = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    withAnimation {
+                        showUnlikeNoticifation = false
+                    }
+                }
+            }
+        })
         .onAppear{
             //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
@@ -70,10 +94,12 @@ struct ListingDetailView: View {
             }
         }
         .overlay(alignment: .topTrailing){
-            LikeButtonView(isLiked: $isLiked,
-                           hotel: hotel)
-            .padding(32)
-            .padding(.top, 10)
+            VStack{
+                LikeButtonView(isLiked: $isLiked,
+                               hotel: hotel)
+                .padding(32)
+                .padding(.top, 10)
+            }
         }
         .padding(.bottom, 64)
         .ignoresSafeArea()
@@ -359,7 +385,9 @@ private extension ListingDetailView {
                 Spacer()
                 
                 Button{
-                    
+                    withAnimation(.snappy) {
+                        showNotification.toggle()
+                    }
                 }label:{
                     Text("Reserve")
                         .foregroundStyle(.white)
