@@ -6,10 +6,6 @@ struct WishlistView: View {
     @EnvironmentObject var vm : HomeViewModel
     @State private var isLiked: Bool = false
     
-    @State var showLikeNotification = false
-    @State var showUnlikeNotification = false
-    @State var wishlistChangedHotel: Hotel? = nil
-    
     var body: some View {
         NavigationView {
             VStack{

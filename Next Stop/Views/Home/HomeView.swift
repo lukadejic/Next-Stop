@@ -7,9 +7,6 @@ struct HomeView: View {
     @State private var selectedStayOption: StayOptionType = .lakeFront
     @State private var showDestinationSearchView = false
     @State private var isLiked = false
-    @State var showLikeNotification = false
-    @State var showUnlikeNotification = false
-    @State var wishlistChangedHotel: Hotel? = nil
     
     var body: some View {
         NavigationStack{
@@ -31,7 +28,7 @@ struct HomeView: View {
                     }
                 }
                 .onChange(of: vm.wishlist) { oldValue, newValue in
-                    showNotification(oldValue,newValue)
+                    vm.showNotification(oldValue,newValue)
                 }
                 .onAppear {
                     if vm.destinations.isEmpty {
@@ -48,12 +45,12 @@ struct HomeView: View {
                     }
                 }
                 .overlay(alignment: .bottom) {
-                    if let hotel = wishlistChangedHotel {
+                    if let hotel = vm.wishlistChangedHotel {
                         LikeNotificationView(
-                            showNotification: $showLikeNotification,
+                            showNotification: $vm.showLikeNotification,
                             hotel: hotel)
                         UnlikeNotificationView(
-                            showNotification: $showUnlikeNotification,
+                            showNotification: $vm.showUnlikeNotification,
                             hotel: hotel)
                     }
                 }
