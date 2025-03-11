@@ -6,6 +6,10 @@ struct WishlistView: View {
     @EnvironmentObject var vm : HomeViewModel
     @State private var isLiked: Bool = false
     
+    @State var showLikeNotification = false
+    @State var showUnlikeNotification = false
+    @State var wishlistChangedHotel: Hotel? = nil
+    
     var body: some View {
         NavigationView {
             VStack{
@@ -46,6 +50,19 @@ struct WishlistView: View {
                 }else{
                     ContentUnavailableView("Wishlist is empty",
                                            systemImage: "house.fill")
+                }
+            }
+            .onChange(of: vm.wishlist) { oldValue, newValue in
+                vm.showNotification(oldValue, newValue)
+            }
+            .overlay(alignment: .bottom) {
+                if let hotel = vm.wishlistChangedHotel {
+                    LikeNotificationView(
+                        showNotification: $vm.showLikeNotification,
+                        hotel: hotel)
+                    UnlikeNotificationView(
+                        showNotification: $vm.showUnlikeNotification,
+                        hotel: hotel)
                 }
             }
             .onAppear{

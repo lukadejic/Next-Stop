@@ -311,6 +311,37 @@ extension HomeView {
     }
 }
 
+extension WishlistView {
+    func showNotification(_ oldValue: [Hotel], _ newValue: [Hotel]) {
+        let newlyLiked = newValue.filter { !oldValue.contains($0) }
+        let newlyUnliked = oldValue.filter { !newValue.contains($0) }
+        
+        if let likedHotel = newlyLiked.last {
+            wishlistChangedHotel = likedHotel
+            withAnimation{
+                showLikeNotification = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showLikeNotification = false
+                }
+            }
+        }
+        
+        if let unlikedHotel = newlyUnliked.last {
+            wishlistChangedHotel = unlikedHotel
+            withAnimation {
+                showUnlikeNotification = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showUnlikeNotification = false
+                }
+            }
+        }
+    }
+}
+
 extension LocationSearchService : MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         results = completer.results.map({result in
