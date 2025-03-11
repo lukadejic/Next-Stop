@@ -11,7 +11,7 @@ struct HotelData: Codable {
     let hotels: [Hotel]
 }
 
-struct Hotel: Identifiable, Codable {
+struct Hotel: Identifiable, Codable, Equatable {
     var id = UUID()
     let hotelID: Int?
     let accessibilityLabel: String?
@@ -20,6 +20,10 @@ struct Hotel: Identifiable, Codable {
     enum CodingKeys: String, CodingKey {
         case hotelID = "hotel_id"
         case accessibilityLabel, property
+    }
+    
+    static func == (lhs: Hotel, rhs: Hotel) -> Bool {
+        return lhs.hotelID == rhs.hotelID
     }
 }
 

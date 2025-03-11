@@ -48,6 +48,19 @@ struct WishlistView: View {
                                            systemImage: "house.fill")
                 }
             }
+            .onChange(of: vm.wishlist) { oldValue, newValue in
+                vm.showNotification(oldValue, newValue)
+            }
+            .overlay(alignment: .bottom) {
+                if let hotel = vm.wishlistChangedHotel {
+                    LikeNotificationView(
+                        showNotification: $vm.showLikeNotification,
+                        hotel: hotel)
+                    UnlikeNotificationView(
+                        showNotification: $vm.showUnlikeNotification,
+                        hotel: hotel)
+                }
+            }
             .onAppear{
                 isLiked = false
             }

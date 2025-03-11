@@ -2,15 +2,17 @@ import SwiftUI
 import MapKit
 
 struct ListingDetailView: View {
-    
+    @EnvironmentObject private var vm : HomeViewModel
     let hotel: Hotel
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject private var vm : HomeViewModel
     @State private var showFullDescription : Bool = false
     @State private var isFullMapScreen : Bool = false
     @State private var isFullCancellationPolicy: Bool = false
     @State private var showCalendarView: Bool = false
+    @State private var showLikeNotification = false
+    @State private var showUnlikeNoticifation = false
+    
     @Binding var isLiked: Bool
     
     var body: some View {
@@ -55,6 +57,15 @@ struct ListingDetailView: View {
             
             cancelationPolicy
         }
+        .overlay(alignment: .bottom) {
+            LikeNotificationView(showNotification: $showLikeNotification,
+                                 hotel: hotel)
+            UnlikeNotificationView(showNotification: $showUnlikeNoticifation,
+                                   hotel: hotel)
+        }
+        .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
+            showNotification(oldValue, newValue)
+        })
         .onAppear{
             //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
@@ -70,10 +81,12 @@ struct ListingDetailView: View {
             }
         }
         .overlay(alignment: .topTrailing){
-            LikeButtonView(isLiked: $isLiked,
-                           hotel: hotel)
-            .padding(32)
-            .padding(.top, 10)
+            VStack{
+                LikeButtonView(isLiked: $isLiked,
+                               hotel: hotel)
+                .padding(32)
+                .padding(.top, 10)
+            }
         }
         .padding(.bottom, 64)
         .ignoresSafeArea()
@@ -359,7 +372,9 @@ private extension ListingDetailView {
                 Spacer()
                 
                 Button{
-                    
+                    withAnimation(.snappy) {
+                        showLikeNotification.toggle()
+                    }
                 }label:{
                     Text("Reserve")
                         .foregroundStyle(.white)
@@ -406,6 +421,25 @@ private extension ListingDetailView {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding()
+        }
+    }
+    
+    func showNotification(_ oldValue: Bool, _ newValue: Bool) {
+        if newValue {
+            showLikeNotification = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showLikeNotification = false
+                }
+            }
+        }
+        if oldValue {
+            showUnlikeNoticifation = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    showUnlikeNoticifation = false
+                }
+            }
         }
     }
 }
