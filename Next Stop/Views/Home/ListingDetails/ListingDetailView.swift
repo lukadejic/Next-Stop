@@ -11,9 +11,10 @@ struct ListingDetailView: View {
     @State private var isFullMapScreen : Bool = false
     @State private var isFullCancellationPolicy: Bool = false
     @State private var showCalendarView: Bool = false
-    @Binding var isLiked: Bool
-    @State private var showNotification = false
+    @State private var showLikeNotification = false
     @State private var showUnlikeNoticifation = false
+    
+    @Binding var isLiked: Bool
     
     var body: some View {
         ScrollView {
@@ -58,17 +59,17 @@ struct ListingDetailView: View {
             cancelationPolicy
         }
         .overlay(alignment: .bottom) {
-            LikeNotificationView(showNotification: $showNotification,
+            LikeNotificationView(showNotification: $showLikeNotification,
                                  hotel: hotel)
             UnlikeNotificationView(showNotification: $showUnlikeNoticifation,
                                    hotel: hotel)
         }
         .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
             if newValue {
-                showNotification = true
+                showLikeNotification = true
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     withAnimation {
-                        showNotification = false
+                        showLikeNotification = false
                     }
                 }
             }
@@ -388,7 +389,7 @@ private extension ListingDetailView {
                 
                 Button{
                     withAnimation(.snappy) {
-                        showNotification.toggle()
+                        showLikeNotification.toggle()
                     }
                 }label:{
                     Text("Reserve")

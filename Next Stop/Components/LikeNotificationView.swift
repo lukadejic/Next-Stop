@@ -42,13 +42,8 @@ struct LikeNotificationView: View {
             }
             .padding(10)
         }
-        .frame(maxWidth: .infinity)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .shadow(radius: 10)
-        .padding()
+        .modifier(notificationViewModifier())
         .offset(y: showNotification ? 0 : 300)
-        .transition(.move(edge: .bottom).combined(with: .opacity))
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: showNotification)
     }
 }

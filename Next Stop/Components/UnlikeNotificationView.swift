@@ -43,13 +43,8 @@ struct UnlikeNotificationView: View {
             }
             .padding(10)
         }
-        .frame(maxWidth: .infinity)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        .shadow(radius: 10)
-        .padding()
+        .modifier(notificationViewModifier())
         .offset(y: showNotification ? 0 : 300)
-        .transition(.move(edge: .bottom).combined(with: .opacity))
         .animation(.spring(response: 0.5, dampingFraction: 0.8), value: showNotification)
     }
 }
@@ -58,4 +53,16 @@ struct UnlikeNotificationView: View {
     UnlikeNotificationView(showNotification: .constant(false),
                            hotel: MockData.mockHotel)
     .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+}
+
+struct notificationViewModifier : ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .frame(maxWidth: .infinity)
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .shadow(radius: 10)
+            .padding()
+            .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
 }
