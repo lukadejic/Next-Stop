@@ -15,3 +15,4 @@ The pictures are slightly blurry because I reduced their size; they were too lar
 ![ListingAfterSearchView](https://github.com/user-attachments/assets/277338e8-5c5a-4545-add9-0dc1146db58f)
 ![DestinationSearchView2](https://github.com/user-attachments/assets/a11207a6-af16-4391-836d-9cb120e06359)
 ![DestinationSearchView1](https://github.com/user-attachments/assets/ec78b212-0c45-4671-b7a9-b1cce05d709e)
+![WishListView](https://github.com/user-attachments/assets/d3659b1d-cc26-48b2-a349-93146815ac99)
