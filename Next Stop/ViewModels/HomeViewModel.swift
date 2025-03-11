@@ -22,6 +22,10 @@ class HomeViewModel : ObservableObject {
     @Published var isLoading : Bool = false
     @Published var wishlist: [Hotel] = []
     
+    @Published var showLikeNotification = false
+    @Published var showUnlikeNotification = false
+    @Published var wishlistChangedHotel: Hotel?
+    
     private let hotelsService : HotelsService
     
     init(hotelsService: HotelsService) {
@@ -200,6 +204,35 @@ class HomeViewModel : ObservableObject {
     
     func removeFromWishlist(_ hotel: Hotel) {
         wishlist.removeAll { $0.hotelID == hotel.hotelID }
+    }
+    
+    func showNotification(_ oldValue: [Hotel], _ newValue: [Hotel]) {
+        let newlyLiked = newValue.filter { !oldValue.contains($0) }
+        let newlyUnliked = oldValue.filter { !newValue.contains($0) }
+        
+        if let likedHotel = newlyLiked.last {
+            self.wishlistChangedHotel = likedHotel
+            withAnimation{
+                self.showLikeNotification = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    self.showLikeNotification = false
+                }
+            }
+        }
+        
+        if let unlikedHotel = newlyUnliked.last {
+            self.wishlistChangedHotel = unlikedHotel
+            withAnimation {
+                self.showUnlikeNotification = true
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                withAnimation {
+                    self.showUnlikeNotification = false
+                }
+            }
+        }
     }
     
 }

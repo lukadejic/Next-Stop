@@ -27,6 +27,9 @@ struct HomeView: View {
                         listingList
                     }
                 }
+                .onChange(of: vm.wishlist) { oldValue, newValue in
+                    vm.showNotification(oldValue,newValue)
+                }
                 .onAppear {
                     if vm.destinations.isEmpty {
                         vm.getDestinations(query: selectedStayOption.querryKeywords)
@@ -41,7 +44,18 @@ struct HomeView: View {
                         vm.selectDestination(for: selectedStayOption.querryKeywords)
                     }
                 }
+                .overlay(alignment: .bottom) {
+                    if let hotel = vm.wishlistChangedHotel {
+                        LikeNotificationView(
+                            showNotification: $vm.showLikeNotification,
+                            hotel: hotel)
+                        UnlikeNotificationView(
+                            showNotification: $vm.showUnlikeNotification,
+                            hotel: hotel)
+                    }
+                }
             }
+            
 
         }
         .tint(.black)
