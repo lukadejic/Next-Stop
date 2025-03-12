@@ -11,7 +11,7 @@ struct LikeButtonView: View {
                 toggleWishlist()
             }
         }label: {
-            Image(vm.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
+            Image(vm.wishlistManager.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 20, height: 20)
@@ -34,10 +34,10 @@ struct LikeButtonView: View {
 
 private extension LikeButtonView {    
     func toggleWishlist() {
-        if vm.isHotelLiked(hotel) {
-            vm.removeFromWishlist(hotel)
+        if vm.wishlistManager.isHotelLiked(hotel) {
+            vm.wishlistManager.removeFromWishlist(hotel)
         } else {
-            vm.addToWishlist(hotel)
+            vm.wishlistManager.addToWishlist(hotel)
         }
     }
 }

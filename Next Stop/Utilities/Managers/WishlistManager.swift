@@ -5,10 +5,10 @@ class WishlistManager : ObservableObject {
     
     @Published private(set) var wishlist: [Hotel] = []
     
+    @Published var wishlistChangedHotel: Hotel?
     @Published var showLikeNotification = false
     @Published var showUnlikeNotification = false
-    @Published var wishlistChangedHotel: Hotel?
-    
+
     init() {
         loadWishlist()
     }
