@@ -345,3 +345,7 @@ extension SearchButtonView {
     }
     
 }
+
+extension UserDefaults {
+    static let wishlistKey = "wishlist"
+}

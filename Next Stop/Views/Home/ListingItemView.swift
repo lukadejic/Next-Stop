@@ -15,7 +15,9 @@ struct ListingItemView: View {
                     .overlay(alignment: .topTrailing) {
                         LikeButtonView(isLiked: $isLiked,
                                        hotel: hotel)
+                        .padding()
                     }
+                
             } else {
                 ProgressView()
                     .frame(height: 350)

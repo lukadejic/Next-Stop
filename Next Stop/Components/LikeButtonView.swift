@@ -11,12 +11,18 @@ struct LikeButtonView: View {
                 toggleWishlist()
             }
         }label: {
-            Image(vm.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
+            Image(vm.wishlistManager.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 30, height: 30)
-                .padding()
-                .foregroundStyle(.black.opacity(0.8))
+                .frame(width: 20, height: 20)
+                .padding(12)
+                .background(
+                    Circle()
+                        .foregroundStyle(.white)
+                        .frame(width: 40, height: 40)
+                )
+                .shadow(radius: 4)
+                .foregroundStyle(.black)
         }
     }
 }
@@ -26,24 +32,12 @@ struct LikeButtonView: View {
         .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 
-private extension LikeButtonView {
-    func addToWishlist() {
-        if isLiked{
-            if !vm.wishlist.contains(where: {$0.hotelID ==  hotel.hotelID}){
-                vm.wishlist.append(hotel)
-                print("added...")
-            }
-        }else{
-            vm.wishlist.removeAll(where: {$0.hotelID == hotel.hotelID})
-            print("deleted")
-        }
-    }
-    
+private extension LikeButtonView {    
     func toggleWishlist() {
-        if vm.isHotelLiked(hotel) {
-            vm.removeFromWishlist(hotel)
+        if vm.wishlistManager.isHotelLiked(hotel) {
+            vm.wishlistManager.removeFromWishlist(hotel)
         } else {
-            vm.addToWishlist(hotel)
+            vm.wishlistManager.addToWishlist(hotel)
         }
     }
 }
