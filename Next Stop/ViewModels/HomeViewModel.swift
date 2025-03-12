@@ -4,6 +4,8 @@ import SwiftData
 
 @MainActor
 class HomeViewModel : ObservableObject {
+    @AppStorage("wishlist") var wishlistData: Data?
+    
     @Published var destinations : [Destination] = []
     @Published var hotels : [Hotel] = []
     @Published var selectedDestination: Destination? {
@@ -20,7 +22,11 @@ class HomeViewModel : ObservableObject {
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
     @Published var isLoading : Bool = false
-    @Published var wishlist: [Hotel] = []
+    @Published var wishlist: [Hotel] = [] {
+        didSet{
+            saveWishlist()
+        }
+    }
     
     @Published var showLikeNotification = false
     @Published var showUnlikeNotification = false
@@ -30,6 +36,7 @@ class HomeViewModel : ObservableObject {
     
     init(hotelsService: HotelsService) {
         self.hotelsService = hotelsService
+        loadWishlist()
     }
     
     func getDestinations(query: String) {
@@ -235,4 +242,23 @@ class HomeViewModel : ObservableObject {
         }
     }
     
+    private func saveWishlist() {
+        do {
+            let data = try JSONEncoder().encode(wishlist)
+            wishlistData = data
+        } catch {
+            print("Error while saving data: \(error.localizedDescription)")
+        }
+    }
+    
+    private func loadWishlist() {
+        guard let data = wishlistData else { return }
+        
+        do{
+            wishlist = try JSONDecoder().decode([Hotel].self, from: data)
+        }catch{
+            print("Error while loading data: \(error.localizedDescription)")
+        }
+    }
+        
 }
