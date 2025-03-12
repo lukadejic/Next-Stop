@@ -34,6 +34,7 @@ class HomeViewModel : ObservableObject {
     @Published var wishlistChangedHotel: Hotel?
     
     private let hotelsService : HotelsService
+    
     init(hotelsService: HotelsService) {
         self.hotelsService = hotelsService
         loadWishlist()
