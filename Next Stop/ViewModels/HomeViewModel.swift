@@ -4,6 +4,8 @@ import SwiftData
 
 @MainActor
 class HomeViewModel : ObservableObject {
+    @AppStorage("wishlist") private var wishlistData: Data?
+    
     @Published var destinations : [Destination] = []
     @Published var hotels : [Hotel] = []
     @Published var selectedDestination: Destination? {
@@ -20,16 +22,21 @@ class HomeViewModel : ObservableObject {
     @Published var endDate: Date? = nil
     @Published var arrivalDay: Date? = nil
     @Published var isLoading : Bool = false
-    @Published var wishlist: [Hotel] = []
+    
+    @Published var wishlist: [Hotel] = [] {
+        didSet{
+            saveWishlist()
+        }
+    }
     
     @Published var showLikeNotification = false
     @Published var showUnlikeNotification = false
     @Published var wishlistChangedHotel: Hotel?
     
     private let hotelsService : HotelsService
-    
     init(hotelsService: HotelsService) {
         self.hotelsService = hotelsService
+        loadWishlist()
     }
     
     func getDestinations(query: String) {
@@ -234,5 +241,24 @@ class HomeViewModel : ObservableObject {
             }
         }
     }
-    
+
+
+    private func saveWishlist() {
+        do {
+            let data = try JSONEncoder().encode(wishlist)
+            wishlistData = data
+        } catch {
+            print("Greška pri čuvanju wishlist-a: \(error.localizedDescription)")
+        }
+    }
+
+    private func loadWishlist() {
+        guard let data = wishlistData else { return }
+        do {
+            wishlist = try JSONDecoder().decode([Hotel].self, from: data)
+        } catch {
+            print("Greška pri učitavanju wishlist-a: \(error.localizedDescription)")
+        }
+    }
+
 }

@@ -4,7 +4,12 @@ import SwiftUI
 class WishlistManager: ObservableObject {
     @AppStorage("wishlist") private var wishlistData: Data?
 
-    @Published private(set) var wishlist: [Hotel] = []
+    @Published var wishlist: [Hotel] = [] {
+        didSet{
+            saveWishlist()
+        }
+    }
+    
     @Published var wishlistChangedHotel: Hotel?
     @Published var showLikeNotification: Bool = false
     @Published var showUnlikeNotification: Bool = false
@@ -19,18 +24,14 @@ class WishlistManager: ObservableObject {
 
     func addToWishlist(_ hotel: Hotel) {
         if !isHotelLiked(hotel) {
-            let oldValue = wishlist
             wishlist.append(hotel)
             saveWishlist()
-            showNotification(oldValue, wishlist)
         }
     }
 
     func removeFromWishlist(_ hotel: Hotel) {
-        let oldValue = wishlist
         wishlist.removeAll { $0.hotelID == hotel.hotelID }
         saveWishlist()
-        showNotification(oldValue, wishlist)
     }
 
     private func saveWishlist() {
