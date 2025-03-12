@@ -63,7 +63,7 @@ struct ListingDetailView: View {
             UnlikeNotificationView(showNotification: $showUnlikeNoticifation,
                                    hotel: hotel)
         }
-        .onChange(of: vm.wishlistManager.isHotelLiked(hotel), { oldValue, newValue in
+        .onChange(of: vm.isHotelLiked(hotel), { oldValue, newValue in
             showNotification(oldValue, newValue)
         })
         .onAppear{

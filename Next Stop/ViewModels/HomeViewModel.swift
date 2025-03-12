@@ -188,7 +188,20 @@ class HomeViewModel : ObservableObject {
         self.arrivalDay = arrivalDay
     }
 
-
+    func isHotelLiked(_ hotel: Hotel) -> Bool {
+        wishlist.contains { $0.hotelID == hotel.hotelID }
+    }
+    
+    func addToWishlist(_ hotel: Hotel) {
+        if !isHotelLiked(hotel) {
+            wishlist.append(hotel)
+        }
+    }
+    
+    func removeFromWishlist(_ hotel: Hotel) {
+        wishlist.removeAll { $0.hotelID == hotel.hotelID }
+    }
+    
     private func saveWishlist() {
         do {
             let data = try JSONEncoder().encode(wishlist)
@@ -207,4 +220,32 @@ class HomeViewModel : ObservableObject {
         }
     }
 
+    func showNotification(_ oldValue: [Hotel], _ newValue: [Hotel]) {
+         let newlyLiked = newValue.filter { !oldValue.contains($0) }
+         let newlyUnliked = oldValue.filter { !newValue.contains($0) }
+         
+         if let likedHotel = newlyLiked.last {
+             self.wishlistChangedHotel = likedHotel
+             withAnimation{
+                 self.showLikeNotification = true
+             }
+             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                 withAnimation {
+                     self.showLikeNotification = false
+                 }
+             }
+         }
+         
+         if let unlikedHotel = newlyUnliked.last {
+             self.wishlistChangedHotel = unlikedHotel
+             withAnimation {
+                 self.showUnlikeNotification = true
+             }
+             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                 withAnimation {
+                     self.showUnlikeNotification = false
+                 }
+             }
+         }
+     }
 }
