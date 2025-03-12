@@ -1,6 +1,5 @@
 import Foundation
 import SwiftUI
-import SwiftData
 
 @MainActor
 class HomeViewModel : ObservableObject {
@@ -70,13 +69,10 @@ class HomeViewModel : ObservableObject {
         
         Task{
             do{
-                
                 let hotels = try await hotelsService.fetchHotels(for: destination)
-                print("Fetched hotels count: \(hotels.count)")
                 
                 DispatchQueue.main.async {
                     self.hotels = hotels
-                    print("Updated hotels count: \(self.hotels.count)")
                 }
             }catch{
                 print("Error while fetching hotels: \(error.localizedDescription)")
@@ -118,7 +114,6 @@ class HomeViewModel : ObservableObject {
                 DispatchQueue.main.async {
                     self.hotels = hotels
                     self.isLoading = false
-                    print("Succesfully fetched \(hotels.count) hotels")
                 }
             }catch {
                 print("Error while fetching hotels with filters \(error.localizedDescription)")
@@ -133,7 +128,6 @@ class HomeViewModel : ObservableObject {
             if selectedDestination?.id != selectedDest.id {
                 self.selectedDestination = selectedDest
                 self.getHotels()
-                print("Hotels count after fetching: \(self.hotels.count)")
             }
         } else {
             print("Destination not found for query: \(query)")
@@ -143,12 +137,9 @@ class HomeViewModel : ObservableObject {
     func getHotelImages(hotelID: Int) {
         if hotelImages[hotelID] != nil { return }
         
-        print("fetching the hotel images...")
         Task{
             do{
                 let images = try await hotelsService.fetchHotelImages(hotelID: hotelID)
-                print("fetched images count : \(images.count)")
-                
                 self.hotelImages[hotelID] = images
                 
             }catch{
@@ -163,8 +154,6 @@ class HomeViewModel : ObservableObject {
                 let hotelDetails = try await hotelsService.fetchHotelDetails(hotelId: hotelId)
                 
                 self.hotelDetail = hotelDetails
-                
-                print("succesfully fetched the details for the hotel")
             }catch{
                 print("error while fetching hotel details : \(error.localizedDescription)")
             }
@@ -185,7 +174,6 @@ class HomeViewModel : ObservableObject {
     }
     private func fetchHotelsIfNeeded() {
         guard let destination = selectedDestination, hotels.isEmpty else { return }
-        print(destination)
         getHotels()
     }
     
@@ -198,49 +186,6 @@ class HomeViewModel : ObservableObject {
     func saveArrivalDay(arrivalDay: Date?) {
         guard let arrivalDay = arrivalDay else { return }
         self.arrivalDay = arrivalDay
-    }
-    
-    func isHotelLiked(_ hotel: Hotel) -> Bool {
-        wishlist.contains { $0.hotelID == hotel.hotelID }
-    }
-    
-    func addToWishlist(_ hotel: Hotel) {
-        if !isHotelLiked(hotel) {
-            wishlist.append(hotel)
-        }
-    }
-    
-    func removeFromWishlist(_ hotel: Hotel) {
-        wishlist.removeAll { $0.hotelID == hotel.hotelID }
-    }
-    
-    func showNotification(_ oldValue: [Hotel], _ newValue: [Hotel]) {
-        let newlyLiked = newValue.filter { !oldValue.contains($0) }
-        let newlyUnliked = oldValue.filter { !newValue.contains($0) }
-        
-        if let likedHotel = newlyLiked.last {
-            self.wishlistChangedHotel = likedHotel
-            withAnimation{
-                self.showLikeNotification = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                withAnimation {
-                    self.showLikeNotification = false
-                }
-            }
-        }
-        
-        if let unlikedHotel = newlyUnliked.last {
-            self.wishlistChangedHotel = unlikedHotel
-            withAnimation {
-                self.showUnlikeNotification = true
-            }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                withAnimation {
-                    self.showUnlikeNotification = false
-                }
-            }
-        }
     }
 
 

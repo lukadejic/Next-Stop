@@ -27,8 +27,8 @@ struct HomeView: View {
                         listingList
                     }
                 }
-                .onChange(of: vm.wishlist) { oldValue, newValue in
-                    vm.showNotification(oldValue,newValue)
+                .onChange(of: vm.wishlistManager.wishlist) { oldValue, newValue in
+                    vm.wishlistManager.showNotification(oldValue,newValue)
                 }
                 .onAppear {
                     if vm.destinations.isEmpty {
@@ -45,12 +45,12 @@ struct HomeView: View {
                     }
                 }
                 .overlay(alignment: .bottom) {
-                    if let hotel = vm.wishlistChangedHotel {
+                    if let hotel = vm.wishlistManager.wishlistChangedHotel {
                         LikeNotificationView(
-                            showNotification: $vm.showLikeNotification,
+                            showNotification: $vm.wishlistManager.showLikeNotification,
                             hotel: hotel)
                         UnlikeNotificationView(
-                            showNotification: $vm.showUnlikeNotification,
+                            showNotification: $vm.wishlistManager.showUnlikeNotification,
                             hotel: hotel)
                     }
                 }

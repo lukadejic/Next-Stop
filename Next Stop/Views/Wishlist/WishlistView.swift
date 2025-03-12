@@ -9,10 +9,10 @@ struct WishlistView: View {
     var body: some View {
         NavigationView {
             VStack{
-                if !vm.wishlist.isEmpty{
+                if !vm.wishlistManager.wishlist.isEmpty{
                     ScrollView {
                         LazyVGrid(columns: columns,spacing: 32) {
-                            ForEach(vm.wishlist) { hotel in
+                            ForEach(vm.wishlistManager.wishlist) { hotel in
                                 VStack(alignment: .leading){
                                     if let images = vm.hotelImages[hotel.hotelID ?? 0], !images.isEmpty {
                                         ListingImageCarouselView(images: images)
@@ -21,7 +21,7 @@ struct WishlistView: View {
                                             .overlay(alignment: .topLeading) {
                                                 if isLiked {
                                                     RemoveButtonView(){
-                                                        vm.removeFromWishlist(hotel)
+                                                        vm.wishlistManager.removeFromWishlist(hotel)
                                                     }
                                                     .padding()
                                                 }
@@ -48,16 +48,16 @@ struct WishlistView: View {
                                            systemImage: "house.fill")
                 }
             }
-            .onChange(of: vm.wishlist) { oldValue, newValue in
-                vm.showNotification(oldValue, newValue)
+            .onChange(of: vm.wishlistManager.wishlist) { oldValue, newValue in
+                vm.wishlistManager.showNotification(oldValue, newValue)
             }
             .overlay(alignment: .bottom) {
-                if let hotel = vm.wishlistChangedHotel {
+                if let hotel = vm.wishlistManager.wishlistChangedHotel {
                     LikeNotificationView(
-                        showNotification: $vm.showLikeNotification,
+                        showNotification: $vm.wishlistManager.showLikeNotification,
                         hotel: hotel)
                     UnlikeNotificationView(
-                        showNotification: $vm.showUnlikeNotification,
+                        showNotification: $vm.wishlistManager.showUnlikeNotification,
                         hotel: hotel)
                 }
             }
