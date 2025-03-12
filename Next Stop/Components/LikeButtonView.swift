@@ -32,19 +32,7 @@ struct LikeButtonView: View {
         .environmentObject(HomeViewModel(hotelsService: HotelsService()))
 }
 
-private extension LikeButtonView {
-    func addToWishlist() {
-        if isLiked{
-            if !vm.wishlist.contains(where: {$0.hotelID ==  hotel.hotelID}){
-                vm.wishlist.append(hotel)
-                print("added...")
-            }
-        }else{
-            vm.wishlist.removeAll(where: {$0.hotelID == hotel.hotelID})
-            print("deleted")
-        }
-    }
-    
+private extension LikeButtonView {    
     func toggleWishlist() {
         if vm.isHotelLiked(hotel) {
             vm.removeFromWishlist(hotel)

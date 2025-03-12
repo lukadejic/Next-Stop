@@ -81,12 +81,10 @@ struct ListingDetailView: View {
             }
         }
         .overlay(alignment: .topTrailing){
-            VStack{
-                LikeButtonView(isLiked: $isLiked,
-                               hotel: hotel)
-                .padding(32)
-                .padding(.top, 10)
-            }
+            LikeButtonView(isLiked: $isLiked,
+                           hotel: hotel)
+            .padding(32)
+            .padding(.top, 10)
         }
         .padding(.bottom, 64)
         .ignoresSafeArea()
@@ -372,9 +370,7 @@ private extension ListingDetailView {
                 Spacer()
                 
                 Button{
-                    withAnimation(.snappy) {
-                        showLikeNotification.toggle()
-                    }
+                    
                 }label:{
                     Text("Reserve")
                         .foregroundStyle(.white)
