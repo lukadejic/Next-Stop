@@ -14,9 +14,15 @@ struct LikeButtonView: View {
             Image(vm.isHotelLiked(hotel) ? "heartLike" : "heartUnlike")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 30, height: 30)
-                .padding()
-                .foregroundStyle(.black.opacity(0.8))
+                .frame(width: 20, height: 20)
+                .padding(12)
+                .background(
+                    Circle()
+                        .foregroundStyle(.white)
+                        .frame(width: 40, height: 40)
+                )
+                .shadow(radius: 4)
+                .foregroundStyle(.black)
         }
     }
 }
