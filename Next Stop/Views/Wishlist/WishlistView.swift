@@ -5,6 +5,7 @@ struct WishlistView: View {
     
     @EnvironmentObject var vm : HomeViewModel
     @State private var isLiked: Bool = false
+    @State private var selectedHotel: Hotel?
     
     var body: some View {
         NavigationView {
@@ -18,6 +19,11 @@ struct WishlistView: View {
                                         ListingImageCarouselView(images: images)
                                             .frame(width: 170, height: 170)
                                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .onTapGesture{
+                                                withAnimation(.snappy) {
+                                                    selectedHotel = hotel
+                                                }
+                                            }
                                             .overlay(alignment: .topLeading) {
                                                 if isLiked {
                                                     RemoveButtonView(){
@@ -38,6 +44,7 @@ struct WishlistView: View {
                                 }
                                 .frame(width: 170, height: 170)
                             }
+                            
                         }
                         .padding(.top)
                         
@@ -47,6 +54,9 @@ struct WishlistView: View {
                     ContentUnavailableView("Wishlist is empty",
                                            systemImage: "house.fill")
                 }
+            }
+            .fullScreenCover(item: $selectedHotel) { hotel in
+                ListingDetailView(hotel: hotel, isLiked: $isLiked)
             }
             .onChange(of: vm.wishlist) { oldValue, newValue in
                 vm.showNotification(oldValue, newValue)
