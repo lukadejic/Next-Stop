@@ -19,11 +19,6 @@ struct WishlistView: View {
                                         ListingImageCarouselView(images: images)
                                             .frame(width: 170, height: 170)
                                             .clipShape(RoundedRectangle(cornerRadius: 10))
-                                            .onTapGesture{
-                                                withAnimation(.snappy) {
-                                                    selectedHotel = hotel
-                                                }
-                                            }
                                             .overlay(alignment: .topLeading) {
                                                 if isLiked {
                                                     RemoveButtonView(){
@@ -43,6 +38,11 @@ struct WishlistView: View {
                                         .lineLimit(2)
                                 }
                                 .frame(width: 170, height: 170)
+                                .onTapGesture {
+                                    withAnimation(.snappy) {
+                                        selectedHotel = hotel
+                                    }
+                                }
                             }
                             
                         }

@@ -67,13 +67,15 @@ struct ListingDetailView: View {
             showNotification(oldValue, newValue)
         })
         .onAppear{
-            //vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
+            vm.getHotelDescription(hotelId: hotel.hotelID ?? 1)
         }
         .toolbar(.hidden, for: .tabBar)
         .toolbar(.hidden, for: .navigationBar)
         .overlay(alignment: .topLeading){
             Button{
-                dismiss()
+                withAnimation(.snappy){
+                    dismiss()
+                }
             }label: {
                 BackButton()
                     .padding(32)

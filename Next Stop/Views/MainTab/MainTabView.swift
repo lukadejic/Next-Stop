@@ -3,6 +3,8 @@ import SwiftData
 
 struct MainTabView: View {
     
+    @EnvironmentObject var vm: HomeViewModel
+    
     var body: some View {
         TabView {
             HomeView()
@@ -15,6 +17,7 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Whishlist", systemImage:"heart")
                 }
+                .badge(vm.wishlist.count)
             
             ProfileView()
                 .tabItem {
