@@ -44,7 +44,7 @@ struct ProfileView: View {
             }
         }
         .fullScreenCover(isPresented: $showLoginView) {
-            LogInView()
+            LogInView(show: $showLoginView)
         }
     }
 }
