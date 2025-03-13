@@ -92,9 +92,7 @@ class HomeViewModel : ObservableObject {
                 guard let destination = try await hotelsService.fetchDestinations(query: location).first else {
                     return
                 }
-                
-                print(destination.name)
-                
+            
                 let arrivalDateToUse = arrivalDate ?? Date()
                 let departureDateToUse = departureDate ?? Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
                 
@@ -173,7 +171,6 @@ class HomeViewModel : ObservableObject {
         }
     }
     private func fetchHotelsIfNeeded() {
-        guard let destination = selectedDestination, hotels.isEmpty else { return }
         getHotels()
     }
     
@@ -207,7 +204,7 @@ class HomeViewModel : ObservableObject {
             let data = try JSONEncoder().encode(wishlist)
             wishlistData = data
         } catch {
-            print("Greška pri čuvanju wishlist-a: \(error.localizedDescription)")
+            print("Error while saving data to wishlist: \(error.localizedDescription)")
         }
     }
 
@@ -216,7 +213,7 @@ class HomeViewModel : ObservableObject {
         do {
             wishlist = try JSONDecoder().decode([Hotel].self, from: data)
         } catch {
-            print("Greška pri učitavanju wishlist-a: \(error.localizedDescription)")
+            print("Error while loading data from wishlist: \(error.localizedDescription)")
         }
     }
 
