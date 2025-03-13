@@ -2,8 +2,10 @@ import SwiftUI
 
 struct LogInButton: View {
     @State var text: String
-    var action : (() -> ())?
+    @State var backgroundColor: Color
+    @State var textColor: Color
     
+    var action : (() -> ())?
     var body: some View {
         Button{
             action?()
@@ -11,14 +13,16 @@ struct LogInButton: View {
             Text(text)
                 .font(.title3)
                 .fontWeight(.semibold)
-                .foregroundStyle(.white)
+                .foregroundStyle(textColor)
                 .frame(width: 340, height: 60)
-                .background(Color.pink)
+                .background(backgroundColor)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
 }
 
 #Preview {
-    LogInButton(text: "Log in")
+    LogInButton(text: "Log in",
+                backgroundColor: Color.pink,
+                textColor: .white)
 }

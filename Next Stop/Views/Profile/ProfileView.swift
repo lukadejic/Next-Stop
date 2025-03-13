@@ -16,7 +16,9 @@ struct ProfileView: View {
                 }
                 .padding(.top,30)
                 
-                LogInButton(text: "Log in"){
+                LogInButton(text: "Log in",
+                            backgroundColor: .pink,
+                            textColor: .white){
                     withAnimation(.snappy) {
                         showLoginView.toggle()
                     }
