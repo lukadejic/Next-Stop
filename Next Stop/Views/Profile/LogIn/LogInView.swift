@@ -9,7 +9,7 @@ struct LogInView: View {
     @Binding var show: Bool
 
     var body: some View {
-        NavigationStack{
+        ZStack{
             if !vm.showSignUp {
                 VStack{
                     Image("NextStopLogo")
@@ -42,20 +42,18 @@ struct LogInView: View {
                     )
                 )
                 .navigationBarTitleDisplayMode(.inline)
-                .toolbar{
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button{
-                            withAnimation(.snappy) {
-                                show.toggle()
-                            }
-                        }label: {
-                            BackButton()
-                                .padding(.horizontal)
+                .overlay(alignment: .topLeading) {
+                    Button{
+                        withAnimation(.snappy) {
+                            show.toggle()
                         }
+                    }label: {
+                        BackButton()
+                            .padding(.horizontal)
                     }
                 }
             }else{
-                Text("Sign up view")
+                SignUpView(show: $vm.showSignUp)
             }
         }
     }
@@ -79,7 +77,7 @@ private extension LogInView {
                 Text("Don't have an account?")
                     .foregroundStyle(.white)
                 Button{
-                    withAnimation(.snappy) {
+                    withAnimation(.snappy()) {
                         vm.showSignUp.toggle()
                     }
                 }label: {
