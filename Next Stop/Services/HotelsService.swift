@@ -77,10 +77,7 @@ class HotelsService {
     }
     
     func fetchHotelImages(hotelID: Int) async throws -> [ImageModel] {
-        
         let parameters = ["hotel_id" : "\(hotelID)"]
-        
-        print("fetching data")
         
         let response : HotelImageResponse = try await NetworkManager.shared.fetchData(
             endpoint: "hotels/getHotelPhotos",
