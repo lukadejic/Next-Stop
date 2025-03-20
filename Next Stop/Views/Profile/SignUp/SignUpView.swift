@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @StateObject private var vm = SignUpViewModel(authManager: AuthenticationManager())
+
     @Binding var show : Bool
     
     @FocusState var isEmailFocused: Bool
@@ -8,10 +10,9 @@ struct SignUpView: View {
     @FocusState var isUsernameFocued: Bool
     @FocusState var isConfirmPasswordFocused: Bool
     
-    @State private var confirmPassword = ""
-    @State private var username = ""
-    @State private var email = ""
-    @State private var password = ""
+    @Environment(\.dismiss) var dismiss
+    
+    @State private var showAlert: Bool = false
     
     var body: some View {
         NavigationView {
@@ -58,12 +59,18 @@ struct SignUpView: View {
                 }
             }
         }
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Error"),
+                  message: Text(vm.error ?? "Unknown error"),
+                  dismissButton: .default(Text("Ok")))
+        }
     }
 }
 
 #Preview {
     SignUpView(show: .constant(false))
 }
+
 
 private extension SignUpView {
     func resetFocus() {
@@ -75,35 +82,36 @@ private extension SignUpView {
     
     var authentication : some View {
         VStack(spacing: 30) {
-            AuthenticationField(text: $email,
+            AuthenticationField(text: $vm.email,
                                 image: "person.fill")
             .overlay{
-                Text(!isEmailFocused && email.isEmpty ? "Email" : "")
+                Text(!isEmailFocused && vm.email.isEmpty ? "Email" : "")
                     .allowsHitTesting(false)
             }
             .focused($isEmailFocused)
             .foregroundStyle(.white)
+            .keyboardType(.emailAddress)
             
-            PasswordField(password: $password)
+            PasswordField(password: $vm.password)
             .overlay{
-                Text(!isPasswordFocused && password.isEmpty ? "Password" : "")
+                Text(!isPasswordFocused && vm.password.isEmpty ? "Password" : "")
                     .allowsHitTesting(false)
             }
             .focused($isPasswordFocused)
             .foregroundStyle(.white)
 
-            PasswordField(password: $confirmPassword)
+            PasswordField(password: $vm.confirmPassword)
             .overlay{
-                Text(!isConfirmPasswordFocused && confirmPassword.isEmpty ? "Confirm password" : "")
+                Text(!isConfirmPasswordFocused && vm.confirmPassword.isEmpty ? "Confirm password" : "")
                     .allowsHitTesting(false)
             }
             .focused($isConfirmPasswordFocused)
             .foregroundStyle(.white)
             
-            AuthenticationField(text: $username,
+            AuthenticationField(text: $vm.username,
                                 image: "person.fill")
             .overlay{
-                Text(!isUsernameFocued && username.isEmpty ? "Username" : "")
+                Text(!isUsernameFocued && vm.username.isEmpty ? "Username" : "")
                     .allowsHitTesting(false)
             }
             .focused($isUsernameFocued)
@@ -115,7 +123,15 @@ private extension SignUpView {
         VStack(spacing: 20){
             LogInButton(text: "Sign up",
                         backgroundColor: .white,
-                        textColor: Color.logInBackground)
+                        textColor: Color.logInBackground){
+                vm.signUp()
+                if vm.error == nil {
+                    dismiss()
+                    dismiss()
+                }else {
+                    showAlert = true
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)
             

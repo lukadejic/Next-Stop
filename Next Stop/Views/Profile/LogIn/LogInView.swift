@@ -7,7 +7,7 @@ struct LogInView: View {
     @FocusState var isPasswordFocused: Bool
     
     @Binding var show: Bool
-
+    
     var body: some View {
         ZStack{
             if !vm.showSignUp {

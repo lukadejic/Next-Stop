@@ -3,11 +3,9 @@ import Firebase
 
 @main
 struct Next_StopApp: App {
-    @StateObject private var homeVM = HomeViewModel(hotelsService: HotelsService())
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    init() {
-        FirebaseApp.configure()
-    }
+    @StateObject private var homeVM = HomeViewModel(hotelsService: HotelsService())
     
     var body: some Scene {
         WindowGroup {
@@ -16,5 +14,13 @@ struct Next_StopApp: App {
             }
             .environmentObject(homeVM)
         }
+    }
+}
+
+class AppDelegate: NSObject, UIApplicationDelegate {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        return true
     }
 }
