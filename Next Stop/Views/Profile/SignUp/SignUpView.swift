@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @StateObject private var vm = SignUpViewModel(authManager: AuthenticationManager())
+    @StateObject private var vm = SignUpViewModel(
+        authManager: AuthenticationManager())
 
     @Binding var show : Bool
     

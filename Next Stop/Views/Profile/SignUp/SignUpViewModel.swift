@@ -46,7 +46,6 @@ final class SignUpViewModel : ObservableObject {
     }
     
     func isValidPassword(_ password: String) -> Bool {
-        // Proverava da li lozinka ima najmanje 8 karaktera, jedan broj i jedan specijalni znak
         let passwordRegEx = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$"
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", passwordRegEx)
         return passwordTest.evaluate(with: password)
