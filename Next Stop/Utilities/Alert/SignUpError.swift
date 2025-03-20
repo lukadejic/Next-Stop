@@ -6,7 +6,7 @@ enum SignUpError : Error {
     case weakPassword
     case firebaseError(error: Error)
     
-    var errorDescription: String? {
+    var errorDescription: String {
         switch self {
         case .emptyFields:
             return "All fields must be filled"
