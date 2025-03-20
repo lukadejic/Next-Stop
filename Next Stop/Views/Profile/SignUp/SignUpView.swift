@@ -13,8 +13,6 @@ struct SignUpView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    @State private var showAlert: Bool = false
-    
     var body: some View {
         NavigationView {
             VStack {
@@ -60,10 +58,10 @@ struct SignUpView: View {
                 }
             }
         }
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Error"),
-                  message: Text(vm.error ?? "Unknown error"),
-                  dismissButton: .default(Text("Ok")))
+        .alert(item: $vm.alertItem) { alert in
+            Alert(title: alert.title,
+                  message: alert.message,
+                  dismissButton: alert.dismissButton)
         }
     }
 }
@@ -126,11 +124,9 @@ private extension SignUpView {
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
                 vm.signUp()
-                if vm.error == nil {
+                if vm.alertItem == nil {
                     dismiss()
                     dismiss()
-                }else {
-                    showAlert = true
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))

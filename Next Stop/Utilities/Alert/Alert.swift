@@ -10,6 +10,12 @@ struct AlertItem: Identifiable {
 struct AlertContext {
     // MARK: - Sign Up Alerts
     
+    static let invalidEmail = AlertItem(
+        title: Text("Invalid email"),
+        message: Text("Please provide a valid e-mail address."),
+        dismissButton: .default(Text("OK"))
+    )
+    
     static let emptyFields = AlertItem(
         title: Text("Missing Information"),
         message: Text("All fields must be filled."),

@@ -1,6 +1,7 @@
 import Foundation
 
 enum SignUpError : Error {
+    case invalidEmail
     case emptyFields
     case passwordsNotMached
     case weakPassword
@@ -16,6 +17,8 @@ enum SignUpError : Error {
             return "Password is too weak"
         case .firebaseError(let error):
             return error.localizedDescription
+        case .invalidEmail:
+            return "Invalid email format"
         }
     }
 }
