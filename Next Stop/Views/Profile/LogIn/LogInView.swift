@@ -1,12 +1,20 @@
 import SwiftUI
 
 struct LogInView: View {
-    @StateObject private var vm = LogInViewModel()
+    @ObservedObject var vm: LogInViewModel
+    @Binding var show: Bool
+    let authManager: AuthenticationManager
+    
+    init(authManager: AuthenticationManager, show: Binding<Bool>) {
+        self._vm = ObservedObject(wrappedValue: LogInViewModel(authManager: authManager))
+        self._show = show
+        self.authManager = authManager
+    }
     
     @FocusState var isEmailFocused: Bool
     @FocusState var isPasswordFocused: Bool
     
-    @Binding var show: Bool
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ZStack{
@@ -52,24 +60,36 @@ struct LogInView: View {
                             .padding(.horizontal)
                     }
                 }
-            }else{
-                SignUpView(show: $vm.showSignUp)
+            }else {
+                SignUpView(authManager: authManager,
+                           show: $vm.showSignUp)
             }
+        }
+        .alert(item: $vm.alertItem) { alert in
+            Alert(title: alert.title,
+                  message: alert.message,
+                  dismissButton: alert.dismissButton)
         }
     }
 }
 
 #Preview {
-    LogInView(show: .constant(false))
+    LogInView(authManager: AuthenticationManager(),
+              show: .constant(false))
 }
 
 private extension LogInView {
     
     var signIn : some View {
-        VStack(spacing: 20){
+        VStack(spacing: 20) {
             LogInButton(text: "Sign in",
                         backgroundColor: .white,
-                        textColor: Color.logInBackground)
+                        textColor: Color.logInBackground){
+                vm.signIn()
+                if vm.alertItem == nil {
+                    dismiss()
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)
             

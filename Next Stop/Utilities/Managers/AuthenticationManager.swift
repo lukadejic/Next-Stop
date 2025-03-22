@@ -2,17 +2,28 @@ import Foundation
 import FirebaseAuth
 
 protocol AuthenticationProtocol {
+    @discardableResult
     func createUser (email: String, password: String) async throws -> AuthDataResultModel
+    
+    @discardableResult
+    func signIn (email: String, password: String) async throws -> AuthDataResultModel
+    
     func getAuthenticatedUser() throws -> AuthDataResultModel
+    
     func signOut() throws
 }
 
 final class AuthenticationManager : AuthenticationProtocol {
     
-    static let shared = AuthenticationManager()
-    
+    @discardableResult
     func createUser (email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
+        return AuthDataResultModel(user: authDataResult.user)
+    }
+    
+    @discardableResult
+    func signIn(email: String, password: String) async throws -> AuthDataResultModel {
+        let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
         return AuthDataResultModel(user: authDataResult.user)
     }
     

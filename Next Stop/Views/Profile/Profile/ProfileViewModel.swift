@@ -4,6 +4,7 @@ import FirebaseAuth
 @MainActor
 final class ProfileViewModel : ObservableObject {
     @Published var user: AuthDataResultModel? = nil
+    @Published var isLoading = false
     
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -15,7 +16,13 @@ final class ProfileViewModel : ObservableObject {
     }
     
     func getAuthenticatedUser() {
-        self.user = try? authManager.getAuthenticatedUser()
+        Task{
+            do{
+                self.user = try authManager.getAuthenticatedUser()
+            }catch{
+                throw SignUpError.firebaseError(error: error)
+            }
+        }
     }
     
     func signOut() {

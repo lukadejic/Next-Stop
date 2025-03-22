@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 @MainActor
 final class SignUpViewModel : ObservableObject {
@@ -21,10 +22,12 @@ final class SignUpViewModel : ObservableObject {
             
             Task{
                 do{
-                    let _ = try await authManager.createUser(email: email, password: password)
+                    try await authManager.createUser(email: email, password: password)
                     self.alertItem = nil
                 }catch{
-                    self.alertItem = AlertContext.firebaseError
+                    self.alertItem = AlertItem(title: Text("Sign up failed"),
+                                               message: Text(error.localizedDescription),
+                                               dismissButton: .default(Text("Ok")))
                 }
             }
         }catch let error as SignUpError {

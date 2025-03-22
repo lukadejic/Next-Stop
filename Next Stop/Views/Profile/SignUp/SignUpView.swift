@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @StateObject private var vm = SignUpViewModel(
-        authManager: AuthenticationManager())
-
+    @StateObject private var vm : SignUpViewModel
+    
     @Binding var show : Bool
+    
+    init(authManager: AuthenticationProtocol, show: Binding<Bool>) {
+        _vm = StateObject(wrappedValue: SignUpViewModel(authManager: authManager))
+        _show = show
+    }
     
     @FocusState var isEmailFocused: Bool
     @FocusState var isPasswordFocused: Bool
@@ -67,7 +71,8 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView(show: .constant(false))
+    SignUpView(authManager: AuthenticationManager(),
+               show: .constant(false))
 }
 
 
