@@ -12,7 +12,12 @@ protocol AuthenticationProtocol {
     
     func resetPassword(email: String) async throws
     
+    func updatePassword(password: String) async throws
+    
+    func updateEmail(email: String) async throws
+    
     func signOut() throws
+    
 }
 
 final class AuthenticationManager : AuthenticationProtocol {
@@ -41,6 +46,22 @@ final class AuthenticationManager : AuthenticationProtocol {
         try await Auth.auth().sendPasswordReset(withEmail: email)
     }
     
+    func updatePassword(password: String) async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw UserError.noCurrentUser
+        }
+        
+        try await user.updatePassword(to: password)
+    }
+    
+    func updateEmail(email: String) async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw UserError.noCurrentUser
+        }
+        
+        try await user.sendEmailVerification(beforeUpdatingEmail: email)
+    }
+
     func signOut() throws {
         try Auth.auth().signOut()
     }

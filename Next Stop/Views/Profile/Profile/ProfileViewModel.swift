@@ -60,6 +60,30 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
+    func updateEmail() {
+        let email = "lukadejic1234@gmail.com"
+        Task{
+            do{
+                try await authManager.updateEmail(email: email)
+                self.alertItem = AlertContext.succesfulEmailUpdate
+            }catch{
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    func updatePassword() {
+        let password = "Password031."
+        Task{
+            do{
+                try await authManager.updatePassword(password: password)
+                self.alertItem = AlertContext.succesfulPasswordUpdate
+            }catch{
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func listenForAuthStateChanges() {
         authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
             if let user = user {

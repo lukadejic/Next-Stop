@@ -64,4 +64,18 @@ struct AlertContext {
         dismissButton: .default(Text("OK"))
     )
     
+    //MARK: Reset credentials
+    
+    static let succesfulPasswordUpdate = AlertItem(
+        title: Text("Succesfull"),
+        message: Text("Password updated succesfully"),
+        dismissButton: .default(Text("OK"))
+    )
+    
+    static let succesfulEmailUpdate = AlertItem(
+        title: Text("Succesfull"),
+        message: Text("Email updated succesfully"),
+        dismissButton: .default(Text("OK"))
+    )
+    
 }

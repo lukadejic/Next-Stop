@@ -43,11 +43,24 @@ struct ProfileView: View {
                             
                             Button {
                                 vm.resetPassword()
-                                print("Succesful")
+                                print("Succesfuly reset password")
                             } label: {
                                 Text("Reset password")
                             }
 
+                            Button {
+                                vm.updatePassword()
+                                print("Succesfully updated password")
+                            } label: {
+                                Text("Update password")
+                            }
+                            
+                            Button {
+                                vm.updateEmail()
+                                print("Succesfully updated email")
+                            } label: {
+                                Text("Update email")
+                            }
                         }
                     }
                     Spacer()
@@ -60,6 +73,11 @@ struct ProfileView: View {
                 LogInView(authManager: authManager, show: $showLoginView)
             }
 
+        }
+        .alert(item: $vm.alertItem) { alert in
+            Alert(title: alert.title,
+                  message: alert.message,
+                  dismissButton: alert.dismissButton)
         }
     }
 }
