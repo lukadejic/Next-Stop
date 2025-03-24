@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct LogInView: View {
-    @ObservedObject var vm: LogInViewModel
+    @StateObject var vm: LogInViewModel
     @Binding var show: Bool
     let authManager: AuthenticationManager
     
     init(authManager: AuthenticationManager, show: Binding<Bool>) {
-        self._vm = ObservedObject(wrappedValue: LogInViewModel(authManager: authManager))
+        self._vm = StateObject(wrappedValue: LogInViewModel(authManager: authManager))
         self._show = show
         self.authManager = authManager
     }
@@ -17,58 +17,56 @@ struct LogInView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        ZStack{
-            if !vm.showSignUp {
-                VStack{
-                    Image("NextStopLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                    
-                    Spacer()
-                    
-                    authentication
-                    
-                    Spacer()
-                    
-                    VStack(spacing: 20){
-                        signIn
-                    }
-                    
-                    Spacer()
+        ZStack {
+            VStack {
+                Image("NextStopLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+                
+                Spacer()
+                
+                authentication
+                
+                Spacer()
+                
+                VStack(spacing: 20) {
+                    signIn
                 }
-                .onTapGesture {
-                    isEmailFocused = false
-                    isPasswordFocused = false
-                }
-                .frame(maxWidth: .infinity,maxHeight: .infinity)
-                .background(
-                    LinearGradient(
-                        colors: [Color.logInBackground, .red],
-                        startPoint: UnitPoint(x: 0.5, y: 0.5),
-                        endPoint: .bottom
-                    )
-                )
-                .navigationBarTitleDisplayMode(.inline)
-                .overlay(alignment: .topLeading) {
-                    Button{
-                        withAnimation(.snappy) {
-                            show.toggle()
-                        }
-                    }label: {
-                        BackButton()
-                            .padding(.horizontal)
-                    }
-                }
-            }else {
-                SignUpView(authManager: authManager,
-                           show: $vm.showSignUp)
+                
+                Spacer()
             }
-        }
-        .alert(item: $vm.alertItem) { alert in
-            Alert(title: alert.title,
-                  message: alert.message,
-                  dismissButton: alert.dismissButton)
+            .onTapGesture {
+                isEmailFocused = false
+                isPasswordFocused = false
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.logInBackground, .red],
+                    startPoint: UnitPoint(x: 0.5, y: 0.5),
+                    endPoint: .bottom
+                )
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .overlay(alignment: .topLeading) {
+                Button {
+                    withAnimation(.snappy) {
+                        show.toggle()
+                    }
+                } label: {
+                    BackButton()
+                        .padding(.horizontal)
+                }
+            }
+            .alert(item: $vm.alertItem) { alert in
+                Alert(title: alert.title,
+                      message: alert.message,
+                      dismissButton: alert.dismissButton)
+            }
+            .fullScreenCover(isPresented: $vm.showSignUp) {
+                SignUpView(authManager: authManager, show: $vm.showSignUp)
+            }
         }
     }
 }
@@ -86,6 +84,7 @@ private extension LogInView {
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
                 vm.signIn()
+                
                 if vm.alertItem == nil && vm.succesful {
                     dismiss()
                 }

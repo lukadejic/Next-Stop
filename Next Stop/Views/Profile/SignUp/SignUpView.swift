@@ -129,8 +129,8 @@ private extension SignUpView {
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
                 vm.signUp()
-                if vm.alertItem == nil {
-                    dismiss()
+                
+                if vm.alertItem == nil && vm.succesful {
                     dismiss()
                 }
             }

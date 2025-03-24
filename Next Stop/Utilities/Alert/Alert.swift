@@ -52,9 +52,16 @@ struct AlertContext {
         dismissButton: .default(Text("OK"))
     )
     
+    static let emailAlreadyExsists = AlertItem(
+        title: Text("Sign up failed"),
+        message: Text("User with the provided email already exists."),
+        dismissButton: .default(Text("OK"))
+    )
+    
     static let defaultError = AlertItem(
         title: Text("Error"),
         message: Text("Default firebase error"),
         dismissButton: .default(Text("OK"))
     )
+    
 }
