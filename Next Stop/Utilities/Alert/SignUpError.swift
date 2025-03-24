@@ -6,6 +6,8 @@ enum SignUpError : Error {
     case passwordsNotMached
     case weakPassword
     case firebaseError(error: Error)
+    case wrongEmail
+    case wrongPassword
     
     var errorDescription: String {
         switch self {
@@ -19,6 +21,10 @@ enum SignUpError : Error {
             return error.localizedDescription
         case .invalidEmail:
             return "Invalid email format"
+        case .wrongEmail:
+            return "User with this email does not exist"
+        case .wrongPassword:
+            return "Incorect password"
         }
     }
 }

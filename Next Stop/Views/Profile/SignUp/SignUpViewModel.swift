@@ -67,6 +67,10 @@ final class SignUpViewModel : ObservableObject {
             alertItem = AlertContext.firebaseError
         case .invalidEmail:
             alertItem = AlertContext.invalidEmail
+        case .wrongEmail:
+            alertItem = AlertContext.invalidEmail
+        case .wrongPassword:
+            alertItem = AlertContext.wrongPassword
         }
     }
     

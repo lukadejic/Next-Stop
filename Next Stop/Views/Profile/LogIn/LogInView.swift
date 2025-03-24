@@ -86,7 +86,7 @@ private extension LogInView {
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
                 vm.signIn()
-                if vm.alertItem == nil {
+                if vm.alertItem == nil && vm.succesful {
                     dismiss()
                 }
             }

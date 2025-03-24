@@ -39,4 +39,22 @@ struct AlertContext {
         message: Text("An error occurred while creating the account. Please try again."),
         dismissButton: .default(Text("OK"))
     )
+    
+    static let userNotFound = AlertItem(
+        title: Text("User Not Found"),
+        message: Text("No user found with the provided email and password.Try again."),
+        dismissButton: .default(Text("OK"))
+    )
+    
+    static let wrongPassword = AlertItem(
+        title: Text("Incorrect Password"),
+        message: Text("The password you entered is incorrect. Please try again."),
+        dismissButton: .default(Text("OK"))
+    )
+    
+    static let defaultError = AlertItem(
+        title: Text("Error"),
+        message: Text("Default firebase error"),
+        dismissButton: .default(Text("OK"))
+    )
 }

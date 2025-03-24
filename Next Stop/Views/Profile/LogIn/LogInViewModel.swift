@@ -1,13 +1,15 @@
 import Foundation
 import SwiftUI
+import FirebaseAuth
 
 @MainActor
 final class LogInViewModel : ObservableObject {
     @Published var email = ""
     @Published var password = ""
     @Published var showSignUp = false
-    @Published var alertItem: AlertItem? = nil
+    @Published var alertItem: AlertItem?
     @Published var isLoading = false
+    @Published var succesful = false
     
     let authManager: AuthenticationProtocol
     
@@ -18,28 +20,28 @@ final class LogInViewModel : ObservableObject {
     func signIn() {
         do{
             try validateFields()
-            isLoading = true
-            
             Task{
                 do{
-                    let authResultModel = try await authManager.signIn(email: email, password: password)
-                    print("Succesfull")
-                    print(authResultModel)
-                    self.alertItem = nil
-                    isLoading = false
-                }catch{
-                    self.alertItem = AlertItem(title: Text("Sign in failed"),
-                                               message: Text(error.localizedDescription),
-                                               dismissButton: .default(Text("Ok")))
-                    isLoading = false
+                    try await Auth.auth().signIn(withEmail: email, password: password)
+                    DispatchQueue.main.async {
+                        self.succesful = true
+                        self.alertItem = nil
+                    }
+                }catch let error as NSError {
+                    if let authErrorCode = AuthErrorCode(rawValue: error.code) {
+                        switch authErrorCode {
+                        case .invalidCredential:
+                            alertItem = AlertContext.userNotFound
+                        default:
+                            alertItem = AlertContext.firebaseError
+                        }
+                    }
                 }
             }
         }catch let error as SignUpError {
             mapErrorToAlert(error)
-            isLoading = false
         }catch {
             self.alertItem = AlertContext.firebaseError
-            isLoading = false
         }
     }
     
@@ -82,6 +84,10 @@ final class LogInViewModel : ObservableObject {
             alertItem = AlertContext.firebaseError
         case .invalidEmail:
             alertItem = AlertContext.invalidEmail
+        case .wrongEmail:
+            alertItem = AlertContext.invalidEmail
+        case .wrongPassword:
+            alertItem = AlertContext.wrongPassword
         }
     }
 }
