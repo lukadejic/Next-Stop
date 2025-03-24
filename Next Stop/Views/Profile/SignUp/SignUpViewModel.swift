@@ -18,36 +18,32 @@ final class SignUpViewModel : ObservableObject {
         self.authManager = authManager
     }
     
-    func signUp() {
-        
-        do{
+    func signUp() async throws {
+        do {
             try AuthValidator.validateFields(email: email,
                                              password: password,
                                              confirmPassword: confirmPassword)
-            Task{
-                do{
-                    try await authManager.createUser(email: email, password: password)
-                    DispatchQueue.main.async {
-                        self.alertItem = nil
-                        self.succesful = true
-                    }
-                    
-                }catch let error as NSError {
-                    if let authErrorCode = AuthErrorCode(rawValue: error.code) {
-                        switch authErrorCode {
-                        case .emailAlreadyInUse:
-                            alertItem = AlertContext.emailAlreadyExsists
-                        default:
-                            alertItem = AlertContext.firebaseError
-                        }
-                    }
+            
+            try await authManager.createUser(email: email, password: password)
+            
+            self.succesful = true
+            
+        } catch let error as SignUpError {
+            alertItem = AuthValidator.mapErrorToAlert(error)
+        } catch let error as NSError {
+            if let authErrorCode = AuthErrorCode(rawValue: error.code) {
+                switch authErrorCode {
+                case .emailAlreadyInUse:
+                    alertItem = AlertContext.emailAlreadyExsists
+                default:
+                    alertItem = AlertContext.firebaseError
                 }
             }
-        }catch let error as SignUpError {
-            alertItem = AuthValidator.mapErrorToAlert(error)
-        }catch{
+            self.succesful = false
+        } catch {
             self.alertItem = AlertContext.firebaseError
         }
     }
+
 
 }

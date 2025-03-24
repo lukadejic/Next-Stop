@@ -1,4 +1,7 @@
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
+import FirebaseAuth
 
 struct LogInView: View {
     @StateObject var vm: LogInViewModel
@@ -33,7 +36,7 @@ struct LogInView: View {
                 VStack(spacing: 20) {
                     signIn
                 }
-                
+
                 Spacer()
             }
             .onTapGesture {
@@ -83,10 +86,16 @@ private extension LogInView {
             LogInButton(text: "Sign in",
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
-                vm.signIn()
-                
-                if vm.alertItem == nil && vm.succesful {
-                    dismiss()
+                Task {
+                    do {
+                        try await vm.signIn()
+                        
+                        if vm.succesful {
+                            dismiss()
+                        }
+                    } catch {
+                        print("error: \(error.localizedDescription)")
+                    }
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -106,6 +115,23 @@ private extension LogInView {
                         .foregroundStyle(.white)
                 }
             }
+            
+            
+            GoogleSignInButton(
+                viewModel: GoogleSignInButtonViewModel(
+                    scheme: .light,
+                    style: .wide,
+                    state: .normal)) {
+                        Task {
+                            do {
+                                try await vm.signInWithGoogle()
+                                dismiss()
+                            } catch {
+                                print("Error: \(error.localizedDescription)")
+                            }
+                        }
+                }
+                .padding(.horizontal, 25)
         }
     }
     

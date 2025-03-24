@@ -1,8 +1,6 @@
-//
-//  GoogleSignInResultModel.swift
-//  Next Stop
-//
-//  Created by MacBook on 3/24/25.
-//
-
 import Foundation
+
+struct GoogleSignInResultModel {
+    let idToken: String
+    let accessToken: String
+}

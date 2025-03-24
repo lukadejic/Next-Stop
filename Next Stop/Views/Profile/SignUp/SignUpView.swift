@@ -17,6 +17,7 @@ struct SignUpView: View {
     
     @Environment(\.dismiss) var dismiss
     
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -128,11 +129,17 @@ private extension SignUpView {
             LogInButton(text: "Sign up",
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
-                vm.signUp()
-                
-                if vm.alertItem == nil && vm.succesful {
-                    dismiss()
-                    dismiss()
+                Task{
+                    do{
+                        try await vm.signUp()
+                        
+                        if vm.succesful {
+                            dismiss()
+                        }
+                        
+                    }catch{
+                        print("Error: \(error.localizedDescription)")
+                    }
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
