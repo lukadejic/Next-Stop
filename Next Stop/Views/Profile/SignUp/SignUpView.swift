@@ -132,6 +132,7 @@ private extension SignUpView {
                 
                 if vm.alertItem == nil && vm.succesful {
                     dismiss()
+                    dismiss()
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))

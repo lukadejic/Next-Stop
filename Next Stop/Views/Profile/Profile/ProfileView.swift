@@ -40,6 +40,14 @@ struct ProfileView: View {
                             } label: {
                                 Text("Log out")
                             }
+                            
+                            Button {
+                                vm.resetPassword()
+                                print("Succesful")
+                            } label: {
+                                Text("Reset password")
+                            }
+
                         }
                     }
                     Spacer()

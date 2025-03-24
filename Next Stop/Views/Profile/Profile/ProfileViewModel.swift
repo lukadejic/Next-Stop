@@ -34,6 +34,23 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
+    func resetPassword() {
+        Task{
+            do{
+                let user = try authManager.getAuthenticatedUser()
+                
+                guard let email = user.email else {
+                    throw UserError.emptyEmail
+                }
+                
+                try await authManager.resetPassword(email: email)
+                
+            }catch{
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func listenForAuthStateChanges() {
         authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
             if let user = user {
