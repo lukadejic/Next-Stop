@@ -1,7 +1,6 @@
 import SwiftUI
 import GoogleSignIn
 import GoogleSignInSwift
-import FirebaseAuth
 
 struct LogInView: View {
     @StateObject var vm: LogInViewModel
