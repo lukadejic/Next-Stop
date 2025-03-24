@@ -60,7 +60,7 @@ struct AlertContext {
     
     static let defaultError = AlertItem(
         title: Text("Error"),
-        message: Text("Default firebase error"),
+        message: Text("Something went wrong, please try again."),
         dismissButton: .default(Text("OK"))
     )
     

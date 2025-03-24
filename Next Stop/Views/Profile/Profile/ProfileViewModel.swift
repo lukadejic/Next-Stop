@@ -5,6 +5,7 @@ import FirebaseAuth
 final class ProfileViewModel : ObservableObject {
     @Published var user: AuthDataResultModel? = nil
     @Published var isLoading = false
+    @Published var alertItem: AlertItem? = nil
     
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -45,8 +46,16 @@ final class ProfileViewModel : ObservableObject {
                 
                 try await authManager.resetPassword(email: email)
                 
-            }catch{
-                print("Error: \(error.localizedDescription)")
+            }catch let error as NSError {
+                if let authErrorCode = AuthErrorCode(rawValue: error.code) {
+                    switch authErrorCode {
+                    case .invalidRecipientEmail:
+                        alertItem = AlertContext.invalidEmail
+                    default:
+                        alertItem = AlertContext.defaultError
+                    }
+                }
+                
             }
         }
     }
