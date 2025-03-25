@@ -78,4 +78,12 @@ struct AlertContext {
         dismissButton: .default(Text("OK"))
     )
     
+    //MARK: Delete user
+    
+    static let succesfulyDeletedUser = AlertItem (
+        title: Text("Succesfull"),
+        message: Text("Account deleted succesfully"),
+        dismissButton: .default(Text("OK"))
+    )
+    
 }

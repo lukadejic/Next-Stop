@@ -43,6 +43,17 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
+    func deleteUser(){
+        Task{
+            do{
+                try await authManager.deleteUser()
+                alertItem = AlertContext.succesfulyDeletedUser
+            }catch {
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func resetPassword() {
         Task{
             do{

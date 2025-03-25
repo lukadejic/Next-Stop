@@ -30,6 +30,7 @@ protocol AuthenticationProtocol {
     
     func signOut() throws
     
+    func deleteUser() async throws
 }
 
 final class AuthenticationManager : AuthenticationProtocol {
@@ -44,6 +45,14 @@ final class AuthenticationManager : AuthenticationProtocol {
     
     func signOut() throws {
         try Auth.auth().signOut()
+    }
+    
+    func deleteUser() async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw UserError.noCurrentUser
+        }
+        
+        try await user.delete()
     }
     
     func getProviders() throws -> [AuthProviderOption] {

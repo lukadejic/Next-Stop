@@ -33,6 +33,7 @@ struct ProfileView: View {
                         }
                     } else {
                             VStack(alignment: .leading) {
+                                
                                 Text(vm.user?.email ?? "Test user")
                                 
                                 Button {
@@ -40,7 +41,7 @@ struct ProfileView: View {
                                 } label: {
                                     Text("Log out")
                                 }
-                                if vm.authProviders.contains(.email) {
+                                
                                 Button {
                                     vm.resetPassword()
                                     print("Succesfuly reset password")
@@ -61,7 +62,13 @@ struct ProfileView: View {
                                 } label: {
                                     Text("Update email")
                                 }
-                            }
+                            
+                                Button {
+                                    vm.deleteUser()
+                                    print("User Succesfully deleted")
+                                } label: {
+                                    Text("Delete user")
+                                }
                         }
                     }
                     Spacer()

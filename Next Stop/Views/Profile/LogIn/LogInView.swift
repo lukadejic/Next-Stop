@@ -99,6 +99,24 @@ private extension LogInView {
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)
+                  
+            GoogleSignInButton(
+                viewModel: GoogleSignInButtonViewModel(
+                    scheme: .light,
+                    style: .wide,
+                    state: .normal)) {
+                        Task {
+                            do {
+                                try await vm.signInWithGoogle()
+                                dismiss()
+                            } catch {
+                                print("Error: \(error.localizedDescription)")
+                            }
+                        }
+                }
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .padding(.top,10)
+                    .padding(.horizontal, 30)
             
             HStack{
                 Text("Don't have an account?")
@@ -114,23 +132,6 @@ private extension LogInView {
                         .foregroundStyle(.white)
                 }
             }
-            
-            
-            GoogleSignInButton(
-                viewModel: GoogleSignInButtonViewModel(
-                    scheme: .light,
-                    style: .wide,
-                    state: .normal)) {
-                        Task {
-                            do {
-                                try await vm.signInWithGoogle()
-                                dismiss()
-                            } catch {
-                                print("Error: \(error.localizedDescription)")
-                            }
-                        }
-                }
-                .padding(.horizontal, 25)
         }
     }
     
