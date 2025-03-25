@@ -7,7 +7,7 @@ struct ProfileHeaderView: View {
                 Circle()
                     .frame(width: 60, height: 60)
                 
-                VStack(alignment: .leading,spacing: 8) {
+                VStack(alignment: .leading,spacing: 5) {
                     Text("Luka")
                         .font(.headline)
                         .fontWeight(.medium)
@@ -19,13 +19,9 @@ struct ProfileHeaderView: View {
                 
                 Spacer()
                 
-                Button{
-                    
-                }label: {
-                    Text(">")
-                        .font(.title)
-                        .fontWeight(.medium)
-                }
+                Text(">")
+                    .font(.title)
+                    .fontWeight(.medium)
             }
             .tint(.black)
             .padding()
