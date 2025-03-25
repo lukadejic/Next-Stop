@@ -2,7 +2,7 @@ import SwiftUI
 
 struct LogedInProfileView: View {
     var body: some View {
-        NavigationStack{
+        NavigationView{
             VStack(alignment:.leading) {
                 
                 profileHeader
@@ -13,7 +13,6 @@ struct LogedInProfileView: View {
                 
                 logout
             }
-            .navigationTitle("Profile")
         }
     }
 }

@@ -63,7 +63,6 @@ final class AuthenticationManager : AuthenticationProtocol {
         var providers: [AuthProviderOption] = []
         
         for provider in providerData {
-            print(provider.providerID)
             if let option = AuthProviderOption(rawValue: provider.providerID) {
                 providers.append(option)
             }else{
