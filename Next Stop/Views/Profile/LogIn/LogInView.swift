@@ -1,77 +1,122 @@
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
 
 struct LogInView: View {
-    @StateObject private var vm = LogInViewModel()
+    @StateObject var vm: LogInViewModel
+    @Binding var show: Bool
+    let authManager: AuthenticationManager
+    
+    init(authManager: AuthenticationManager, show: Binding<Bool>) {
+        self._vm = StateObject(wrappedValue: LogInViewModel(authManager: authManager))
+        self._show = show
+        self.authManager = authManager
+    }
     
     @FocusState var isEmailFocused: Bool
     @FocusState var isPasswordFocused: Bool
     
-    @Binding var show: Bool
-
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
-        ZStack{
-            if !vm.showSignUp {
-                VStack{
-                    Image("NextStopLogo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 200, height: 200)
-                    
-                    Spacer()
-                    
-                    authentication
-                    
-                    Spacer()
-                    
-                    VStack(spacing: 20){
-                        signIn
-                    }
-                    
-                    Spacer()
+        ZStack {
+            VStack {
+                Image("NextStopLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+                
+                Spacer()
+                
+                authentication
+                
+                Spacer()
+                
+                VStack(spacing: 20) {
+                    signIn
                 }
-                .onTapGesture {
-                    isEmailFocused = false
-                    isPasswordFocused = false
-                }
-                .frame(maxWidth: .infinity,maxHeight: .infinity)
-                .background(
-                    LinearGradient(
-                        colors: [Color.logInBackground, .red],
-                        startPoint: UnitPoint(x: 0.5, y: 0.5),
-                        endPoint: .bottom
-                    )
+
+                Spacer()
+            }
+            .onTapGesture {
+                isEmailFocused = false
+                isPasswordFocused = false
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                LinearGradient(
+                    colors: [Color.logInBackground, .red],
+                    startPoint: UnitPoint(x: 0.5, y: 0.5),
+                    endPoint: .bottom
                 )
-                .navigationBarTitleDisplayMode(.inline)
-                .overlay(alignment: .topLeading) {
-                    Button{
-                        withAnimation(.snappy) {
-                            show.toggle()
-                        }
-                    }label: {
-                        BackButton()
-                            .padding(.horizontal)
+            )
+            .navigationBarTitleDisplayMode(.inline)
+            .overlay(alignment: .topLeading) {
+                Button {
+                    withAnimation(.snappy) {
+                        show.toggle()
                     }
+                } label: {
+                    BackButton()
+                        .padding(.horizontal)
                 }
-            }else{
-                SignUpView(show: $vm.showSignUp)
+            }
+            .alert(item: $vm.alertItem) { alert in
+                Alert(title: alert.title,
+                      message: alert.message,
+                      dismissButton: alert.dismissButton)
+            }
+            .fullScreenCover(isPresented: $vm.showSignUp) {
+                SignUpView(authManager: authManager, show: $vm.showSignUp)
             }
         }
     }
 }
 
 #Preview {
-    LogInView(show: .constant(false))
+    LogInView(authManager: AuthenticationManager(),
+              show: .constant(false))
 }
 
 private extension LogInView {
     
     var signIn : some View {
-        VStack(spacing: 20){
+        VStack(spacing: 20) {
             LogInButton(text: "Sign in",
                         backgroundColor: .white,
-                        textColor: Color.logInBackground)
+                        textColor: Color.logInBackground){
+                Task {
+                    do {
+                        try await vm.signIn()
+                        
+                        if vm.succesful {
+                            dismiss()
+                        }
+                    } catch {
+                        print("error: \(error.localizedDescription)")
+                    }
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)
+                  
+            GoogleSignInButton(
+                viewModel: GoogleSignInButtonViewModel(
+                    scheme: .light,
+                    style: .wide,
+                    state: .normal)) {
+                        Task {
+                            do {
+                                try await vm.signInWithGoogle()
+                                dismiss()
+                            } catch {
+                                print("Error: \(error.localizedDescription)")
+                            }
+                        }
+                }
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .padding(.top,10)
+                    .padding(.horizontal, 30)
             
             HStack{
                 Text("Don't have an account?")

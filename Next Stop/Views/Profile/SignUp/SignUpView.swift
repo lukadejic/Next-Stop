@@ -1,17 +1,22 @@
 import SwiftUI
 
 struct SignUpView: View {
+    @StateObject private var vm : SignUpViewModel
+    
     @Binding var show : Bool
+    
+    init(authManager: AuthenticationProtocol, show: Binding<Bool>) {
+        _vm = StateObject(wrappedValue: SignUpViewModel(authManager: authManager))
+        _show = show
+    }
     
     @FocusState var isEmailFocused: Bool
     @FocusState var isPasswordFocused: Bool
     @FocusState var isUsernameFocued: Bool
     @FocusState var isConfirmPasswordFocused: Bool
     
-    @State private var confirmPassword = ""
-    @State private var username = ""
-    @State private var email = ""
-    @State private var password = ""
+    @Environment(\.dismiss) var dismiss
+    
     
     var body: some View {
         NavigationView {
@@ -58,12 +63,19 @@ struct SignUpView: View {
                 }
             }
         }
+        .alert(item: $vm.alertItem) { alert in
+            Alert(title: alert.title,
+                  message: alert.message,
+                  dismissButton: alert.dismissButton)
+        }
     }
 }
 
 #Preview {
-    SignUpView(show: .constant(false))
+    SignUpView(authManager: AuthenticationManager(),
+               show: .constant(false))
 }
+
 
 private extension SignUpView {
     func resetFocus() {
@@ -75,35 +87,36 @@ private extension SignUpView {
     
     var authentication : some View {
         VStack(spacing: 30) {
-            AuthenticationField(text: $email,
+            AuthenticationField(text: $vm.email,
                                 image: "person.fill")
             .overlay{
-                Text(!isEmailFocused && email.isEmpty ? "Email" : "")
+                Text(!isEmailFocused && vm.email.isEmpty ? "Email" : "")
                     .allowsHitTesting(false)
             }
             .focused($isEmailFocused)
             .foregroundStyle(.white)
+            .keyboardType(.emailAddress)
             
-            PasswordField(password: $password)
+            PasswordField(password: $vm.password)
             .overlay{
-                Text(!isPasswordFocused && password.isEmpty ? "Password" : "")
+                Text(!isPasswordFocused && vm.password.isEmpty ? "Password" : "")
                     .allowsHitTesting(false)
             }
             .focused($isPasswordFocused)
             .foregroundStyle(.white)
 
-            PasswordField(password: $confirmPassword)
+            PasswordField(password: $vm.confirmPassword)
             .overlay{
-                Text(!isConfirmPasswordFocused && confirmPassword.isEmpty ? "Confirm password" : "")
+                Text(!isConfirmPasswordFocused && vm.confirmPassword.isEmpty ? "Confirm password" : "")
                     .allowsHitTesting(false)
             }
             .focused($isConfirmPasswordFocused)
             .foregroundStyle(.white)
             
-            AuthenticationField(text: $username,
+            AuthenticationField(text: $vm.username,
                                 image: "person.fill")
             .overlay{
-                Text(!isUsernameFocued && username.isEmpty ? "Username" : "")
+                Text(!isUsernameFocued && vm.username.isEmpty ? "Username" : "")
                     .allowsHitTesting(false)
             }
             .focused($isUsernameFocued)
@@ -115,7 +128,20 @@ private extension SignUpView {
         VStack(spacing: 20){
             LogInButton(text: "Sign up",
                         backgroundColor: .white,
-                        textColor: Color.logInBackground)
+                        textColor: Color.logInBackground){
+                Task{
+                    do{
+                        try await vm.signUp()
+                        
+                        if vm.succesful {
+                            dismiss()
+                        }
+                        
+                    }catch{
+                        print("Error: \(error.localizedDescription)")
+                    }
+                }
+            }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)
             

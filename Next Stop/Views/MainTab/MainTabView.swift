@@ -2,9 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct MainTabView: View {
+    @StateObject private var profileViewModel =
+    ProfileViewModel(authManager: AuthenticationManager())
     
     @EnvironmentObject var vm: HomeViewModel
-    
+
     var body: some View {
         TabView {
             HomeView()
@@ -19,7 +21,7 @@ struct MainTabView: View {
                 }
                 .badge(vm.wishlist.count)
             
-            ProfileView()
+            ProfileView(vm: profileViewModel)
                 .tabItem {
                     Label("Profile", systemImage:"person")
                 }
