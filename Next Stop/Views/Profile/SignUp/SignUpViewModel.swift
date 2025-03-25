@@ -3,25 +3,28 @@ import SwiftUI
 import FirebaseAuth
 
 @MainActor
-final class LogInViewModel : ObservableObject {
+final class SignUpViewModel : ObservableObject {
     
+    @Published var confirmPassword = ""
+    @Published var username = ""
     @Published var email = ""
     @Published var password = ""
-    @Published var showSignUp = false
-    @Published var alertItem: AlertItem?
-    @Published var isLoading = false
+    @Published var alertItem: AlertItem? = nil
     @Published var succesful = false
     
-    let authManager: AuthenticationProtocol
+    private let authManager : AuthenticationProtocol
     
     init(authManager: AuthenticationProtocol) {
         self.authManager = authManager
     }
     
-    func signIn() async throws {
+    func signUp() async throws {
         do {
-            try AuthValidator.validateFields(email: email, password: password)
-            try await Auth.auth().signIn(withEmail: email, password: password)
+            try AuthValidator.validateFields(email: email,
+                                             password: password,
+                                             confirmPassword: confirmPassword)
+            
+            try await authManager.createUser(email: email, password: password)
             
             self.succesful = true
             
@@ -30,19 +33,17 @@ final class LogInViewModel : ObservableObject {
         } catch let error as NSError {
             if let authErrorCode = AuthErrorCode(rawValue: error.code) {
                 switch authErrorCode {
-                case .invalidCredential:
-                    alertItem = AlertContext.userNotFound
+                case .emailAlreadyInUse:
+                    alertItem = AlertContext.emailAlreadyExsists
                 default:
                     alertItem = AlertContext.firebaseError
                 }
             }
             self.succesful = false
+        } catch {
+            self.alertItem = AlertContext.firebaseError
         }
     }
-    
-    func signInWithGoogle() async throws {
-        let tokens = try await SignInGoogleHelper.signIn()
-        
-        try await authManager.signInWithGoogle(tokens: tokens)
-    }
+
+
 }
