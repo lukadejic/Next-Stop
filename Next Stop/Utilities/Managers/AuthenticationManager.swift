@@ -1,6 +1,11 @@
 import Foundation
 import FirebaseAuth
 
+enum AuthProviderOption: String {
+    case email = "password"
+    case google = "google.com"
+}
+
 protocol AuthenticationProtocol {
     @discardableResult
     func createUser (email: String, password: String) async throws -> AuthDataResultModel
@@ -13,6 +18,7 @@ protocol AuthenticationProtocol {
     @discardableResult
     func signInWithGoogle(tokens: GoogleSignInResultModel) async throws -> AuthDataResultModel
     
+    func getProviders() throws -> [AuthProviderOption]
     
     func getAuthenticatedUser() throws -> AuthDataResultModel
     
@@ -38,6 +44,25 @@ final class AuthenticationManager : AuthenticationProtocol {
     
     func signOut() throws {
         try Auth.auth().signOut()
+    }
+    
+    func getProviders() throws -> [AuthProviderOption] {
+        guard let providerData = Auth.auth().currentUser?.providerData else {
+            throw URLError(.badURL)
+        }
+        
+        var providers: [AuthProviderOption] = []
+        
+        for provider in providerData {
+            print(provider.providerID)
+            if let option = AuthProviderOption(rawValue: provider.providerID) {
+                providers.append(option)
+            }else{
+                assertionFailure("Provider option not found: \(provider.providerID)")
+            }
+        }
+        
+        return providers
     }
     
 }

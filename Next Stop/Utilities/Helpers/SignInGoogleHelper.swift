@@ -2,7 +2,6 @@ import Foundation
 import GoogleSignIn
 import GoogleSignInSwift
 
-
 final class SignInGoogleHelper {
     @MainActor
     static func signIn() async throws -> GoogleSignInResultModel{
@@ -18,7 +17,13 @@ final class SignInGoogleHelper {
 
         let accessToken: String = gidSignInResult.user.accessToken.tokenString
 
-        let tokens = GoogleSignInResultModel(idToken: idToken, accessToken: accessToken)
+        let name = gidSignInResult.user.profile?.name
+        let email = gidSignInResult.user.profile?.email
+        
+        let tokens = GoogleSignInResultModel(idToken: idToken,
+                                             accessToken: accessToken,
+                                             name: name,
+                                             email: email)
         return tokens
     }
 }

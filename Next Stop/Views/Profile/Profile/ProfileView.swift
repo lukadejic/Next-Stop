@@ -32,34 +32,35 @@ struct ProfileView: View {
                             }
                         }
                     } else {
-                        VStack(alignment: .leading) {
-                            Text(vm.user?.email ?? "Test user")
-                            
-                            Button {
-                                vm.signOut()
-                            } label: {
-                                Text("Log out")
-                            }
-                            
-                            Button {
-                                vm.resetPassword()
-                                print("Succesfuly reset password")
-                            } label: {
-                                Text("Reset password")
-                            }
-
-                            Button {
-                                vm.updatePassword()
-                                print("Succesfully updated password")
-                            } label: {
-                                Text("Update password")
-                            }
-                            
-                            Button {
-                                vm.updateEmail()
-                                print("Succesfully updated email")
-                            } label: {
-                                Text("Update email")
+                            VStack(alignment: .leading) {
+                                Text(vm.user?.email ?? "Test user")
+                                
+                                Button {
+                                    vm.signOut()
+                                } label: {
+                                    Text("Log out")
+                                }
+                                if vm.authProviders.contains(.email) {
+                                Button {
+                                    vm.resetPassword()
+                                    print("Succesfuly reset password")
+                                } label: {
+                                    Text("Reset password")
+                                }
+                                
+                                Button {
+                                    vm.updatePassword()
+                                    print("Succesfully updated password")
+                                } label: {
+                                    Text("Update password")
+                                }
+                                
+                                Button {
+                                    vm.updateEmail()
+                                    print("Succesfully updated email")
+                                } label: {
+                                    Text("Update email")
+                                }
                             }
                         }
                     }
@@ -68,6 +69,7 @@ struct ProfileView: View {
             }
             .onAppear {
                 vm.getAuthenticatedUser()
+                vm.loadAuthProviders()
             }
             .fullScreenCover(isPresented: $showLoginView) {
                 LogInView(authManager: authManager, show: $showLoginView)

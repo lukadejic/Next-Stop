@@ -6,6 +6,7 @@ final class ProfileViewModel : ObservableObject {
     @Published var user: AuthDataResultModel? = nil
     @Published var isLoading = false
     @Published var alertItem: AlertItem? = nil
+    @Published var authProviders: [AuthProviderOption] = []
     
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -14,6 +15,13 @@ final class ProfileViewModel : ObservableObject {
         self.authManager = authManager
         self.getAuthenticatedUser()
         self.listenForAuthStateChanges()
+    }
+    
+    
+    func loadAuthProviders(){
+        if let providers = try? authManager.getProviders() {
+            authProviders = providers
+        }
     }
     
     func getAuthenticatedUser() {
