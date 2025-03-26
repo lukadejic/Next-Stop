@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct LogedInProfileView: View {
+    @ObservedObject var vm: ProfileViewModel
+    
     var body: some View {
         NavigationView{
             VStack(alignment:.leading) {
@@ -18,7 +20,8 @@ struct LogedInProfileView: View {
 }
 
 #Preview {
-    LogedInProfileView()
+    LogedInProfileView(vm: ProfileViewModel(authManager:
+                                                AuthenticationManager()))
 }
 
 private extension LogedInProfileView {
@@ -55,7 +58,7 @@ private extension LogedInProfileView {
     
     var logout: some View {
         Button{
-            
+            vm.signOut()
         }label: {
             Text("Log out")
                 .fontWeight(.semibold)
@@ -67,9 +70,9 @@ private extension LogedInProfileView {
     
     var profileHeader: some View {
         NavigationLink {
-            ProfileDetailsView()
+            ProfileDetailsView(vm: vm)
         } label: {
-            ProfileHeaderView()
+            ProfileHeaderView(vm: vm)
         }
     }
 }

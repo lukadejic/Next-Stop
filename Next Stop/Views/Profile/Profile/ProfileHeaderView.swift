@@ -1,14 +1,17 @@
 import SwiftUI
 
 struct ProfileHeaderView: View {
+    @ObservedObject var vm: ProfileViewModel
+    
     var body: some View {
         VStack(spacing: 0){
             HStack(spacing: 20){
-                Circle()
+                AsyncImage(url: URL(string:vm.user?.photoURL ?? ""))
                     .frame(width: 60, height: 60)
-                
+                    .clipShape(Circle())
+
                 VStack(alignment: .leading,spacing: 5) {
-                    Text("Luka")
+                    Text(vm.user?.email ?? "test@gmail.com")
                         .font(.headline)
                         .fontWeight(.medium)
                     
@@ -36,5 +39,5 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView()
+    ProfileHeaderView(vm: ProfileViewModel(authManager: AuthenticationManager()))
 }

@@ -1,11 +1,15 @@
 import SwiftUI
 
 struct ProfileDetailsView: View {
+    @ObservedObject var vm: ProfileViewModel
+    
     var body: some View {
-        Text("Profile details view")
+        VStack(alignment: .leading) {
+            
+        }
     }
 }
 
 #Preview {
-    ProfileDetailsView()
+    ProfileDetailsView(vm: ProfileViewModel(authManager: AuthenticationManager()))
 }
