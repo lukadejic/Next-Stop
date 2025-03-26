@@ -15,9 +15,13 @@ struct SettingsOptionView: View {
             
             Spacer()
             
-            Text(">")
-                .font(.title)
-                .fontWeight(.semibold)
+            VStack{
+                Image("next")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 15, height: 15)
+            }
+            .frame(width: 30, height: 30)
         }
         
         Rectangle()

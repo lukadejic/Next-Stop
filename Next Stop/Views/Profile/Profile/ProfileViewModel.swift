@@ -1,12 +1,27 @@
 import Foundation
 import FirebaseAuth
 
+struct UserInfo: Identifiable {
+    let id = UUID()
+    let icon: String
+    let text: String
+    let info: String
+}
+
+
 @MainActor
 final class ProfileViewModel : ObservableObject {
     @Published var user: AuthDataResultModel? = nil
     @Published var isLoading = false
     @Published var alertItem: AlertItem? = nil
     @Published var authProviders: [AuthProviderOption] = []
+    
+    @Published var userInfoList: [UserInfo] = [
+        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish"),
+        UserInfo(icon: "like", text: "I'm obsessed with:", info: "Something"),
+        UserInfo(icon: "book", text: "My biography title", info: "Biography title"),
+        UserInfo(icon: "globe", text: "Lives in", info: "Belgrade, Serbia")
+    ]
     
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -18,7 +33,7 @@ final class ProfileViewModel : ObservableObject {
     }
     
     
-    func loadAuthProviders(){
+    func loadAuthProviders() {
         if let providers = try? authManager.getProviders() {
             authProviders = providers
         }

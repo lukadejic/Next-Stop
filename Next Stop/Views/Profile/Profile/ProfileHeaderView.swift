@@ -22,9 +22,10 @@ struct ProfileHeaderView: View {
                 
                 Spacer()
                 
-                Text(">")
-                    .font(.title)
-                    .fontWeight(.medium)
+                Image("next")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 15, height: 15)
             }
             .tint(.black)
             .padding()
