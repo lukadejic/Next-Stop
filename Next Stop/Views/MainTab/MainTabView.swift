@@ -7,6 +7,8 @@ struct MainTabView: View {
     
     @EnvironmentObject var vm: HomeViewModel
 
+    let authManager = AuthenticationManager()
+    
     var body: some View {
         TabView {
             HomeView()
@@ -14,14 +16,14 @@ struct MainTabView: View {
                     Label("Explore", systemImage:"magnifyingglass")
                 }
                 
-            
             WishlistView()
                 .tabItem {
                     Label("Whishlist", systemImage:"heart")
                 }
                 .badge(vm.wishlist.count)
             
-            ProfileView(vm: profileViewModel)
+            ProfileView(vm: profileViewModel,
+                        authManager: authManager)
                 .tabItem {
                     Label("Profile", systemImage:"person")
                 }

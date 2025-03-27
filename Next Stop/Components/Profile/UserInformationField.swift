@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct UserInformationField: View {
+    
     let icon: String
     let text: String
     @State var info: String = ""
@@ -12,12 +13,13 @@ struct UserInformationField: View {
                 .scaledToFit()
                 .frame(width: 25, height: 25)
             
-            Text("\(text): \(info)")
+            Text(info.isEmpty ? text : "\(text): \(info)")
                 .font(.title3)
+                .foregroundStyle(info.isEmpty ? .gray : .black)
         }
     }
 }
 
 #Preview {
-    UserInformationField(icon: "speak", text: "Speaks", info: "English and Serbian")
+    UserInformationField(icon: "speak", text: "Speaks", info: "English and Spanish")
 }

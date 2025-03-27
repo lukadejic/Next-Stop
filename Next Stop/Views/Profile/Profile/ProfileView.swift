@@ -3,7 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @ObservedObject var vm: ProfileViewModel
     @State private var showLoginView = false
-    let authManager = AuthenticationManager()
+    let authManager : AuthenticationManager
     
     var body: some View {
         NavigationStack{
@@ -39,7 +39,9 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(vm: ProfileViewModel(authManager: AuthenticationManager()))
+    ProfileView(vm: ProfileViewModel(
+                authManager: AuthenticationManager()),
+                authManager: AuthenticationManager())
 }
 
 private extension ProfileView {

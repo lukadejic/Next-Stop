@@ -8,7 +8,6 @@ struct UserInfo: Identifiable {
     let info: String
 }
 
-
 @MainActor
 final class ProfileViewModel : ObservableObject {
     @Published var user: AuthDataResultModel? = nil
@@ -23,6 +22,22 @@ final class ProfileViewModel : ObservableObject {
         UserInfo(icon: "globe", text: "Lives in", info: "Belgrade, Serbia")
     ]
     
+    @Published var userEditProfileList : [UserInfo] = [
+        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish"),
+        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something"),
+        UserInfo(icon: "book", text: "My biography title", info: "Biography title"),
+        UserInfo(icon: "globe", text: "Lives in", info: ""),
+        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer"),
+        UserInfo(icon: "paws", text: "Pets", info: "")
+    ]
+    
+    @Published var myWork: String = ""
+    @Published var pets: String = ""
+    @Published var languages: String = ""
+    @Published var obsessed: String = ""
+    @Published var biography: String = ""
+    @Published var location: String = ""
+        
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
     

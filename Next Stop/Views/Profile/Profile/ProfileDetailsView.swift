@@ -4,6 +4,8 @@ struct ProfileDetailsView: View {
     @ObservedObject var vm: ProfileViewModel
     @Environment(\.dismiss) private var dismiss
     
+    @State private var showEditView = false
+    
     var body: some View {
         
         ScrollView {
@@ -14,6 +16,11 @@ struct ProfileDetailsView: View {
                 userInfo
                 
                 Spacer()
+            }
+            .sheet(isPresented: $showEditView) {
+                NavigationView{
+                    EditProfileView(vm: vm, show: $showEditView)
+                }
             }
             .frame(maxWidth: .infinity)
             .navigationBarBackButtonHidden()
@@ -31,7 +38,7 @@ struct ProfileDetailsView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button{
-                        
+                        showEditView.toggle()
                     }label: {
                         Text("Edit")
                             .fontWeight(.semibold)
@@ -52,10 +59,11 @@ struct ProfileDetailsView: View {
 private extension ProfileDetailsView {
     var header: some View {
         VStack{
-            Circle()
-                .frame(width: 150, height: 150)
+            AsyncImage(url: URL(string: vm.user?.photoURL ?? ""))
+                .clipShape(Circle())
+                .frame(width: 130, height: 130)
             
-            Text("Luka")
+            Text(vm.user?.displayName ?? "Unknown")
                 .font(.title)
                 .fontWeight(.semibold)
             
