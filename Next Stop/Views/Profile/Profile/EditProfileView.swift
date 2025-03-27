@@ -1,6 +1,16 @@
 import SwiftUI
 import PhotosUI
 
+enum UserInfoItem {
+    case language
+    case obsessed
+    case biography
+    case location
+    case work
+    case pets
+    case none
+}
+
 struct EditProfileView: View {
     
     @ObservedObject var vm: ProfileViewModel
@@ -8,6 +18,8 @@ struct EditProfileView: View {
     @State private var avatarItem: PhotosPickerItem?
     @State private var userImage: Image?
     @State private var showPicker = false
+    @State private var selectedItem: UserInfoItem = .none
+    @State private var showSheet = false
     
     @Binding var show: Bool
 
@@ -17,6 +29,24 @@ struct EditProfileView: View {
                 photo
                 
                 information
+            }
+        }
+        .sheet(isPresented: $showSheet) {
+            switch selectedItem {
+            case .language:
+                Text("Language")
+            case .obsessed:
+                Text("Obsessed")
+            case .biography:
+                EditBiographyView()
+            case .location:
+                Text("Location")
+            case .work:
+                Text("Work")
+            case .pets:
+                Text("Pets")
+            case .none:
+                EmptyView()
             }
         }
         .photosPicker(isPresented: $showPicker, selection: $avatarItem, matching: .images)
@@ -75,7 +105,7 @@ private extension EditProfileView {
                 showPicker.toggle()
             }label: {
                 VStack{
-                    HStack(spacing: 10){
+                    HStack(spacing: 10) {
                         Image(systemName: "camera.fill")
                             
                         Text("Edit")
@@ -97,7 +127,7 @@ private extension EditProfileView {
         VStack(alignment: .leading,spacing: 30) {
             ForEach(vm.userEditProfileList) { item in
                 VStack(alignment: .leading,spacing: 30) {
-                    HStack{
+                    HStack {
                         UserInformationField(icon: item.icon,
                                              text: item.text,
                                              info: item.info)
@@ -110,6 +140,10 @@ private extension EditProfileView {
                                 .scaledToFit()
                                 .frame(width: 15, height: 15)
                         }
+                    }
+                    .onTapGesture {
+                        selectedItem = item.itemType
+                        showSheet = true
                     }
                     Divider()
                 }

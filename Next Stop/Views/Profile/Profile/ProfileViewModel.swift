@@ -6,6 +6,7 @@ struct UserInfo: Identifiable {
     let icon: String
     let text: String
     let info: String
+    let itemType: UserInfoItem
 }
 
 @MainActor
@@ -15,20 +16,15 @@ final class ProfileViewModel : ObservableObject {
     @Published var alertItem: AlertItem? = nil
     @Published var authProviders: [AuthProviderOption] = []
     
-    @Published var userInfoList: [UserInfo] = [
-        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish"),
-        UserInfo(icon: "like", text: "I'm obsessed with:", info: "Something"),
-        UserInfo(icon: "book", text: "My biography title", info: "Biography title"),
-        UserInfo(icon: "globe", text: "Lives in", info: "Belgrade, Serbia")
-    ]
+    @Published var userInfoList: [UserInfo] = []
     
-    @Published var userEditProfileList : [UserInfo] = [
-        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish"),
-        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something"),
-        UserInfo(icon: "book", text: "My biography title", info: "Biography title"),
-        UserInfo(icon: "globe", text: "Lives in", info: ""),
-        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer"),
-        UserInfo(icon: "paws", text: "Pets", info: "")
+    @Published var userEditProfileList: [UserInfo] = [
+        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish", itemType: .language),
+        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something", itemType: .obsessed),
+        UserInfo(icon: "book", text: "My biography title", info: "Biography title", itemType: .biography),
+        UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
+        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer", itemType: .work),
+        UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)
     ]
     
     @Published var myWork: String = ""
