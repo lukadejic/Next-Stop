@@ -1,83 +1,110 @@
 import SwiftUI
 
 struct EditBiographyView: View {
-    @State private var text : String = ""
+    @State private var text: String = ""
     private let characterLimit = 40
-    
+
     @Environment(\.dismiss) private var dismiss
-    @FocusState var showKeyboard: Bool
-    
+    @FocusState private var showKeyboard: Bool
+
+    private var isOverLimit: Bool {
+        text.count > characterLimit
+    }
+
     var body: some View {
-        VStack(alignment: .leading,spacing: 20) {
-            Button{
-                dismiss()
-            }label: {
-                Image(systemName: "xmark")
-                    .foregroundStyle(.black)
-            }
-            .padding(.bottom)
+        VStack(alignment: .leading, spacing: 20) {
+            closeButton
             
-            Text("What would your biography title be?")
-                .font(.title2)
-                .fontWeight(.medium)
+            titleSection
             
-            Text("If someone wrote a book about your life, what would they call it? Example: Born to Roam or Chronicles of a Dog Mum.")
-                .font(.callout)
-                .foregroundStyle(.black.opacity(0.7))
-        
-            VStack(alignment: .leading, spacing: 30){
-                TextField("", text: $text)
-                    .padding(.top, 50)
-                    .padding(.horizontal)
-                    .focused($showKeyboard)
-                
-                HStack {
-                    if text.count <= characterLimit {
-                        Text("\(text.count)/\(characterLimit) characters")
-                            .foregroundStyle(text.count > characterLimit ? .red : .black.opacity(0.7))
-                            .font(.caption)
-                        
-                    } else {
-                        HStack(spacing: 5){
-                            Image(systemName: "exclamationmark.triangle.fill")
-                            
-                            Text("Character limit reached")
-                        }
-                        .foregroundStyle(.red)
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                    }
-                }
-            }
-            .frame(height: 50)
-            .background(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 1))
-            .overlay(alignment: .topLeading ){
-                Text("My biography title would be:")
-                    .foregroundStyle(text.count > characterLimit ? .red : .black.opacity(0.7))
-                    .font(.caption)
-                    .fontWeight(text.count > characterLimit ? .heavy : .light)
-                    .padding(5)
-                    .padding(.horizontal)
-            }
-            .background(text.count > characterLimit ? .red.opacity(0.1) : .white)
+            bioTextField
             
-            LogInButton(text: "Save", backgroundColor: .black, textColor: .white) {
-                
-            }
-            .offset(x: 15)
-            .padding(.top, 40)
-            .disabled(text.count > characterLimit)
-            .opacity(text.count > characterLimit ? 0.3 : 1)
+            saveButton
         }
         .onAppear {
             showKeyboard = true
         }
         .presentationDetents([.height(400)])
-        .frame(maxWidth: .infinity,alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
     }
 }
 
 #Preview {
     EditBiographyView()
+}
+
+private extension EditBiographyView {
+    
+    var closeButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "xmark")
+                .foregroundStyle(.black)
+        }
+        .padding(.bottom)
+    }
+    
+    var titleSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("What would your biography title be?")
+                .font(.title2)
+                .fontWeight(.medium)
+
+            Text("If someone wrote a book about your life, what would they call it? Example: Born to Roam or Chronicles of a Dog Mum.")
+                .font(.callout)
+                .foregroundStyle(.black.opacity(0.7))
+        }
+    }
+    
+    var bioTextField: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            TextField("", text: $text)
+                .padding(.top, 50)
+                .padding(.horizontal)
+                .focused($showKeyboard)
+
+            characterCounter
+        }
+        .frame(height: 50)
+        .background(RoundedRectangle(cornerRadius: 10).stroke(lineWidth: 1))
+        .overlay(alignment: .topLeading) {
+            Text("My biography title would be:")
+                .foregroundStyle(isOverLimit ? .red : .black.opacity(0.7))
+                .font(.caption)
+                .fontWeight(isOverLimit ? .heavy : .light)
+                .padding(5)
+                .padding(.horizontal)
+        }
+        .background(isOverLimit ? .red.opacity(0.1) : .white)
+    }
+
+    var characterCounter: some View {
+        HStack {
+            if isOverLimit {
+                HStack(spacing: 5) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                    Text("Character limit reached")
+                }
+                .foregroundStyle(.red)
+                .font(.caption)
+                .fontWeight(.semibold)
+            } else {
+                Text("\(text.count)/\(characterLimit) characters")
+                    .foregroundStyle(.black.opacity(0.7))
+                    .font(.caption)
+            }
+        }
+    }
+
+    var saveButton: some View {
+        LogInButton(text: "Save", backgroundColor: .black, textColor: .white) {
+            
+        }
+        .offset(x: 15)
+        .padding(.top, 40)
+        .disabled(isOverLimit)
+        .opacity(isOverLimit ? 0.3 : 1)
+    }
 }
