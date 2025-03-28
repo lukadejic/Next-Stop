@@ -2,13 +2,7 @@ import SwiftUI
 import PhotosUI
 
 enum UserInfoItem {
-    case language
-    case obsessed
-    case biography
-    case location
-    case work
-    case pets
-    case none
+    case language, obsessed, biography, location, work, pets, none
 }
 
 struct EditProfileView: View {
@@ -26,46 +20,30 @@ struct EditProfileView: View {
     var body: some View {
         ScrollView(showsIndicators: true) {
             VStack {
-                photo
+                ProfilePhotoView(userImage: $userImage,
+                                 showPicker: $showPicker,
+                                 photoURL: vm.user?.photoURL)
                 
-                information
+                UserInfoListView(vm: vm,
+                                 selectedItem: $selectedItem,
+                                 showSheet: $showSheet)
             }
         }
         .sheet(isPresented: $showSheet) {
-            switch selectedItem {
-            case .language:
-                Text("Language")
-            case .obsessed:
-                Text("Obsessed")
-            case .biography:
-                EditBiographyView()
-            case .location:
-                Text("Location")
-            case .work:
-                Text("Work")
-            case .pets:
-                Text("Pets")
-            case .none:
-                EmptyView()
-            }
+            sheetContent(for: selectedItem)
         }
-        .photosPicker(isPresented: $showPicker, selection: $avatarItem, matching: .images)
+        .photosPicker(isPresented: $showPicker,
+                      selection: $avatarItem, matching: .images)
         .onChange(of: avatarItem) {
-            Task {
-                if let image = try? await avatarItem?.loadTransferable(type: Image.self) {
-                    userImage = image
-                } else {
-                    print("Failed to load image")
-                }
-            }
+            loadImage()
         }
         .navigationTitle("Edit Profile")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar{
+        .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button{
+                Button {
                     show.toggle()
-                }label: {
+                } label: {
                     Image(systemName: "xmark")
                         .imageScale(.medium)
                 }
@@ -81,79 +59,33 @@ struct EditProfileView: View {
 }
 
 private extension EditProfileView {
-    var photo: some View {
-        VStack{
-            if let userImage = userImage {
-                userImage
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                    .clipShape(Circle())
-            } else if let photoURL = vm.user?.photoURL {
-                AsyncImageView(url: photoURL)
-            }else{
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .frame(width: 200, height: 200)
-                    .clipShape(Circle())
-                    .foregroundStyle(.gray)
-            }
-        }
-        .overlay(alignment: .bottom) {
-            Button{
-                showPicker.toggle()
-            }label: {
-                VStack{
-                    HStack(spacing: 10) {
-                        Image(systemName: "camera.fill")
-                            
-                        Text("Edit")
-                            .font(.title3)
-                    }
-                }
-                .fontWeight(.semibold)
-                .frame(width: 100, height: 40)
-                .background(Color.white)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                .shadow(radius: 10)
-                .offset(y: 10)
-                .foregroundStyle(.black)
-            }
+    @ViewBuilder
+    func sheetContent(for item: UserInfoItem) -> some View {
+        switch item {
+        case .language:
+            Text("Language")
+        case .obsessed:
+            Text("Obsessed")
+        case .biography:
+            EditBiographyView()
+        case .location:
+            Text("Location")
+        case .work:
+            Text("Work")
+        case .pets:
+            Text("Pets")
+        case .none:
+            EmptyView()
         }
     }
     
-    var information: some View {
-        VStack(alignment: .leading,spacing: 30) {
-            ForEach(vm.userEditProfileList) { item in
-                VStack(alignment: .leading,spacing: 30) {
-                    HStack {
-                        UserInformationField(icon: item.icon,
-                                             text: item.text,
-                                             info: item.info)
-                        
-                        Spacer()
-                        
-                        if !item.info.isEmpty {
-                            Image("next")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 15, height: 15)
-                        }
-                    }
-                    .onTapGesture {
-                        selectedItem = item.itemType
-                    }
-                    .onChange(of: selectedItem) {oldValue, newValue in
-                        if newValue != .none {
-                            showSheet = true
-                        }
-                    }
-                    
-                    Divider()
-                }
+    func loadImage() {
+        Task {
+            if let image = try? await avatarItem?.loadTransferable(type: Image.self) {
+                userImage = image
+            } else {
+                print("Failed to load image")
             }
         }
-        .padding()
-        .padding(.top)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
