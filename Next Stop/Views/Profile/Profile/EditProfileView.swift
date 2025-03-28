@@ -89,9 +89,7 @@ private extension EditProfileView {
                     .frame(width: 200, height: 200)
                     .clipShape(Circle())
             } else if let photoURL = vm.user?.photoURL {
-                AsyncImage(url: URL(string: photoURL))
-                    .frame(width: 200, height: 200)
-                    .clipShape(Circle())
+                AsyncImageView(url: photoURL)
             }else{
                 Image(systemName: "person.crop.circle.fill")
                     .resizable()
@@ -143,8 +141,13 @@ private extension EditProfileView {
                     }
                     .onTapGesture {
                         selectedItem = item.itemType
-                        showSheet = true
                     }
+                    .onChange(of: selectedItem) {oldValue, newValue in
+                        if newValue != .none {
+                            showSheet = true
+                        }
+                    }
+                    
                     Divider()
                 }
             }

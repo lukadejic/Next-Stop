@@ -5,7 +5,8 @@ struct EditBiographyView: View {
     private let characterLimit = 40
     
     @Environment(\.dismiss) private var dismiss
-
+    @FocusState var showKeyboard: Bool
+    
     var body: some View {
         VStack(alignment: .leading,spacing: 20) {
             Button{
@@ -28,7 +29,8 @@ struct EditBiographyView: View {
                 TextField("", text: $text)
                     .padding(.top, 50)
                     .padding(.horizontal)
-
+                    .focused($showKeyboard)
+                
                 HStack {
                     if text.count <= characterLimit {
                         Text("\(text.count)/\(characterLimit) characters")
@@ -66,6 +68,9 @@ struct EditBiographyView: View {
             .padding(.top, 40)
             .disabled(text.count > characterLimit)
             .opacity(text.count > characterLimit ? 0.3 : 1)
+        }
+        .onAppear {
+            showKeyboard = true
         }
         .presentationDetents([.height(400)])
         .frame(maxWidth: .infinity,alignment: .leading)
