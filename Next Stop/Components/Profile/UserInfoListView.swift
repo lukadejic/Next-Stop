@@ -10,7 +10,9 @@ struct UserInfoListView: View {
             ForEach(vm.userEditProfileList) { item in
                 VStack(alignment: .leading, spacing: 30) {
                     HStack {
-                        UserInformationField(icon: item.icon, text: item.text, info: item.info)
+                        UserInformationField(icon: item.icon,
+                                             text: item.text,
+                                             info: item.info)
                         
                         Spacer()
                         

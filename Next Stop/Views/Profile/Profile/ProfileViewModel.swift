@@ -1,21 +1,5 @@
 import Foundation
 import FirebaseAuth
-import SwiftUI
-
-struct UserInfo: Identifiable {
-    var id = UUID()
-    var icon: String
-    var text: String
-    var info: String
-    var itemType: UserInfoItem
-    
-    init(icon: String, text: String, info: String, itemType: UserInfoItem) {
-        self.icon = icon
-        self.text = text
-        self.info = info
-        self.itemType = itemType
-    }
-}
 
 @MainActor
 final class ProfileViewModel : ObservableObject {
@@ -34,11 +18,11 @@ final class ProfileViewModel : ObservableObject {
     @Published var location: String = ""
     
     @Published var userEditProfileList: [UserInfo] = [
-        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish", itemType: .language),
-        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something", itemType: .obsessed),
+        UserInfo(icon: "speak", text: "Speaks", info: "", itemType: .language),
+        UserInfo(icon: "like", text: "I'm obsessed with", info: "", itemType: .obsessed),
         UserInfo(icon: "book", text: "My biography title", info: "", itemType: .biography),
         UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
-        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer", itemType: .work),
+        UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
         UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)
     ]
         
@@ -51,11 +35,16 @@ final class ProfileViewModel : ObservableObject {
         self.listenForAuthStateChanges()
     }
     
-    func updateUserInfo(for itemType: UserInfoItem, newInfo: String) {
-        if let index = userEditProfileList.firstIndex(where: { $0.itemType == itemType }) {
-            userEditProfileList[index].info = newInfo
+    deinit {
+        if let handle = authStateListenerHandle {
+            Auth.auth().removeStateDidChangeListener(handle)
         }
     }
+}
+
+extension ProfileViewModel {
+    
+    //MARK: Authentication
     
     func loadAuthProviders() {
         if let providers = try? authManager.getProviders() {
@@ -82,7 +71,7 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
-    func deleteUser(){
+    func deleteUser() {
         Task{
             do{
                 try await authManager.deleteUser()
@@ -142,6 +131,15 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
+    //MARK: User info
+    func updateUserInfo(for itemType: UserInfoItem, newInfo: String) {
+        if let index = userEditProfileList.firstIndex(where: { $0.itemType == itemType }) {
+            userEditProfileList[index].info = newInfo
+        }
+    }
+    
+    // MARK: Auth State Listener
+    
     func listenForAuthStateChanges() {
         authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
             if let user = user {
@@ -152,9 +150,4 @@ final class ProfileViewModel : ObservableObject {
         }
     }
     
-    deinit {
-        if let handle = authStateListenerHandle {
-            Auth.auth().removeStateDidChangeListener(handle)
-        }
-    }
 }
