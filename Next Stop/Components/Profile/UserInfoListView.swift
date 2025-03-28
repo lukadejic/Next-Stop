@@ -40,7 +40,11 @@ struct UserInfoListView: View {
     }
 }
 
-//
-//#Preview {
-//    UserInfoListView(vm: <#ProfileViewModel#>, selectedItem: <#Binding<UserInfoItem>#>, showSheet: <#Binding<Bool>#>)
-//}
+
+#Preview {
+    UserInfoListView(
+        vm: ProfileViewModel(
+        authManager: AuthenticationManager()),
+        selectedItem: .constant(.none),
+        showSheet: .constant(false))
+}

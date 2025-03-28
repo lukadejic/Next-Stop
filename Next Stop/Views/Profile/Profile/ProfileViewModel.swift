@@ -1,12 +1,20 @@
 import Foundation
 import FirebaseAuth
+import SwiftUI
 
 struct UserInfo: Identifiable {
-    let id = UUID()
-    let icon: String
-    let text: String
-    let info: String
-    let itemType: UserInfoItem
+    var id = UUID()
+    var icon: String
+    var text: String
+    var info: String
+    var itemType: UserInfoItem
+    
+    init(icon: String, text: String, info: String, itemType: UserInfoItem) {
+        self.icon = icon
+        self.text = text
+        self.info = info
+        self.itemType = itemType
+    }
 }
 
 @MainActor
@@ -18,21 +26,21 @@ final class ProfileViewModel : ObservableObject {
     
     @Published var userInfoList: [UserInfo] = []
     
-    @Published var userEditProfileList: [UserInfo] = [
-        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish", itemType: .language),
-        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something", itemType: .obsessed),
-        UserInfo(icon: "book", text: "My biography title", info: "Biography title", itemType: .biography),
-        UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
-        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer", itemType: .work),
-        UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)
-    ]
-    
     @Published var myWork: String = ""
     @Published var pets: String = ""
     @Published var languages: String = ""
     @Published var obsessed: String = ""
     @Published var biography: String = ""
     @Published var location: String = ""
+    
+    @Published var userEditProfileList: [UserInfo] = [
+        UserInfo(icon: "speak", text: "Speaks", info: "English and Spanish", itemType: .language),
+        UserInfo(icon: "like", text: "I'm obsessed with", info: "Something", itemType: .obsessed),
+        UserInfo(icon: "book", text: "My biography title", info: "", itemType: .biography),
+        UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
+        UserInfo(icon: "briefcase", text: "My work", info: "Software Developer", itemType: .work),
+        UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)
+    ]
         
     private let authManager : AuthenticationProtocol
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
@@ -43,6 +51,11 @@ final class ProfileViewModel : ObservableObject {
         self.listenForAuthStateChanges()
     }
     
+    func updateUserInfo(for itemType: UserInfoItem, newInfo: String) {
+        if let index = userEditProfileList.firstIndex(where: { $0.itemType == itemType }) {
+            userEditProfileList[index].info = newInfo
+        }
+    }
     
     func loadAuthProviders() {
         if let providers = try? authManager.getProviders() {

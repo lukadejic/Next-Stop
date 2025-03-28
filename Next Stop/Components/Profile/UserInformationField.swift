@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct UserInformationField: View {
-    
     let icon: String
     let text: String
-    @State var info: String = ""
+    var info: String
     
     var body: some View {
         HStack(spacing: 10){

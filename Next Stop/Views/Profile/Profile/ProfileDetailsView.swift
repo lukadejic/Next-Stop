@@ -79,11 +79,11 @@ private extension ProfileDetailsView {
     var userInfo: some View {
         VStack(alignment: .leading){
             VStack(alignment: .leading, spacing: 25) {
-                ForEach(vm.userInfoList) { info in
-                    UserInformationField(icon: info.icon,
-                                         text: info.text,
-                                         info: info.info)
-                }
+//                ForEach(vm.userInfoList) { info in
+//                    UserInformationField(icon: info.icon,
+//                                         text: info.text,
+//                                         info: info.info)
+//                }
             }
             
             Rectangle()

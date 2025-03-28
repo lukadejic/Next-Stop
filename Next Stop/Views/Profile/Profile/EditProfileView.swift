@@ -67,7 +67,7 @@ private extension EditProfileView {
         case .obsessed:
             Text("Obsessed")
         case .biography:
-            EditBiographyView()
+            EditBiographyView(vm: vm, text: $vm.biography)
         case .location:
             Text("Location")
         case .work:

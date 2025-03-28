@@ -11,7 +11,7 @@ struct ProfileView: View {
                 VStack {
                     VStack(alignment: .leading) {
                         
-                        if vm.user == nil {
+                        if vm.user != nil {
                             login
                         } else {
                             LogedInProfileView(vm: vm)

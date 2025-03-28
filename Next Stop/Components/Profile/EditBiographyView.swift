@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct EditBiographyView: View {
-    @State private var text: String = ""
+    @ObservedObject var vm: ProfileViewModel
+    @Binding var text: String
     private let characterLimit = 40
 
     @Environment(\.dismiss) private var dismiss
@@ -31,7 +32,8 @@ struct EditBiographyView: View {
 }
 
 #Preview {
-    EditBiographyView()
+    EditBiographyView(vm: ProfileViewModel(
+        authManager: AuthenticationManager()), text: .constant(""))
 }
 
 private extension EditBiographyView {
@@ -100,7 +102,8 @@ private extension EditBiographyView {
 
     var saveButton: some View {
         LogInButton(text: "Save", backgroundColor: .black, textColor: .white) {
-            
+            vm.updateUserInfo(for: .biography, newInfo: text)
+            dismiss()
         }
         .offset(x: 15)
         .padding(.top, 40)
