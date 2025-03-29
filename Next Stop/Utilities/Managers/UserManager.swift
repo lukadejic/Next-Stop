@@ -4,6 +4,7 @@ import FirebaseFirestore
 protocol UserManagerProtocol {
     func getUser(userId: String) async throws -> DBUser
     func createNewUser(user: DBUser) async throws
+    func updateUserBiography(userId: String, biography: String ) async throws
 }
 
 final class UserManager : UserManagerProtocol {
@@ -34,5 +35,13 @@ final class UserManager : UserManagerProtocol {
     
     func getUser(userId: String) async throws -> DBUser {
         try await userDocument(userId: userId).getDocument(as: DBUser.self, decoder: decoder)
+    }
+    
+    func updateUserBiography(userId: String, biography: String) async throws {
+        let data: [String : Any] = [
+            "biography" : biography
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
     }
 }

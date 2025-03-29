@@ -104,6 +104,7 @@ private extension EditBiographyView {
     var saveButton: some View {
         LogInButton(text: "Save", backgroundColor: .black, textColor: .white) {
             vm.updateUserInfo(for: .biography, newInfo: text)
+            vm.updateUserBiography()
             dismiss()
         }
         .offset(x: 15)

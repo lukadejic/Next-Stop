@@ -166,6 +166,19 @@ extension ProfileViewModel {
     
     //MARK: Firestore
     
-    
+    func updateUserBiography() {
+        Task{
+            do{
+                guard let user else { return }
+                
+                try await userManager.updateUserBiography(userId: user.userId,
+                                                          biography: self.biography)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+            }catch{
+                
+            }
+        }
+    }
     
 }

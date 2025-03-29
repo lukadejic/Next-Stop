@@ -24,7 +24,7 @@ final class LogInViewModel : ObservableObject {
         do {
             try AuthValidator.validateFields(email: email, password: password)
             
-            let authDataResult = try await authManager.signIn(email: email, password: password)
+            try await authManager.signIn(email: email, password: password)
 
             self.succesful = true
             

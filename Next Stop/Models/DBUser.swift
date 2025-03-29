@@ -22,4 +22,5 @@ struct DBUser : Codable {
         self.displayName = user.displayName
         self.dateCreated = Date()
     }
+
 }
