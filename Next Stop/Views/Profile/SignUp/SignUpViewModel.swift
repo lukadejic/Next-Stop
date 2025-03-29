@@ -29,7 +29,10 @@ final class SignUpViewModel : ObservableObject {
             
             var authDataResult = try await authManager.createUser(email: email, password: password)
             authDataResult.displayName = username
-            try await userManager.createUser(auth: authDataResult)
+            
+            let user = DBUser(user: authDataResult)
+            
+            try await userManager.createNewUser(user: user)
             
             self.succesful = true
             

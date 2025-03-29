@@ -23,10 +23,9 @@ final class LogInViewModel : ObservableObject {
     func signIn() async throws {
         do {
             try AuthValidator.validateFields(email: email, password: password)
-            let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
             
-            try await userManager.createUser(auth: AuthDataResultModel(user: authDataResult.user))
-            
+            let authDataResult = try await authManager.signIn(email: email, password: password)
+
             self.succesful = true
             
         } catch let error as SignUpError {
@@ -49,6 +48,8 @@ final class LogInViewModel : ObservableObject {
         
         let authDataResult = try await authManager.signInWithGoogle(tokens: tokens)
         
-        try await userManager.createUser(auth: authDataResult)
+        let user = DBUser(user: authDataResult)
+        
+        try await userManager.createNewUser(user: user)
     }
 }

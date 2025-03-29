@@ -155,7 +155,6 @@ extension ProfileViewModel {
                     do {
                         self.user = try await self.userManager.getUser(userId: user.uid)
                     } catch {
-                        print("Failed to fetch user data: \(error)")
                         self.user = nil
                     }
                 } else {

@@ -1,6 +1,6 @@
 import Foundation
 
-struct DBUser {
+struct DBUser : Codable {
     let userId: String
     let email: String?
     let photoURL: String?
@@ -13,5 +13,13 @@ struct DBUser {
         self.photoURL = photoURL
         self.displayName = displayName
         self.dateCreated = dateCreated
+    }
+    
+    init(user: AuthDataResultModel) {
+        self.userId = user.uid
+        self.email = user.email
+        self.photoURL = user.photoURL
+        self.displayName = user.displayName
+        self.dateCreated = Date()
     }
 }

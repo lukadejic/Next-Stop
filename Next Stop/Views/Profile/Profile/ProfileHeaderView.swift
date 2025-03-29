@@ -35,7 +35,6 @@ struct ProfileHeaderView: View {
                 .frame(height: 1)
                 .padding(.horizontal)
         }
-
     }
 }
 
