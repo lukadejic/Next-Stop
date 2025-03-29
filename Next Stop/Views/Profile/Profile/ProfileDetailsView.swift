@@ -53,7 +53,9 @@ struct ProfileDetailsView: View {
 }
 
 #Preview {
-    ProfileDetailsView(vm: ProfileViewModel(authManager: AuthenticationManager()))
+    ProfileDetailsView(vm: ProfileViewModel(
+        authManager: AuthenticationManager(),
+        userManager: UserManager()))
 }
 
 private extension ProfileDetailsView {

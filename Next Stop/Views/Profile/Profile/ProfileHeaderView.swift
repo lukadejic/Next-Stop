@@ -11,7 +11,7 @@ struct ProfileHeaderView: View {
                     .clipShape(Circle())
 
                 VStack(alignment: .leading,spacing: 5) {
-                    Text(vm.user?.email ?? "test@gmail.com")
+                    Text(vm.user?.displayName ?? "Test")
                         .font(.headline)
                         .fontWeight(.medium)
                     
@@ -40,5 +40,7 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView(vm: ProfileViewModel(authManager: AuthenticationManager()))
+    ProfileHeaderView(vm: ProfileViewModel(
+        authManager: AuthenticationManager(),
+        userManager: UserManager()))
 }

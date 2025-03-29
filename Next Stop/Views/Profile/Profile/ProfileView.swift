@@ -4,6 +4,7 @@ struct ProfileView: View {
     @ObservedObject var vm: ProfileViewModel
     @State private var showLoginView = false
     let authManager : AuthenticationManager
+    let userManager: UserManagerProtocol
     
     var body: some View {
         NavigationStack{
@@ -11,7 +12,7 @@ struct ProfileView: View {
                 VStack {
                     VStack(alignment: .leading) {
                         
-                        if vm.user != nil {
+                        if vm.user == nil {
                             login
                         } else {
                             LogedInProfileView(vm: vm)
@@ -24,7 +25,9 @@ struct ProfileView: View {
                     vm.loadAuthProviders()
                 }
                 .fullScreenCover(isPresented: $showLoginView) {
-                    LogInView(authManager: authManager, show: $showLoginView)
+                    LogInView(authManager: authManager,
+                              userManager: userManager,
+                              show: $showLoginView)
                 }
                 
             }
@@ -40,8 +43,10 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView(vm: ProfileViewModel(
-                authManager: AuthenticationManager()),
-                authManager: AuthenticationManager())
+        authManager: AuthenticationManager(),
+        userManager: UserManager()),
+                authManager: AuthenticationManager(),
+                userManager: UserManager())
 }
 
 private extension ProfileView {

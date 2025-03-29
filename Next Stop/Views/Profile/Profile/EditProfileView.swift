@@ -54,8 +54,10 @@ struct EditProfileView: View {
 }
 
 #Preview {
-    EditProfileView(vm: ProfileViewModel(authManager: AuthenticationManager()),
-                    show: .constant(false))
+    EditProfileView(vm: ProfileViewModel(
+        authManager: AuthenticationManager(),
+        userManager: UserManager()),
+        show: .constant(false))
 }
 
 private extension EditProfileView {

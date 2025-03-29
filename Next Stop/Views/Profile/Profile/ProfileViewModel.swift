@@ -3,7 +3,7 @@ import FirebaseAuth
 
 @MainActor
 final class ProfileViewModel : ObservableObject {
-    @Published var user: AuthDataResultModel? = nil
+    @Published var user: DBUser? = nil
     @Published var isLoading = false
     @Published var alertItem: AlertItem? = nil
     @Published var authProviders: [AuthProviderOption] = []
@@ -27,10 +27,13 @@ final class ProfileViewModel : ObservableObject {
     ]
         
     private let authManager : AuthenticationProtocol
+    private let userManager: UserManagerProtocol
+    
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
     
-    init(authManager: AuthenticationProtocol) {
+    init(authManager: AuthenticationProtocol, userManager: UserManagerProtocol) {
         self.authManager = authManager
+        self.userManager = userManager
         self.getAuthenticatedUser()
         self.listenForAuthStateChanges()
     }
@@ -55,7 +58,8 @@ extension ProfileViewModel {
     func getAuthenticatedUser() {
         Task{
             do{
-                self.user = try authManager.getAuthenticatedUser()
+                let authDataResultModel = try authManager.getAuthenticatedUser()
+                self.user = try await userManager.getUser(userId: authDataResultModel.uid)
             }catch{
                 throw SignUpError.firebaseError(error: error)
             }
@@ -146,12 +150,23 @@ extension ProfileViewModel {
     
     func listenForAuthStateChanges() {
         authStateListenerHandle = Auth.auth().addStateDidChangeListener { auth, user in
-            if let user = user {
-                self.user = AuthDataResultModel(user: user)
-            } else {
-                self.user = nil
+            Task {
+                if let user = user {
+                    do {
+                        self.user = try await self.userManager.getUser(userId: user.uid)
+                    } catch {
+                        print("Failed to fetch user data: \(error)")
+                        self.user = nil
+                    }
+                } else {
+                    self.user = nil
+                }
             }
         }
     }
+    
+    //MARK: Firestore
+    
+    
     
 }

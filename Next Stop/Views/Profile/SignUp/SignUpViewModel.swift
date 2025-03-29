@@ -13,18 +13,23 @@ final class SignUpViewModel : ObservableObject {
     @Published var succesful = false
     
     private let authManager : AuthenticationProtocol
+    private let userManager: UserManagerProtocol
     
-    init(authManager: AuthenticationProtocol) {
+    init(authManager: AuthenticationProtocol, userManager: UserManagerProtocol) {
         self.authManager = authManager
+        self.userManager = userManager
     }
     
     func signUp() async throws {
         do {
             try AuthValidator.validateFields(email: email,
                                              password: password,
-                                             confirmPassword: confirmPassword)
+                                             confirmPassword: confirmPassword,
+                                             username: username)
             
-            try await authManager.createUser(email: email, password: password)
+            var authDataResult = try await authManager.createUser(email: email, password: password)
+            authDataResult.displayName = username
+            try await userManager.createUser(auth: authDataResult)
             
             self.succesful = true
             

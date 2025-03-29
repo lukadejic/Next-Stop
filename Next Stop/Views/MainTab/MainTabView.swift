@@ -3,11 +3,13 @@ import SwiftData
 
 struct MainTabView: View {
     @StateObject private var profileViewModel =
-    ProfileViewModel(authManager: AuthenticationManager())
+    ProfileViewModel(authManager: AuthenticationManager(),
+                     userManager: UserManager())
     
     @EnvironmentObject var vm: HomeViewModel
 
     let authManager = AuthenticationManager()
+    let userManager = UserManager()
     
     var body: some View {
         TabView {
@@ -23,7 +25,9 @@ struct MainTabView: View {
                 .badge(vm.wishlist.count)
             
             ProfileView(vm: profileViewModel,
-                        authManager: authManager)
+                        authManager: authManager,
+                        userManager: userManager)
+            
                 .tabItem {
                     Label("Profile", systemImage:"person")
                 }

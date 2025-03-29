@@ -33,7 +33,8 @@ struct EditBiographyView: View {
 
 #Preview {
     EditBiographyView(vm: ProfileViewModel(
-        authManager: AuthenticationManager()), text: .constant(""))
+        authManager: AuthenticationManager(),
+        userManager: UserManager()), text: .constant(""))
 }
 
 private extension EditBiographyView {

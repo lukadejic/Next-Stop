@@ -46,7 +46,8 @@ struct UserInfoListView: View {
 #Preview {
     UserInfoListView(
         vm: ProfileViewModel(
-        authManager: AuthenticationManager()),
+            authManager: AuthenticationManager(),
+            userManager: UserManager()),
         selectedItem: .constant(.none),
         showSheet: .constant(false))
 }

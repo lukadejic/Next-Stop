@@ -20,8 +20,9 @@ struct LogedInProfileView: View {
 }
 
 #Preview {
-    LogedInProfileView(vm: ProfileViewModel(authManager:
-                                                AuthenticationManager()))
+    LogedInProfileView(vm: ProfileViewModel(
+        authManager: AuthenticationManager(),
+        userManager: UserManager()))
 }
 
 private extension LogedInProfileView {

@@ -5,7 +5,7 @@ struct AuthDataResultModel : Equatable{
     let uid : String
     let email: String?
     let photoURL: String?
-    let displayName: String?
+    var displayName: String?
     
     init(user: User) {
         self.uid = user.uid
