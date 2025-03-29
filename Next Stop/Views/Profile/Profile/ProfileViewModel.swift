@@ -136,6 +136,10 @@ extension ProfileViewModel {
         if let index = userEditProfileList.firstIndex(where: { $0.itemType == itemType }) {
             userEditProfileList[index].info = newInfo
         }
+        
+        if let newUserInfo = userEditProfileList.first(where: { $0.itemType == itemType }) {
+            userInfoList.append(newUserInfo)
+        }
     }
     
     // MARK: Auth State Listener
