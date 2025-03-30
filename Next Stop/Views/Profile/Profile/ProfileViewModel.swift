@@ -152,7 +152,7 @@ extension ProfileViewModel {
         var tempList : [UserInfo] = []
         
         if let biography = user.biography, !biography.isEmpty {
-            tempList.append(UserInfo(icon: "book", text: "My biography title", info: biography, itemType: .obsessed))
+            tempList.append(UserInfo(icon: "book", text: "My biography title", info: biography, itemType: .biography))
         }
         
         self.userInfoList = tempList
@@ -210,6 +210,36 @@ extension ProfileViewModel {
                 
                 self.user = try await userManager.getUser(userId: user.userId)
             }catch{
+                
+            }
+        }
+    }
+    
+    func addUserLanguage(language: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateLanguages(userId: user.userId, language: language)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+            }catch {
+                
+            }
+        }
+    }
+    
+    func removeUserLanguage(language: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.removeLanguages(userId: user.userId, language: language)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+            }catch {
                 
             }
         }

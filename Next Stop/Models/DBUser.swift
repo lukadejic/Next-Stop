@@ -8,8 +8,9 @@ struct DBUser: Codable {
     let dateCreated: Date?
     let biography: String?
     let preferences: [String]?
+    let languages: [String]?
     
-    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?) {
+    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?) {
         self.userId = userId
         self.email = email
         self.photoURL = photoURL
@@ -17,6 +18,7 @@ struct DBUser: Codable {
         self.dateCreated = dateCreated
         self.biography = biography
         self.preferences = preferences
+        self.languages = languages
     }
     
     init(user: AuthDataResultModel) {
@@ -27,6 +29,7 @@ struct DBUser: Codable {
         self.dateCreated = Date()
         self.biography = nil
         self.preferences = nil
+        self.languages = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -37,6 +40,7 @@ struct DBUser: Codable {
         case dateCreated = "date_created"
         case biography = "biography"
         case preferences = "preferences"
+        case languages = "languages"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -48,6 +52,7 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.biography, forKey: .biography)
         try container.encodeIfPresent(self.preferences, forKey: .preferences)
+        try container.encodeIfPresent(self.languages, forKey: .languages)
     }
     
     init(from decoder: any Decoder) throws {
@@ -59,5 +64,6 @@ struct DBUser: Codable {
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.biography = try container.decodeIfPresent(String.self, forKey: .biography)
         self.preferences = try container.decodeIfPresent([String].self, forKey: .preferences)
+        self.languages = try container.decodeIfPresent([String].self, forKey: .languages)
     }
 }

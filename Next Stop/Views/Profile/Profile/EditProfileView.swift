@@ -88,7 +88,7 @@ private extension EditProfileView {
     func sheetContent(for item: UserInfoItem) -> some View {
         switch item {
         case .language:
-            Text("Language")
+            EditLanguageView(vm: vm)
         case .obsessed:
             Text("Obsessed")
         case .biography:
