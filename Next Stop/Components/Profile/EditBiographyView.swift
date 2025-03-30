@@ -2,7 +2,7 @@ import SwiftUI
 
 struct EditBiographyView: View {
     @ObservedObject var vm: ProfileViewModel
-    @Binding var text: String
+    @State private var text: String = ""
     private let characterLimit = 40
 
     @Environment(\.dismiss) private var dismiss
@@ -24,7 +24,9 @@ struct EditBiographyView: View {
         }
         .onAppear {
             showKeyboard = true
+            text = vm.user?.biography ?? ""
         }
+
         .presentationDetents([.height(400)])
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
@@ -34,7 +36,7 @@ struct EditBiographyView: View {
 #Preview {
     EditBiographyView(vm: ProfileViewModel(
         authManager: AuthenticationManager(),
-        userManager: UserManager()), text: .constant(""))
+        userManager: UserManager()))
 }
 
 private extension EditBiographyView {
@@ -103,8 +105,7 @@ private extension EditBiographyView {
 
     var saveButton: some View {
         LogInButton(text: "Save", backgroundColor: .black, textColor: .white) {
-            vm.updateUserInfo(for: .biography, newInfo: text)
-            vm.updateUserBiography()
+            vm.updateUserBiography(bio: text)
             dismiss()
         }
         .offset(x: 15)

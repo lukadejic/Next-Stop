@@ -9,6 +9,7 @@ struct ProfileDetailsView: View {
     var body: some View {
         
         ScrollView {
+            
             VStack {
                 
                 header

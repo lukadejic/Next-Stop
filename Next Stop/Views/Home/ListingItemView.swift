@@ -6,7 +6,7 @@ struct ListingItemView: View {
     @Binding var isLiked: Bool
     
     var body: some View {
-        VStack(alignment: .leading){
+        VStack(alignment: .leading) {
             
             if let images = vm.hotelImages[hotel.hotelID ?? 0], !images.isEmpty {
                 ListingImageCarouselView(images: images)

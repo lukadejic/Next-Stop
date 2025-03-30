@@ -49,4 +49,5 @@ final class UserManager : UserManagerProtocol {
         
         try await userDocument(userId: userId).updateData(data)
     }
+    
 }

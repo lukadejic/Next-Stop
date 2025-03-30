@@ -9,22 +9,7 @@ final class ProfileViewModel : ObservableObject {
     @Published var authProviders: [AuthProviderOption] = []
     
     @Published var userInfoList: [UserInfo] = []
-    
-    @Published var myWork: String = ""
-    @Published var pets: String = ""
-    @Published var languages: String = ""
-    @Published var obsessed: String = ""
-    @Published var biography: String = ""
-    @Published var location: String = ""
-    
-    @Published var userEditProfileList: [UserInfo] = [
-        UserInfo(icon: "speak", text: "Speaks", info: "", itemType: .language),
-        UserInfo(icon: "like", text: "I'm obsessed with", info: "", itemType: .obsessed),
-        UserInfo(icon: "book", text: "My biography title", info: "", itemType: .biography),
-        UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
-        UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
-        UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)
-    ]
+    @Published var userEditProfileList: [UserInfo] = []
         
     private let authManager : AuthenticationProtocol
     private let userManager: UserManagerProtocol
@@ -60,6 +45,7 @@ extension ProfileViewModel {
             do{
                 let authDataResultModel = try authManager.getAuthenticatedUser()
                 self.user = try await userManager.getUser(userId: authDataResultModel.uid)
+                loadUserData()
             }catch{
                 throw SignUpError.firebaseError(error: error)
             }
@@ -135,17 +121,6 @@ extension ProfileViewModel {
         }
     }
     
-    //MARK: User info
-    func updateUserInfo(for itemType: UserInfoItem, newInfo: String) {
-        if let index = userEditProfileList.firstIndex(where: { $0.itemType == itemType }) {
-            userEditProfileList[index].info = newInfo
-        }
-        
-        if let newUserInfo = userEditProfileList.first(where: { $0.itemType == itemType }) {
-            userInfoList.append(newUserInfo)
-        }
-    }
-    
     // MARK: Auth State Listener
     
     func listenForAuthStateChanges() {
@@ -165,16 +140,47 @@ extension ProfileViewModel {
     }
     
     //MARK: Firestore
+
+    func loadUserData() {
+        loadUserInfoList()
+        populateUserEditProfileList()
+    }
     
-    func updateUserBiography() {
+    func loadUserInfoList() {
+        guard let user else { return }
+        
+        var tempList : [UserInfo] = []
+        
+        if let biography = user.biography, !biography.isEmpty {
+            tempList.append(UserInfo(icon: "book", text: "My biography title", info: biography, itemType: .obsessed))
+        }
+        
+        self.userInfoList = tempList
+    }
+    
+    func populateUserEditProfileList() {
+        let tempList : [UserInfo] = [
+            UserInfo(icon: "speak", text: "Speaks", info: "", itemType: .language),
+            UserInfo(icon: "like", text: "I'm obsessed with", info: "", itemType: .obsessed),
+            UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
+            UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
+            UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
+            UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)]
+        
+        self.userEditProfileList = tempList
+    }
+    
+    func updateUserBiography(bio: String) {
         guard let user else { return }
         
         Task{
             do{
                 try await userManager.updateUserBiography(userId: user.userId,
-                                                          biography: self.biography)
+                                                          biography: bio)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
             }catch{
                 
             }
