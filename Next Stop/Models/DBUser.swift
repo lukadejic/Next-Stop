@@ -1,19 +1,22 @@
 import Foundation
 
-struct DBUser : Codable {
+struct DBUser: Codable {
     let userId: String
     let email: String?
     let photoURL: String?
     let displayName: String?
-    let dateCreated : Date?
-    var biogrpahy: String?
+    let dateCreated: Date?
+    let biography: String?
+    let preferences: [String]?
     
-    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?) {
+    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?) {
         self.userId = userId
         self.email = email
         self.photoURL = photoURL
         self.displayName = displayName
         self.dateCreated = dateCreated
+        self.biography = biography
+        self.preferences = preferences
     }
     
     init(user: AuthDataResultModel) {
@@ -22,6 +25,8 @@ struct DBUser : Codable {
         self.photoURL = user.photoURL
         self.displayName = user.displayName
         self.dateCreated = Date()
+        self.biography = nil
+        self.preferences = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -31,6 +36,7 @@ struct DBUser : Codable {
         case displayName = "display_name"
         case dateCreated = "date_created"
         case biography = "biography"
+        case preferences = "preferences"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -40,7 +46,8 @@ struct DBUser : Codable {
         try container.encodeIfPresent(self.photoURL, forKey: .photoURL)
         try container.encodeIfPresent(self.displayName, forKey: .displayName)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
-        try container.encodeIfPresent(self.biogrpahy, forKey: .biography)
+        try container.encodeIfPresent(self.biography, forKey: .biography)
+        try container.encodeIfPresent(self.preferences, forKey: .preferences)
     }
     
     init(from decoder: any Decoder) throws {
@@ -50,7 +57,7 @@ struct DBUser : Codable {
         self.photoURL = try container.decodeIfPresent(String.self, forKey: .photoURL)
         self.displayName = try container.decodeIfPresent(String.self, forKey: .displayName)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
-        self.biogrpahy = try container.decodeIfPresent(String.self, forKey: .biography)
+        self.biography = try container.decodeIfPresent(String.self, forKey: .biography)
+        self.preferences = try container.decodeIfPresent([String].self, forKey: .preferences)
     }
-    
 }

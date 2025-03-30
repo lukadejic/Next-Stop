@@ -167,10 +167,10 @@ extension ProfileViewModel {
     //MARK: Firestore
     
     func updateUserBiography() {
+        guard let user else { return }
+        
         Task{
             do{
-                guard let user else { return }
-                
                 try await userManager.updateUserBiography(userId: user.userId,
                                                           biography: self.biography)
                 
@@ -181,4 +181,31 @@ extension ProfileViewModel {
         }
     }
     
+    func addUserPreference(text: String) {
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updatePreferences(userId: user.userId, preference: text)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+            }catch{
+                
+            }
+        }
+    }
+    
+    func removeUserPreference(text: String) {
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.removePreferences(userId: user.userId, preference: text)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+            }catch{
+                
+            }
+        }
+    }
 }

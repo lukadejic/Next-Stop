@@ -16,7 +16,13 @@ struct EditProfileView: View {
     @State private var showSheet = false
     
     @Binding var show: Bool
+    
+    let preferenceOptions : [String] = ["Sports", "Movies", "Books"]
 
+    private func preferenceIsSelected(text: String) -> Bool {
+        vm.user?.preferences?.contains(text) == true
+    }
+    
     var body: some View {
         ScrollView(showsIndicators: true) {
             VStack {
@@ -27,6 +33,23 @@ struct EditProfileView: View {
                 UserInfoListView(vm: vm,
                                  selectedItem: $selectedItem,
                                  showSheet: $showSheet)
+                
+                VStack{
+                    HStack(spacing: 20) {
+                        ForEach(preferenceOptions, id: \.self ) {option in
+                            Button(option) {
+                                if preferenceIsSelected(text: option){
+                                    vm.removeUserPreference(text: option)
+                                }else {
+                                    vm.addUserPreference(text: option)
+                                }
+                            }
+                            .tint(preferenceIsSelected(text: option) ? .green : .red)
+                        }
+                    }
+                    Text("User preferences: \((vm.user?.preferences ?? []).joined(separator: ", "))")
+
+                }
             }
         }
         .sheet(isPresented: $showSheet) {
