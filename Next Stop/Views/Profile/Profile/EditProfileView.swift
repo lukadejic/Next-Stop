@@ -73,7 +73,7 @@ private extension EditProfileView {
         case .language:
             EditLanguageView(vm: vm)
         case .obsessed:
-            Text("Obsessed")
+            EditObsessedView(vm: vm)
         case .biography:
             EditBiographyView(vm: vm)
         case .location:

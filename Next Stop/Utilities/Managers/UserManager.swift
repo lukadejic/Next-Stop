@@ -8,6 +8,7 @@ protocol UserManagerProtocol {
     func updatePreferences(userId: String, preference: String) async throws
     func removePreferences(userId: String, preference: String) async throws
     func updateLanguages(userId: String, languages: [String]) async throws
+    func updateObsessed(userId: String, text: String) async throws
 }
 
 final class UserManager : UserManagerProtocol {
@@ -54,6 +55,14 @@ final class UserManager : UserManagerProtocol {
     func updateLanguages(userId: String, languages: [String]) async throws {
         let data: [String : Any] = [
             DBUser.CodingKeys.languages.rawValue : languages
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func updateObsessed(userId: String, text: String) async throws {
+        let data: [String : Any] = [
+            DBUser.CodingKeys.obsessed.rawValue : text
         ]
         
         try await userDocument(userId: userId).updateData(data)

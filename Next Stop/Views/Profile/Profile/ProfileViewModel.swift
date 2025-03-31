@@ -161,6 +161,10 @@ extension ProfileViewModel {
             tempList.append(UserInfo(icon: "speak", text: "Languages i speak", info: languages.joined(separator: ", "), itemType: .language))
         }
         
+        if let obsessed = user.obsessed, !obsessed.isEmpty {
+            tempList.append(UserInfo(icon: "like", text: "I'm obsessed with", info: obsessed, itemType: .obsessed))
+        }
+        
         self.userInfoList = tempList
     }
     
@@ -168,7 +172,7 @@ extension ProfileViewModel {
         let tempList : [UserInfo] = [
             UserInfo(icon: "speak", text: "Speaks",
                      info: user?.languages?.joined(separator: ", ") ?? "", itemType: .language),
-            UserInfo(icon: "like", text: "I'm obsessed with", info: "", itemType: .obsessed),
+            UserInfo(icon: "like", text: "I'm obsessed with", info: user?.obsessed ?? "", itemType: .obsessed),
             UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
             UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
             UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
@@ -229,6 +233,23 @@ extension ProfileViewModel {
         Task{
             do{
                 try await userManager.updateLanguages(userId: user.userId, languages: languages)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                
+            }
+        }
+    }
+    
+    func updateObsessedUserText(text: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateObsessed(userId: user.userId, text: text)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
                 

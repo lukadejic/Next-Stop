@@ -9,8 +9,9 @@ struct DBUser: Codable {
     let biography: String?
     let preferences: [String]?
     let languages: [String]?
+    let obsessed : String?
     
-    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?) {
+    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?,obsessed: String?) {
         self.userId = userId
         self.email = email
         self.photoURL = photoURL
@@ -19,6 +20,7 @@ struct DBUser: Codable {
         self.biography = biography
         self.preferences = preferences
         self.languages = languages
+        self.obsessed = obsessed
     }
     
     init(user: AuthDataResultModel) {
@@ -30,6 +32,7 @@ struct DBUser: Codable {
         self.biography = nil
         self.preferences = nil
         self.languages = nil
+        self.obsessed = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -41,6 +44,7 @@ struct DBUser: Codable {
         case biography = "biography"
         case preferences = "preferences"
         case languages = "languages"
+        case obsessed = "obsessed"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -53,6 +57,7 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.biography, forKey: .biography)
         try container.encodeIfPresent(self.preferences, forKey: .preferences)
         try container.encodeIfPresent(self.languages, forKey: .languages)
+        try container.encodeIfPresent(self.obsessed, forKey: .obsessed)
     }
     
     init(from decoder: any Decoder) throws {
@@ -65,5 +70,6 @@ struct DBUser: Codable {
         self.biography = try container.decodeIfPresent(String.self, forKey: .biography)
         self.preferences = try container.decodeIfPresent([String].self, forKey: .preferences)
         self.languages = try container.decodeIfPresent([String].self, forKey: .languages)
+        self.obsessed = try container.decodeIfPresent(String.self, forKey: .obsessed)
     }
 }
