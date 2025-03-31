@@ -3,30 +3,23 @@ import SwiftUI
 struct EditLanguageView: View {
     @ObservedObject var vm: ProfileViewModel
     
-    let languages: [String] = ["English", "Spanish", "Serbian"]
-    
-    private func languageIsSelected(language: String) -> Bool {
-        vm.user?.languages?.contains(language) == true
-    }
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        List{
-            ForEach(languages, id: \.self) { language in
-                HStack{
-                    Text(language)
+        NavigationView {
+            ScrollView {
+                VStack {
+                    
+                    UserLanguagesView(vm: vm)
                     
                     Spacer()
-                    
-                    Button{
-                        if languageIsSelected(language: language ){
-                            vm.removeUserLanguage(language: language)
-                        }else {
-                            vm.addUserLanguage(language: language)
-                        }
-                    }label: {
-                        Image(systemName: "heart")
-                            .tint(languageIsSelected(language: language) ? .green : .red)
-                    }
+                }
+                .navigationTitle("Lagnuages you speak")
+            }
+            .overlay(alignment: .bottom) {
+                ButtonOverlay(text: "Save") {
+                    vm.addUserLanguages(languages: vm.userLanguages)
+                    dismiss()
                 }
             }
         }
@@ -34,6 +27,7 @@ struct EditLanguageView: View {
 }
 
 #Preview {
+    
     EditLanguageView(vm: ProfileViewModel(
         authManager: AuthenticationManager(),
         userManager: UserManager()))

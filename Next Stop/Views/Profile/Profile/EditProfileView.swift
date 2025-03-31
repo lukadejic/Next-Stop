@@ -33,23 +33,6 @@ struct EditProfileView: View {
                 UserInfoListView(vm: vm,
                                  selectedItem: $selectedItem,
                                  showSheet: $showSheet)
-                
-                VStack{
-                    HStack(spacing: 20) {
-                        ForEach(preferenceOptions, id: \.self ) {option in
-                            Button(option) {
-                                if preferenceIsSelected(text: option){
-                                    vm.removeUserPreference(text: option)
-                                }else {
-                                    vm.addUserPreference(text: option)
-                                }
-                            }
-                            .tint(preferenceIsSelected(text: option) ? .green : .red)
-                        }
-                    }
-                    Text("User preferences: \((vm.user?.preferences ?? []).joined(separator: ", "))")
-
-                }
             }
         }
         .sheet(isPresented: $showSheet) {

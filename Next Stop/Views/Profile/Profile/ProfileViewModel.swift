@@ -11,6 +11,8 @@ final class ProfileViewModel : ObservableObject {
     @Published var userInfoList: [UserInfo] = []
     @Published var userEditProfileList: [UserInfo] = []
         
+    @Published var userLanguages : [String] = []
+    
     private let authManager : AuthenticationProtocol
     private let userManager: UserManagerProtocol
     
@@ -155,12 +157,17 @@ extension ProfileViewModel {
             tempList.append(UserInfo(icon: "book", text: "My biography title", info: biography, itemType: .biography))
         }
         
+        if let languages = user.languages, !languages.isEmpty {
+            tempList.append(UserInfo(icon: "speak", text: "Languages i speak", info: languages.joined(separator: ", "), itemType: .language))
+        }
+        
         self.userInfoList = tempList
     }
     
     func populateUserEditProfileList() {
         let tempList : [UserInfo] = [
-            UserInfo(icon: "speak", text: "Speaks", info: "", itemType: .language),
+            UserInfo(icon: "speak", text: "Speaks",
+                     info: user?.languages?.joined(separator: ", ") ?? "", itemType: .language),
             UserInfo(icon: "like", text: "I'm obsessed with", info: "", itemType: .obsessed),
             UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
             UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
@@ -215,30 +222,17 @@ extension ProfileViewModel {
         }
     }
     
-    func addUserLanguage(language: String) {
+    func addUserLanguages(languages: [String]) {
         
         guard let user else { return }
         
         Task{
             do{
-                try await userManager.updateLanguages(userId: user.userId, language: language)
+                try await userManager.updateLanguages(userId: user.userId, languages: languages)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
-            }catch {
                 
-            }
-        }
-    }
-    
-    func removeUserLanguage(language: String) {
-        
-        guard let user else { return }
-        
-        Task{
-            do{
-                try await userManager.removeLanguages(userId: user.userId, language: language)
-                
-                self.user = try await userManager.getUser(userId: user.userId)
+                loadUserData()
             }catch {
                 
             }
