@@ -165,6 +165,10 @@ extension ProfileViewModel {
             tempList.append(UserInfo(icon: "like", text: "I'm obsessed with", info: obsessed, itemType: .obsessed))
         }
         
+        if let location = user.location, !location.isEmpty {
+            tempList.append(UserInfo(icon: "globe", text: "Lives in", info: location, itemType: .location))
+        }
+        
         self.userInfoList = tempList
     }
     
@@ -174,7 +178,7 @@ extension ProfileViewModel {
                      info: user?.languages?.joined(separator: ", ") ?? "", itemType: .language),
             UserInfo(icon: "like", text: "I'm obsessed with", info: user?.obsessed ?? "", itemType: .obsessed),
             UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
-            UserInfo(icon: "globe", text: "Lives in", info: "", itemType: .location),
+            UserInfo(icon: "globe", text: "Lives in", info: user?.location ?? "", itemType: .location),
             UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
             UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)]
         
@@ -250,6 +254,23 @@ extension ProfileViewModel {
         Task{
             do{
                 try await userManager.updateObsessed(userId: user.userId, text: text)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                
+            }
+        }
+    }
+    
+    func updateUserLocation(location: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateLocation(userId: user.userId, location: location)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
                 

@@ -77,7 +77,7 @@ private extension EditProfileView {
         case .biography:
             EditBiographyView(vm: vm)
         case .location:
-            Text("Location")
+            EditLocationView(vm: vm)
         case .work:
             Text("Work")
         case .pets:
