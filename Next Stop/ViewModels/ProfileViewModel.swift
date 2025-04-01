@@ -169,6 +169,10 @@ extension ProfileViewModel {
             tempList.append(UserInfo(icon: "globe", text: "Lives in", info: location, itemType: .location))
         }
         
+        if let work = user.work, !work.isEmpty {
+            tempList.append(UserInfo(icon: "briefcase", text: "My work", info: work, itemType: .work))
+        }
+        
         self.userInfoList = tempList
     }
     
@@ -179,7 +183,7 @@ extension ProfileViewModel {
             UserInfo(icon: "like", text: "I'm obsessed with", info: user?.obsessed ?? "", itemType: .obsessed),
             UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
             UserInfo(icon: "globe", text: "Lives in", info: user?.location ?? "", itemType: .location),
-            UserInfo(icon: "briefcase", text: "My work", info: "", itemType: .work),
+            UserInfo(icon: "briefcase", text: "My work", info: user?.work ?? "", itemType: .work),
             UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)]
         
         self.userEditProfileList = tempList
@@ -271,6 +275,23 @@ extension ProfileViewModel {
         Task{
             do{
                 try await userManager.updateLocation(userId: user.userId, location: location)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                
+            }
+        }
+    }
+    
+    func updateUserWork(work: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateWork(userId: user.userId, work: work)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
                 

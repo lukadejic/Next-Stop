@@ -16,13 +16,7 @@ struct EditProfileView: View {
     @State private var showSheet = false
     
     @Binding var show: Bool
-    
-    let preferenceOptions : [String] = ["Sports", "Movies", "Books"]
 
-    private func preferenceIsSelected(text: String) -> Bool {
-        vm.user?.preferences?.contains(text) == true
-    }
-    
     var body: some View {
         ScrollView(showsIndicators: true) {
             VStack {
@@ -79,7 +73,7 @@ private extension EditProfileView {
         case .location:
             EditLocationView(vm: vm)
         case .work:
-            Text("Work")
+            EditUserWorkView(vm: vm)
         case .pets:
             Text("Pets")
         case .none:
