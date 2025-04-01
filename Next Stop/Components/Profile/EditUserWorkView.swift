@@ -5,12 +5,18 @@ struct EditUserWorkView: View {
     @State private var text: String = ""
     
     var body: some View {
-        UserEditDescriptionView(text: $text,
-                                title: title,
-                                description: description,
-                                buttonText: buttonText) {
-            vm.updateUserWork(work: text)
+        VStack{
+            UserEditDescriptionView(text: $text,
+                                    title: title,
+                                    description: description,
+                                    buttonText: buttonText) {
+                vm.updateUserWork(work: text)
+            }
         }
+        .onAppear {
+            text = vm.user?.work ?? ""
+        }
+        .presentationDetents([.height(400)])
     }
 }
 
