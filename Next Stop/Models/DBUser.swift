@@ -12,8 +12,9 @@ struct DBUser: Codable {
     let obsessed : String?
     let location: String?
     let work: String?
+    let pets: String?
     
-    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?,obsessed: String?,location: String?, work: String?) {
+    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?,obsessed: String?,location: String?, work: String?, pets: String?) {
         self.userId = userId
         self.email = email
         self.photoURL = photoURL
@@ -25,6 +26,7 @@ struct DBUser: Codable {
         self.obsessed = obsessed
         self.location = location
         self.work = work
+        self.pets = pets
     }
     
     init(user: AuthDataResultModel) {
@@ -39,6 +41,7 @@ struct DBUser: Codable {
         self.obsessed = nil
         self.location = nil
         self.work = nil
+        self.pets = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -53,6 +56,7 @@ struct DBUser: Codable {
         case obsessed = "obsessed"
         case location = "location"
         case work = "work"
+        case pets = "pets"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -68,7 +72,7 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.obsessed, forKey: .obsessed)
         try container.encodeIfPresent(self.location, forKey: .location)
         try container.encodeIfPresent(self.work, forKey: .work)
-
+        try container.encodeIfPresent(self.pets, forKey: .pets)
     }
     
     init(from decoder: any Decoder) throws {
@@ -84,5 +88,6 @@ struct DBUser: Codable {
         self.obsessed = try container.decodeIfPresent(String.self, forKey: .obsessed)
         self.location = try container.decodeIfPresent(String.self, forKey: .location)
         self.work = try container.decodeIfPresent(String.self, forKey: .work)
+        self.pets = try container.decodeIfPresent(String.self, forKey: .pets)
     }
 }

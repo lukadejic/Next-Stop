@@ -75,7 +75,7 @@ private extension EditProfileView {
         case .work:
             EditUserWorkView(vm: vm)
         case .pets:
-            Text("Pets")
+            EditPetsView(vm: vm)
         case .none:
             EmptyView()
         }

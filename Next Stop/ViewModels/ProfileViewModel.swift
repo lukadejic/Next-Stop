@@ -173,6 +173,10 @@ extension ProfileViewModel {
             tempList.append(UserInfo(icon: "briefcase", text: "My work", info: work, itemType: .work))
         }
         
+        if let pets = user.pets, !pets.isEmpty {
+            tempList.append(UserInfo(icon: "paws", text: "Pets", info: pets, itemType: .pets))
+        }
+        
         self.userInfoList = tempList
     }
     
@@ -184,7 +188,7 @@ extension ProfileViewModel {
             UserInfo(icon: "book", text: "My biography title", info: user?.biography ?? "", itemType: .biography),
             UserInfo(icon: "globe", text: "Lives in", info: user?.location ?? "", itemType: .location),
             UserInfo(icon: "briefcase", text: "My work", info: user?.work ?? "", itemType: .work),
-            UserInfo(icon: "paws", text: "Pets", info: "", itemType: .pets)]
+            UserInfo(icon: "paws", text: "Pets", info: user?.pets ?? "", itemType: .pets)]
         
         self.userEditProfileList = tempList
     }
@@ -292,6 +296,23 @@ extension ProfileViewModel {
         Task{
             do{
                 try await userManager.updateWork(userId: user.userId, work: work)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                
+            }
+        }
+    }
+    
+    func updateUserPets(pets: String) {
+        
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updatePets(userId: user.userId, pets: pets)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
                 

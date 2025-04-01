@@ -11,6 +11,7 @@ protocol UserManagerProtocol {
     func updateObsessed(userId: String, text: String) async throws
     func updateLocation(userId: String, location: String) async throws
     func updateWork(userId: String, work: String) async throws
+    func updatePets(userId: String, pets: String) async throws 
 }
 
 final class UserManager : UserManagerProtocol {
@@ -81,6 +82,14 @@ final class UserManager : UserManagerProtocol {
     func updateWork(userId: String, work: String) async throws {
         let data: [String : Any] = [
             DBUser.CodingKeys.work.rawValue : work
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func updatePets(userId: String, pets: String) async throws {
+        let data: [String : Any] = [
+            DBUser.CodingKeys.pets.rawValue : pets
         ]
         
         try await userDocument(userId: userId).updateData(data)
