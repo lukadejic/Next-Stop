@@ -13,8 +13,9 @@ struct DBUser: Codable {
     let location: String?
     let work: String?
     let pets: String?
+    let interests: [Interest]?
     
-    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?,obsessed: String?,location: String?, work: String?, pets: String?) {
+    init(userId: String, email: String?, photoURL: String?, displayName: String?, dateCreated: Date?, biography: String?, preferences: [String]?,languages: [String]?,obsessed: String?,location: String?, work: String?, pets: String?,interests: [Interest]?) {
         self.userId = userId
         self.email = email
         self.photoURL = photoURL
@@ -27,6 +28,7 @@ struct DBUser: Codable {
         self.location = location
         self.work = work
         self.pets = pets
+        self.interests = interests
     }
     
     init(user: AuthDataResultModel) {
@@ -42,6 +44,7 @@ struct DBUser: Codable {
         self.location = nil
         self.work = nil
         self.pets = nil
+        self.interests = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -57,6 +60,7 @@ struct DBUser: Codable {
         case location = "location"
         case work = "work"
         case pets = "pets"
+        case interests = "interests"
     }
     
     func encode(to encoder: any Encoder) throws {
@@ -73,6 +77,7 @@ struct DBUser: Codable {
         try container.encodeIfPresent(self.location, forKey: .location)
         try container.encodeIfPresent(self.work, forKey: .work)
         try container.encodeIfPresent(self.pets, forKey: .pets)
+        try container.encodeIfPresent(self.interests, forKey: .interests)
     }
     
     init(from decoder: any Decoder) throws {
@@ -89,5 +94,6 @@ struct DBUser: Codable {
         self.location = try container.decodeIfPresent(String.self, forKey: .location)
         self.work = try container.decodeIfPresent(String.self, forKey: .work)
         self.pets = try container.decodeIfPresent(String.self, forKey: .pets)
+        self.interests = try container.decodeIfPresent([Interest].self, forKey: .interests)
     }
 }

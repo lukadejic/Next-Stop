@@ -2,7 +2,7 @@ import SwiftUI
 import PhotosUI
 
 enum UserInfoItem {
-    case language, obsessed, biography, location, work, pets, none
+    case language, obsessed, biography, location, work, pets, interests, none
 }
 
 struct EditProfileView: View {
@@ -16,6 +16,11 @@ struct EditProfileView: View {
     @State private var showSheet = false
     
     @Binding var show: Bool
+    
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
 
     var body: some View {
         ScrollView(showsIndicators: true) {
@@ -27,6 +32,81 @@ struct EditProfileView: View {
                 UserInfoListView(vm: vm,
                                  selectedItem: $selectedItem,
                                  showSheet: $showSheet)
+                
+                VStack(alignment: .leading,spacing: 20) {
+                    Text("What you're into")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    if !vm.interests.isEmpty {
+                        VStack(alignment: .leading,spacing: 0) {
+                            LazyVGrid(columns: columns,spacing: 20) {
+                                ForEach(vm.interests) { interest in
+                                    InterestItem(icon: interest.icon,
+                                                 name: interest.name,
+                                                 selectedInterests: $vm.interests)
+                                }
+                            }
+                            .padding(.bottom,30)
+                            
+                            Text("Edit interests")
+                                .fontWeight(.semibold)
+                                .underline()
+                        }
+                        .onTapGesture {
+                            selectedItem = .interests
+                        }
+                        .onChange(of: selectedItem) { _ , newValue in
+                            if newValue != .none {
+                                showSheet = true
+                            }
+                        }
+                    }else{
+                        
+                        Text("Find common ground with other guests and hosts by adding interests to your profile.")
+                            .foregroundStyle(.black.opacity(0.6))
+                        
+                        VStack (alignment: .leading,spacing: 30) {
+                            HStack(spacing: 20) {
+                                ForEach(0..<3){ item in
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [10]))
+                                            .frame(width: 110, height: 50)
+                                            .foregroundColor(.black.opacity(0.8))
+                                        
+                                        Image(systemName: "plus")
+                                            .font(.system(size: 30, weight: .bold))
+                                            .foregroundColor(.gray)
+                                    }
+                                }
+                            }
+                            
+                            Text("Add interests")
+                                .fontWeight(.semibold)
+                                .underline()
+                        }
+                        .onTapGesture {
+                            selectedItem = .interests
+                        }
+                        .onChange(of: selectedItem) { _ , newValue in
+                            if newValue != .none {
+                                showSheet = true
+                            }
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity,alignment: .leading)
+                .padding()
+                .padding(.bottom, 40)
+            }
+        }
+        .onAppear {
+            vm.loadInterests()
+        }
+        .overlay(alignment: .bottom) {
+            ButtonOverlay(text: "Done") {
+                show.toggle()
             }
         }
         .sheet(isPresented: $showSheet) {
@@ -59,7 +139,6 @@ struct EditProfileView: View {
         userManager: UserManager()),
         show: .constant(false))
 }
-
 private extension EditProfileView {
     @ViewBuilder
     func sheetContent(for item: UserInfoItem) -> some View {
@@ -76,6 +155,8 @@ private extension EditProfileView {
             EditUserWorkView(vm: vm)
         case .pets:
             EditPetsView(vm: vm)
+        case .interests:
+            UserInterestsView(vm: vm)
         case .none:
             EmptyView()
         }

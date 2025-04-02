@@ -37,9 +37,9 @@ final class AuthenticationManager : AuthenticationProtocol {
     
     func getAuthenticatedUser() throws -> AuthDataResultModel {
         guard let user = Auth.auth().currentUser else {
-            throw URLError(.badURL)
+            throw UserError.noCurrentUser
         }
-        
+
         return AuthDataResultModel(user: user)
     }
     

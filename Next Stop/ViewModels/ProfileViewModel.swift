@@ -13,6 +13,8 @@ final class ProfileViewModel : ObservableObject {
         
     @Published var userLanguages : [String] = []
     
+    @Published var interests: [Interest] = []
+    
     private let authManager : AuthenticationProtocol
     private let userManager: UserManagerProtocol
     
@@ -30,6 +32,10 @@ final class ProfileViewModel : ObservableObject {
             Auth.auth().removeStateDidChangeListener(handle)
         }
     }
+    
+    func loadInterests() {
+        self.interests = user?.interests ?? []
+    }
 }
 
 extension ProfileViewModel {
@@ -46,7 +52,9 @@ extension ProfileViewModel {
         Task{
             do{
                 let authDataResultModel = try authManager.getAuthenticatedUser()
+                               
                 self.user = try await userManager.getUser(userId: authDataResultModel.uid)
+                
                 loadUserData()
             }catch{
                 throw SignUpError.firebaseError(error: error)
@@ -313,6 +321,22 @@ extension ProfileViewModel {
         Task{
             do{
                 try await userManager.updatePets(userId: user.userId, pets: pets)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                
+            }
+        }
+    }
+    
+    func updateUserInterests() {
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateUserInterests(userId: user.userId, interests: interests)
                 
                 self.user = try await userManager.getUser(userId: user.userId)
                 

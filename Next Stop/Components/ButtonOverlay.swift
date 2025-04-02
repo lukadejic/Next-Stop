@@ -15,7 +15,7 @@ struct ButtonOverlay: View {
                     .foregroundStyle(.white)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .frame(width: 140, height: 40)
+                    .frame(width: 300, height: 40)
                     .background(.black)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
             }
