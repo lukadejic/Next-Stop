@@ -6,6 +6,12 @@ struct ProfileDetailsView: View {
     
     @State private var showEditView = false
     
+    let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
         
         ScrollView {
@@ -18,8 +24,11 @@ struct ProfileDetailsView: View {
                 
                 Spacer()
             }
+            .onAppear {
+                vm.interests = vm.user?.interests ?? []
+            }
             .sheet(isPresented: $showEditView) {
-                NavigationView{
+                NavigationView {
                     EditProfileView(vm: vm, show: $showEditView)
                 }
             }
@@ -92,6 +101,20 @@ private extension ProfileDetailsView {
             Rectangle()
                 .stroke(lineWidth: 0.27)
                 .frame(height: 1)
+            
+            VStack(alignment: .leading) {
+                Text("Ask \(vm.user?.displayName ?? "Luka") about")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                
+                LazyVGrid(columns: columns) {
+                    ForEach(vm.interests) { interest in
+                        InterestItem(icon: interest.icon,
+                                     name: interest.name,
+                                     selectedInterests: $vm.interests)
+                    }
+                }
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal)

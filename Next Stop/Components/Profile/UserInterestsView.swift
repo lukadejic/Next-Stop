@@ -102,7 +102,7 @@ private extension UserInterestsView {
     
     var dismissButton: some View {
         Button {
-            
+            dismiss()
         } label: {
             Image(systemName: "xmark")
                 .foregroundStyle(.black)

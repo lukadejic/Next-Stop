@@ -19,6 +19,7 @@ struct EditProfileView: View {
     
     let columns = [
         GridItem(.flexible()),
+        GridItem(.flexible()),
         GridItem(.flexible())
     ]
 
@@ -33,72 +34,7 @@ struct EditProfileView: View {
                                  selectedItem: $selectedItem,
                                  showSheet: $showSheet)
                 
-                VStack(alignment: .leading,spacing: 20) {
-                    Text("What you're into")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    if !vm.interests.isEmpty {
-                        VStack(alignment: .leading,spacing: 0) {
-                            LazyVGrid(columns: columns,spacing: 20) {
-                                ForEach(vm.interests) { interest in
-                                    InterestItem(icon: interest.icon,
-                                                 name: interest.name,
-                                                 selectedInterests: $vm.interests)
-                                }
-                            }
-                            .padding(.bottom,30)
-                            
-                            Text("Edit interests")
-                                .fontWeight(.semibold)
-                                .underline()
-                        }
-                        .onTapGesture {
-                            selectedItem = .interests
-                        }
-                        .onChange(of: selectedItem) { _ , newValue in
-                            if newValue != .none {
-                                showSheet = true
-                            }
-                        }
-                    }else{
-                        
-                        Text("Find common ground with other guests and hosts by adding interests to your profile.")
-                            .foregroundStyle(.black.opacity(0.6))
-                        
-                        VStack (alignment: .leading,spacing: 30) {
-                            HStack(spacing: 20) {
-                                ForEach(0..<3){ item in
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(style: StrokeStyle(lineWidth: 1, dash: [10]))
-                                            .frame(width: 110, height: 50)
-                                            .foregroundColor(.black.opacity(0.8))
-                                        
-                                        Image(systemName: "plus")
-                                            .font(.system(size: 30, weight: .bold))
-                                            .foregroundColor(.gray)
-                                    }
-                                }
-                            }
-                            
-                            Text("Add interests")
-                                .fontWeight(.semibold)
-                                .underline()
-                        }
-                        .onTapGesture {
-                            selectedItem = .interests
-                        }
-                        .onChange(of: selectedItem) { _ , newValue in
-                            if newValue != .none {
-                                showSheet = true
-                            }
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity,alignment: .leading)
-                .padding()
-                .padding(.bottom, 40)
+                interests
             }
         }
         .onAppear {
@@ -170,5 +106,74 @@ private extension EditProfileView {
                 print("Failed to load image")
             }
         }
+    }
+    
+    var interests: some View {
+        VStack(alignment: .leading,spacing: 20) {
+            Text("What you're into")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            if !vm.interests.isEmpty {
+                VStack(alignment: .leading) {
+                    LazyVGrid(columns: columns) {
+                        ForEach(vm.interests) { interest in
+                            InterestItem(icon: interest.icon,
+                                         name: interest.name,
+                                         selectedInterests: $vm.interests)
+                        }
+                    }
+                    .padding(.bottom,30)
+                    
+                    Text("Edit interests")
+                        .fontWeight(.semibold)
+                        .underline()
+                }
+                .onTapGesture {
+                    selectedItem = .interests
+                }
+                .onChange(of: selectedItem) { _ , newValue in
+                    if newValue != .none {
+                        showSheet = true
+                    }
+                }
+            }else{
+                
+                Text("Find common ground with other guests and hosts by adding interests to your profile.")
+                    .foregroundStyle(.black.opacity(0.6))
+                
+                VStack (alignment: .leading,spacing: 30) {
+                    HStack(spacing: 20) {
+                        ForEach(0..<3){ item in
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(style: StrokeStyle(lineWidth: 1, dash: [10]))
+                                    .frame(width: 110, height: 50)
+                                    .foregroundColor(.black.opacity(0.8))
+                                
+                                Image(systemName: "plus")
+                                    .font(.system(size: 30, weight: .bold))
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
+                    
+                    Text("Add interests")
+                        .fontWeight(.semibold)
+                        .underline()
+                }
+                .onTapGesture {
+                    selectedItem = .interests
+                }
+                .onChange(of: selectedItem) { _ , newValue in
+                    if newValue != .none {
+                        showSheet = true
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity,alignment: .leading)
+        .padding()
+        .padding(.bottom, 40)
     }
 }
