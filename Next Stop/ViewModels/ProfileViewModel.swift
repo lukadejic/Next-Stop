@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import FirebaseAuth
 
 @MainActor
@@ -7,7 +7,7 @@ final class ProfileViewModel : ObservableObject {
     @Published var isLoading = false
     @Published var alertItem: AlertItem? = nil
     @Published var authProviders: [AuthProviderOption] = []
-    
+
     @Published var userInfoList: [UserInfo] = []
     @Published var userEditProfileList: [UserInfo] = []
         

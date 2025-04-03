@@ -1,5 +1,6 @@
-import Foundation
+import SwiftUI
 import FirebaseFirestore
+import FirebaseStorage
 
 protocol UserManagerProtocol {
     func getUser(userId: String) async throws -> DBUser
