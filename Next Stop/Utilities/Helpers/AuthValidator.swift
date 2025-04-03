@@ -2,7 +2,11 @@ import Foundation
 
 class AuthValidator {
     
-    static func validateFields(email: String, password: String, confirmPassword: String? = nil) throws {
+    static func validateFields(email: String,
+                               password: String,
+                               confirmPassword: String? = nil,
+                               username: String? = nil) throws {
+        
         guard !email.isEmpty, !password.isEmpty else {
             throw SignUpError.emptyFields
         }
@@ -13,6 +17,12 @@ class AuthValidator {
             }
             guard confirmPassword == password else {
                 throw SignUpError.passwordsNotMached
+            }
+        }
+        
+        if let username = username {
+            guard !username.isEmpty else {
+                throw SignUpError.emptyFields
             }
         }
         

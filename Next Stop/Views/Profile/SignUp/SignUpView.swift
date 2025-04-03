@@ -5,8 +5,12 @@ struct SignUpView: View {
     
     @Binding var show : Bool
     
-    init(authManager: AuthenticationProtocol, show: Binding<Bool>) {
-        _vm = StateObject(wrappedValue: SignUpViewModel(authManager: authManager))
+    init(authManager: AuthenticationProtocol,
+         userManager: UserManagerProtocol ,
+         show: Binding<Bool>) {
+        _vm = StateObject(wrappedValue: SignUpViewModel(
+            authManager: authManager,
+            userManager: userManager))
         _show = show
     }
     
@@ -73,6 +77,7 @@ struct SignUpView: View {
 
 #Preview {
     SignUpView(authManager: AuthenticationManager(),
+               userManager: UserManager(),
                show: .constant(false))
 }
 

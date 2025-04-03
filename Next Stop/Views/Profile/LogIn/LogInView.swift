@@ -6,11 +6,15 @@ struct LogInView: View {
     @StateObject var vm: LogInViewModel
     @Binding var show: Bool
     let authManager: AuthenticationManager
+    let userManager: UserManagerProtocol
     
-    init(authManager: AuthenticationManager, show: Binding<Bool>) {
-        self._vm = StateObject(wrappedValue: LogInViewModel(authManager: authManager))
+    init(authManager: AuthenticationManager,
+         userManager: UserManagerProtocol,
+         show: Binding<Bool>) {
+        self._vm = StateObject(wrappedValue: LogInViewModel(authManager: authManager, userManager: userManager))
         self._show = show
         self.authManager = authManager
+        self.userManager = userManager
     }
     
     @FocusState var isEmailFocused: Bool
@@ -67,7 +71,9 @@ struct LogInView: View {
                       dismissButton: alert.dismissButton)
             }
             .fullScreenCover(isPresented: $vm.showSignUp) {
-                SignUpView(authManager: authManager, show: $vm.showSignUp)
+                SignUpView(authManager: authManager,
+                           userManager: userManager,
+                           show: $vm.showSignUp)
             }
         }
     }
@@ -75,6 +81,7 @@ struct LogInView: View {
 
 #Preview {
     LogInView(authManager: AuthenticationManager(),
+              userManager: UserManager(),
               show: .constant(false))
 }
 

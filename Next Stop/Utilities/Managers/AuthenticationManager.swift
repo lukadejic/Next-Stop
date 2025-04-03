@@ -37,9 +37,9 @@ final class AuthenticationManager : AuthenticationProtocol {
     
     func getAuthenticatedUser() throws -> AuthDataResultModel {
         guard let user = Auth.auth().currentUser else {
-            throw URLError(.badURL)
+            throw UserError.noCurrentUser
         }
-        
+
         return AuthDataResultModel(user: user)
     }
     
@@ -63,7 +63,6 @@ final class AuthenticationManager : AuthenticationProtocol {
         var providers: [AuthProviderOption] = []
         
         for provider in providerData {
-            print(provider.providerID)
             if let option = AuthProviderOption(rawValue: provider.providerID) {
                 providers.append(option)
             }else{
