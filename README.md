@@ -22,6 +22,7 @@ The pictures are slightly blurry because I reduced their size; they were too lar
 ![GoogleSignIn](https://github.com/user-attachments/assets/65fa954b-9c03-43b4-af7b-77150bf57c55)
 ![LogedInProfileView](https://github.com/user-attachments/assets/339c5536-75a8-4603-bb67-67fb75aeb94f)
 ![EditLanguagesView](https://github.com/user-attachments/assets/805c903e-4b78-46b3-a903-02227d4bea74)
+![EditWorkView](https://github.com/user-attachments/assets/bc416665-95f4-4e64-8b24-afb8ed45a40c)
 ![EditLocationView](https://github.com/user-attachments/assets/1d470d24-35dd-406d-93cf-4e9ca47c9f95)
 ![LogedInProfileView2](https://github.com/user-attachments/assets/96e4c77e-44be-4d53-b23f-c5a76a32fdd8)
 ![InterestsView](https://github.com/user-attachments/assets/2acadfa9-20ce-4c7e-8448-18927180c509)
