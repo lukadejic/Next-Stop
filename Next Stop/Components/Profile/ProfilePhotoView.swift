@@ -13,9 +13,9 @@ struct ProfilePhotoView: View {
                     .frame(width: 200, height: 200)
                     .clipShape(Circle())
             } else if let photoURL = photoURL {
-                AsyncImageView(url: photoURL)
+                AsyncImageView(url: photoURL,width: 200,height: 200)
             } else {
-                Image(systemName: "person.crop.circle.fill")
+                Image("user")
                     .resizable()
                     .frame(width: 200, height: 200)
                     .clipShape(Circle())
