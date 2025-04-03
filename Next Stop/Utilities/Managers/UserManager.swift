@@ -14,6 +14,7 @@ protocol UserManagerProtocol {
     func updateWork(userId: String, work: String) async throws
     func updatePets(userId: String, pets: String) async throws
     func updateUserInterests(userId: String, interests: [Interest]) async throws
+    func updateUserProfilePicture(userId: String, picture: Image) async throws
 }
 
 final class UserManager : UserManagerProtocol {
@@ -110,5 +111,9 @@ final class UserManager : UserManagerProtocol {
         ]
         
         try await userDocument(userId: userId).updateData(data)
+    }
+    
+    func updateUserProfilePicture(userId: String, picture: Image) async throws {
+        
     }
 }
