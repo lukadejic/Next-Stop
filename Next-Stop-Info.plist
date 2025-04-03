@@ -8,10 +8,18 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
 			<string>Google Sign In</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.803159753936-t55bl5cnnb309taasm8r80r4o4rue308</string>
+				<string>com.googleusercontent.apps.395152742435-0t54h7d0hlbcn1tek4aqjhuv8h29gvb0</string>
 			</array>
 		</dict>
 	</array>

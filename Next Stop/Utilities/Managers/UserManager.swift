@@ -14,7 +14,7 @@ protocol UserManagerProtocol {
     func updateWork(userId: String, work: String) async throws
     func updatePets(userId: String, pets: String) async throws
     func updateUserInterests(userId: String, interests: [Interest]) async throws
-    func updateUserProfilePicture(userId: String, picture: Image) async throws
+    func updateUserProfilePicture(userId: String, picture: UIImage) async throws
 }
 
 final class UserManager : UserManagerProtocol {
@@ -113,7 +113,27 @@ final class UserManager : UserManagerProtocol {
         try await userDocument(userId: userId).updateData(data)
     }
     
-    func updateUserProfilePicture(userId: String, picture: Image) async throws {
+    func updateUserProfilePicture(userId: String, picture: UIImage) async throws {
+        let storageRef = Storage.storage().reference()
+        let imageRef = storageRef.child("profile_pictures/\(userId).jpg")
+
+        guard let imageData = picture.jpegData(compressionQuality: 0.8) else {
+            throw URLError(.badURL)
+        }
         
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        let _ = try await imageRef.putDataAsync(imageData, metadata: metadata)
+        
+        let downloadURL = try await imageRef.downloadURL()
+        let photoURL = downloadURL.absoluteString
+        
+        let data: [String: Any] = [
+            DBUser.CodingKeys.photoURL.rawValue: photoURL
+        ]
+        
+        try await userDocument(userId: userId).updateData(data)
     }
+
 }

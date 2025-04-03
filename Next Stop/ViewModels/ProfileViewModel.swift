@@ -7,7 +7,7 @@ final class ProfileViewModel : ObservableObject {
     @Published var isLoading = false
     @Published var alertItem: AlertItem? = nil
     @Published var authProviders: [AuthProviderOption] = []
-
+    @Published var userProfileImage: Image?
     @Published var userInfoList: [UserInfo] = []
     @Published var userEditProfileList: [UserInfo] = []
         
@@ -346,4 +346,21 @@ extension ProfileViewModel {
             }
         }
     }
+    
+    func updateUserProfilePicture(picture: UIImage) {
+        guard let user else { return }
+        
+        Task{
+            do{
+                try await userManager.updateUserProfilePicture(userId: user.userId, picture: picture)
+                
+                self.user = try await userManager.getUser(userId: user.userId)
+                
+                loadUserData()
+            }catch {
+                print("Failed to update user profile image")
+            }
+        }
+    }
+
 }

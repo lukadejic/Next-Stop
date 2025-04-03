@@ -71,9 +71,16 @@ struct ProfileDetailsView: View {
 private extension ProfileDetailsView {
     var header: some View {
         VStack{
-            AsyncImage(url: URL(string: vm.user?.photoURL ?? ""))
-                .clipShape(Circle())
-                .frame(width: 130, height: 130)
+            if let photoURL = vm.user?.photoURL {
+                AsyncImageView(url: photoURL,
+                               width: 130, height: 130)
+            }else{
+                Image("user")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 130, height: 130)
+                    .clipShape(Circle())
+            }
             
             Text(vm.user?.displayName ?? "Unknown")
                 .font(.title)
@@ -103,15 +110,17 @@ private extension ProfileDetailsView {
                 .frame(height: 1)
             
             VStack(alignment: .leading) {
-                Text("Ask \(vm.user?.displayName ?? "Luka") about")
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                
-                LazyVGrid(columns: columns) {
-                    ForEach(vm.interests) { interest in
-                        InterestItem(icon: interest.icon,
-                                     name: interest.name,
-                                     selectedInterests: $vm.interests)
+                if let interests = vm.user?.interests {
+                    Text("Ask \(vm.user?.displayName ?? "Luka") about")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    
+                    LazyVGrid(columns: columns) {
+                        ForEach(interests) { interest in
+                            InterestItem(icon: interest.icon,
+                                         name: interest.name,
+                                         selectedInterests: $vm.interests)
+                        }
                     }
                 }
             }

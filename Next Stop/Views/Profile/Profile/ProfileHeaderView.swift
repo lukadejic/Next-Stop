@@ -6,9 +6,16 @@ struct ProfileHeaderView: View {
     var body: some View {
         VStack(spacing: 0){
             HStack(spacing: 20){
-                AsyncImage(url: URL(string:vm.user?.photoURL ?? ""))
-                    .frame(width: 60, height: 60)
-                    .clipShape(Circle())
+                if let photoURL = vm.user?.photoURL {
+                    AsyncImageView(url: photoURL,
+                                   width: 60, height: 60)
+                }else{
+                    Image("user")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
+                }
 
                 VStack(alignment: .leading,spacing: 5) {
                     Text(vm.user?.displayName ?? "Test")

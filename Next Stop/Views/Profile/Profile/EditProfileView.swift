@@ -100,8 +100,10 @@ private extension EditProfileView {
     
     func loadImage() {
         Task {
-            if let image = try? await avatarItem?.loadTransferable(type: Image.self) {
-                userImage = image
+            if let data = try? await avatarItem?.loadTransferable(type: Data.self),
+               let uiImage = UIImage(data: data) {
+                userImage = Image(uiImage: uiImage)
+                vm.updateUserProfilePicture(picture: uiImage)
             } else {
                 print("Failed to load image")
             }

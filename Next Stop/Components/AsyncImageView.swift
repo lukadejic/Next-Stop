@@ -3,6 +3,9 @@ import SwiftUI
 struct AsyncImageView: View {
     let url: String?
     
+    let width: CGFloat
+    let height: CGFloat
+    
     var body: some View {
         AsyncImage(url: URL(string: url ?? "")) { phase in
             switch phase {
@@ -10,7 +13,7 @@ struct AsyncImageView: View {
                 image
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 200, height: 200)
+                    .frame(width: width, height: height)
                     .clipShape(Circle())
             case .failure(_):
                 Image(systemName: "person.crop.circle.fill")
@@ -26,5 +29,5 @@ struct AsyncImageView: View {
 }
 
 #Preview {
-    AsyncImageView(url: "")
+    AsyncImageView(url: "",width: 200, height: 200)
 }

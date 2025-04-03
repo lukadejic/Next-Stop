@@ -10,7 +10,7 @@
 		FA4B41022D9D423F00363F61 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = FA4B41012D9D423F00363F61 /* FirebaseStorage */; };
 		FAC921D62D91C72500CB1469 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = FAC921D52D91C72500CB1469 /* GoogleSignIn */; };
 		FAC921D82D91C72500CB1469 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FAC921D72D91C72500CB1469 /* GoogleSignInSwift */; };
-		FAC921DC2D91C88900CB1469 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FAC921DB2D91C88900CB1469 /* GoogleService-Info.plist */; };
+		FACB3D6A2D9EB05600F1AF79 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FACB3D692D9EB05600F1AF79 /* GoogleService-Info.plist */; };
 		FAD5C2DB2D97214300C91EF0 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = FAD5C2DA2D97214300C91EF0 /* FirebaseFirestore */; };
 		FAED6DA02D87512700AFF528 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FAED6D9F2D87512700AFF528 /* FirebaseAnalytics */; };
 		FAED6DA32D87577B00AFF528 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FAED6DA22D87577B00AFF528 /* FirebaseAuth */; };
@@ -18,7 +18,7 @@
 
 /* Begin PBXFileReference section */
 		FA91F4A52D4536BE00A1F1BB /* Next Stop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Next Stop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FAC921DB2D91C88900CB1469 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FACB3D692D9EB05600F1AF79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,7 +49,7 @@
 		FA91F49C2D4536BE00A1F1BB = {
 			isa = PBXGroup;
 			children = (
-				FAC921DB2D91C88900CB1469 /* GoogleService-Info.plist */,
+				FACB3D692D9EB05600F1AF79 /* GoogleService-Info.plist */,
 				FA91F4A72D4536BE00A1F1BB /* Next Stop */,
 				FAED6DA12D87577B00AFF528 /* Frameworks */,
 				FA91F4A62D4536BE00A1F1BB /* Products */,
@@ -145,7 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAC921DC2D91C88900CB1469 /* GoogleService-Info.plist in Resources */,
+				FACB3D6A2D9EB05600F1AF79 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
