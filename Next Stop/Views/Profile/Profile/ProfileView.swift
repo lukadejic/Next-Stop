@@ -3,85 +3,35 @@ import SwiftUI
 struct ProfileView: View {
     @ObservedObject var vm: ProfileViewModel
     @State private var showLoginView = false
-    let authManager = AuthenticationManager()
+    let authManager : AuthenticationManager
+    let userManager: UserManagerProtocol
     
     var body: some View {
-        ZStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Profile")
-                            .font(.largeTitle)
-                            .fontWeight(.semibold)
-                    }
-                    .padding(.top, 30)
-                    
-                    if vm.user == nil {
-                        VStack(alignment: .leading) {
-                            Text("Log in to start planning your next trip.")
-                                .font(.title3)
-                                .foregroundStyle(.black.opacity(0.5))
-                                .padding(.top, 20)
-                            
-                            LogInButton(text: "Log in",
-                                        backgroundColor: .pink,
-                                        textColor: .white) {
-                                withAnimation(.snappy) {
-                                    showLoginView.toggle()
-                                }
-                            }
+        NavigationStack{
+            ZStack {
+                VStack {
+                    VStack(alignment: .leading) {
+                        
+                        if vm.user == nil {
+                            login
+                        } else {
+                            LogedInProfileView(vm: vm)
                         }
-                    } else {
-                            VStack(alignment: .leading) {
-                                
-                                Text(vm.user?.email ?? "Test user")
-                                
-                                Button {
-                                    vm.signOut()
-                                } label: {
-                                    Text("Log out")
-                                }
-                                
-                                Button {
-                                    vm.resetPassword()
-                                    print("Succesfuly reset password")
-                                } label: {
-                                    Text("Reset password")
-                                }
-                                
-                                Button {
-                                    vm.updatePassword()
-                                    print("Succesfully updated password")
-                                } label: {
-                                    Text("Update password")
-                                }
-                                
-                                Button {
-                                    vm.updateEmail()
-                                    print("Succesfully updated email")
-                                } label: {
-                                    Text("Update email")
-                                }
-                            
-                                Button {
-                                    vm.deleteUser()
-                                    print("User Succesfully deleted")
-                                } label: {
-                                    Text("Delete user")
-                                }
-                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
+                .onAppear {
+                    vm.getAuthenticatedUser()
+                    vm.loadAuthProviders()
+                }
+                .fullScreenCover(isPresented: $showLoginView) {
+                    LogInView(authManager: authManager,
+                              userManager: userManager,
+                              show: $showLoginView)
+                }
+                
             }
-            .onAppear {
-                vm.getAuthenticatedUser()
-                vm.loadAuthProviders()
-            }
-            .fullScreenCover(isPresented: $showLoginView) {
-                LogInView(authManager: authManager, show: $showLoginView)
-            }
-
+            .navigationTitle("Profile")
         }
         .alert(item: $vm.alertItem) { alert in
             Alert(title: alert.title,
@@ -92,5 +42,28 @@ struct ProfileView: View {
 }
 
 #Preview {
-    ProfileView(vm: ProfileViewModel(authManager: AuthenticationManager()))
+    ProfileView(vm: ProfileViewModel(
+        authManager: AuthenticationManager(),
+        userManager: UserManager()),
+                authManager: AuthenticationManager(),
+                userManager: UserManager())
+}
+
+private extension ProfileView {
+    var login: some View {
+        VStack(alignment: .leading) {
+            Text("Log in to start planning your next trip.")
+                .font(.title3)
+                .foregroundStyle(.black.opacity(0.5))
+                .padding(.top, 20)
+            
+            LogInButton(text: "Log in",
+                        backgroundColor: .pink,
+                        textColor: .white) {
+                withAnimation(.snappy) {
+                    showLoginView.toggle()
+                }
+            }
+        }
+    }
 }
