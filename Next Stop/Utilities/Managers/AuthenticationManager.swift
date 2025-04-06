@@ -65,8 +65,9 @@ final class AuthenticationManager : AuthenticationProtocol {
         for provider in providerData {
             if let option = AuthProviderOption(rawValue: provider.providerID) {
                 providers.append(option)
-            }else{
-                assertionFailure("Provider option not found: \(provider.providerID)")
+                print(provider.displayName ?? "no value")
+            }else {
+               print("Failed to get providers")
             }
         }
         

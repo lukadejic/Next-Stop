@@ -2,6 +2,7 @@ import Foundation
 import FirebaseAuth
 
 class MockAuthenticationManager : AuthenticationProtocol {
+    
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         return AuthDataResultModel(uid: "1", email: "test@gmail.com",photoURL: nil, displayName: nil)
     }
@@ -15,15 +16,19 @@ class MockAuthenticationManager : AuthenticationProtocol {
     }
     
     func signInWithGoogle(tokens: GoogleSignInResultModel) async throws -> AuthDataResultModel {
-        return AuthDataResultModel(uid: "1", email: "test@gmail.com",photoURL: nil, displayName: nil)
+        return AuthDataResultModel(uid: "HBFAJN1841N8TNFSOnfjn9Fn",
+                                   email: "test@gmail.com",
+                                   photoURL: nil,
+                                   displayName: "Test")
     }
     
     func getProviders() throws -> [AuthProviderOption] {
-        return [.email,.google]
+        return [.google,.email]
     }
     
     func getAuthenticatedUser() throws -> AuthDataResultModel {
-        return AuthDataResultModel(uid: "1", email: "test@gmail.com",photoURL: nil, displayName: nil)
+        return AuthDataResultModel(uid: "1", email: "test@gmail.com",
+                                   photoURL: nil, displayName: nil)
     }
     
     func resetPassword(email: String) async throws {

@@ -52,7 +52,7 @@ extension ProfileViewModel {
                 self.user = try await userManager.getUser(userId: authDataResultModel.uid)
                 
                 loadUserData()
-            }catch{
+            }catch {
                 throw SignUpError.firebaseError(error: error)
             }
         }

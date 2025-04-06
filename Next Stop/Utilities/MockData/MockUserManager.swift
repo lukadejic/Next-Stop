@@ -2,7 +2,7 @@ import SwiftUI
 
 class MockUserManager : UserManagerProtocol {
     func getUser(userId: String) async throws -> DBUser {
-        return DBUser(userId: "1", email: "test@gmail.com", photoURL: nil, displayName: nil, dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
+        return DBUser(userId: "HBFAJN1841N8TNFSOnfjn9Fn", email: "test@gmail.com", photoURL: nil, displayName: "Luka", dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
     }
     
     func createNewUser(user: DBUser) async throws {
