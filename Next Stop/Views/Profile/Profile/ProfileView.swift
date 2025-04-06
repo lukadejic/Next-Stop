@@ -21,7 +21,13 @@ struct ProfileView: View {
                     }
                 }
                 .onAppear {
-                    vm.getAuthenticatedUser()
+                    Task{
+                        do{
+                            try await vm.getAuthenticatedUser()
+                        }catch{
+                            throw UserError.noCurrentUser
+                        }
+                    }
                     vm.loadAuthProviders()
                 }
                 .fullScreenCover(isPresented: $showLoginView) {

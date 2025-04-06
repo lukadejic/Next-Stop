@@ -50,12 +50,20 @@ final class ProfileViewModel_Tests: XCTestCase {
             }
             .store(in: &cancellables)
         
-        SUT.getAuthenticatedUser()
+        Task{
+            do{
+               try await SUT.getAuthenticatedUser()
+            }catch{
+                throw UserError.noCurrentUser
+            }
+        }
         
         //Then
         wait(for: [expectation], timeout: 5)
         XCTAssertNotNil(SUT.user)
         XCTAssertEqual(SUT.user?.userId, "HBFAJN1841N8TNFSOnfjn9Fn")
     }
+    
+    
     
 }

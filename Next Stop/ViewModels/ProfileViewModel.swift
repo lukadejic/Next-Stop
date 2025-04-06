@@ -23,7 +23,13 @@ final class ProfileViewModel : ObservableObject {
     init(authManager: AuthenticationProtocol, userManager: UserManagerProtocol) {
         self.authManager = authManager
         self.userManager = userManager
-        self.getAuthenticatedUser()
+        Task{
+            do{
+                try await self.getAuthenticatedUser()
+            }catch{
+                throw UserError.noCurrentUser
+            }
+        }
         self.listenForAuthStateChanges()
     }
     
@@ -44,18 +50,14 @@ extension ProfileViewModel {
         }
     }
     
-    func getAuthenticatedUser() {
-        Task{
-            do{
-                let authDataResultModel = try authManager.getAuthenticatedUser()
-                               
-                self.user = try await userManager.getUser(userId: authDataResultModel.uid)
-                
-                loadUserData()
-            }catch {
-                throw SignUpError.firebaseError(error: error)
-            }
-        }
+    func getAuthenticatedUser() async throws {
+        
+        let authDataResultModel = try authManager.getAuthenticatedUser()
+        
+        self.user = try await userManager.getUser(userId: authDataResultModel.uid)
+        
+        loadUserData()
+        
     }
     
     func signOut() {
