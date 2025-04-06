@@ -16,12 +16,28 @@
 		FAED6DA32D87577B00AFF528 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FAED6DA22D87577B00AFF528 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		FA72939D2DA28C1A007C31C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FA91F49D2D4536BE00A1F1BB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA91F4A42D4536BE00A1F1BB;
+			remoteInfo = "Next Stop";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		FA7293992DA28C1A007C31C3 /* NextStop_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextStop_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA91F4A52D4536BE00A1F1BB /* Next Stop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Next Stop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FACB3D692D9EB05600F1AF79 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		FA72939A2DA28C1A007C31C3 /* NextStop_Tests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = NextStop_Tests;
+			sourceTree = "<group>";
+		};
 		FA91F4A72D4536BE00A1F1BB /* Next Stop */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Next Stop";
@@ -30,6 +46,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FA7293962DA28C1A007C31C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA91F4A22D4536BE00A1F1BB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,6 +74,7 @@
 			children = (
 				FACB3D692D9EB05600F1AF79 /* GoogleService-Info.plist */,
 				FA91F4A72D4536BE00A1F1BB /* Next Stop */,
+				FA72939A2DA28C1A007C31C3 /* NextStop_Tests */,
 				FAED6DA12D87577B00AFF528 /* Frameworks */,
 				FA91F4A62D4536BE00A1F1BB /* Products */,
 			);
@@ -60,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				FA91F4A52D4536BE00A1F1BB /* Next Stop.app */,
+				FA7293992DA28C1A007C31C3 /* NextStop_Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,6 +99,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FA7293982DA28C1A007C31C3 /* NextStop_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA7293A12DA28C1A007C31C3 /* Build configuration list for PBXNativeTarget "NextStop_Tests" */;
+			buildPhases = (
+				FA7293952DA28C1A007C31C3 /* Sources */,
+				FA7293962DA28C1A007C31C3 /* Frameworks */,
+				FA7293972DA28C1A007C31C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FA72939E2DA28C1A007C31C3 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FA72939A2DA28C1A007C31C3 /* NextStop_Tests */,
+			);
+			name = NextStop_Tests;
+			packageProductDependencies = (
+			);
+			productName = NextStop_Tests;
+			productReference = FA7293992DA28C1A007C31C3 /* NextStop_Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FA91F4A42D4536BE00A1F1BB /* Next Stop */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FA91F4B32D4536C100A1F1BB /* Build configuration list for PBXNativeTarget "Next Stop" */;
@@ -109,9 +157,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1620;
-				LastUpgradeCheck = 1620;
+				LastSwiftUpdateCheck = 1630;
+				LastUpgradeCheck = 1630;
 				TargetAttributes = {
+					FA7293982DA28C1A007C31C3 = {
+						CreatedOnToolsVersion = 16.3;
+						LastSwiftMigration = 1630;
+						TestTargetID = FA91F4A42D4536BE00A1F1BB;
+					};
 					FA91F4A42D4536BE00A1F1BB = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -136,11 +189,19 @@
 			projectRoot = "";
 			targets = (
 				FA91F4A42D4536BE00A1F1BB /* Next Stop */,
+				FA7293982DA28C1A007C31C3 /* NextStop_Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FA7293972DA28C1A007C31C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA91F4A32D4536BE00A1F1BB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,6 +213,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FA7293952DA28C1A007C31C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FA91F4A12D4536BE00A1F1BB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -161,7 +229,54 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		FA72939E2DA28C1A007C31C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA91F4A42D4536BE00A1F1BB /* Next Stop */;
+			targetProxy = FA72939D2DA28C1A007C31C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		FA72939F2DA28C1A007C31C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.lukadejic.NextStop-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Next Stop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Next Stop";
+			};
+			name = Debug;
+		};
+		FA7293A02DA28C1A007C31C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.lukadejic.NextStop-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Next Stop.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Next Stop";
+			};
+			name = Release;
+		};
 		FA91F4B12D4536C100A1F1BB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -197,6 +312,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZM8LP36WLW;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -260,6 +376,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZM8LP36WLW;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -289,7 +406,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Next Stop/Preview Content\"";
-				DEVELOPMENT_TEAM = ZM8LP36WLW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Next-Stop-Info.plist";
@@ -321,7 +437,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Next Stop/Preview Content\"";
-				DEVELOPMENT_TEAM = ZM8LP36WLW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Next-Stop-Info.plist";
@@ -348,6 +463,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FA7293A12DA28C1A007C31C3 /* Build configuration list for PBXNativeTarget "NextStop_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA72939F2DA28C1A007C31C3 /* Debug */,
+				FA7293A02DA28C1A007C31C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FA91F4A02D4536BE00A1F1BB /* Build configuration list for PBXProject "Next Stop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

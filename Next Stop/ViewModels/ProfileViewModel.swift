@@ -15,8 +15,8 @@ final class ProfileViewModel : ObservableObject {
     
     @Published var interests: [Interest] = []
     
-    private let authManager : AuthenticationProtocol
-    private let userManager: UserManagerProtocol
+    let authManager : AuthenticationProtocol
+    let userManager: UserManagerProtocol
     
     private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
     
@@ -31,10 +31,6 @@ final class ProfileViewModel : ObservableObject {
         if let handle = authStateListenerHandle {
             Auth.auth().removeStateDidChangeListener(handle)
         }
-    }
-    
-    func loadInterests() {
-        self.interests = user?.interests ?? []
     }
 }
 
@@ -121,11 +117,12 @@ extension ProfileViewModel {
     
     func updatePassword() {
         let password = "Password031."
+        
         Task{
             do{
                 try await authManager.updatePassword(password: password)
                 self.alertItem = AlertContext.succesfulPasswordUpdate
-            }catch{
+            }catch {
                 print("Error: \(error.localizedDescription)")
             }
         }
@@ -199,6 +196,10 @@ extension ProfileViewModel {
             UserInfo(icon: "paws", text: "Pets", info: user?.pets ?? "", itemType: .pets)]
         
         self.userEditProfileList = tempList
+    }
+    
+    func loadInterests() {
+        self.interests = user?.interests ?? []
     }
     
     func updateUserBiography(bio: String) {
