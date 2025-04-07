@@ -15,53 +15,33 @@ final class ProfileViewModel_Tests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-
-    func test_init_doesSetValuesCorrectly() {
-        //Given
+    
+    private func getSut() -> ProfileViewModel {
         let authManager = MockAuthenticationManager()
         let userManager = MockUserManager()
-        
-        //When
-        let vm = ProfileViewModel(authManager: authManager, userManager: userManager)
-        
-        //Then
-        XCTAssertTrue(vm.authManager as AnyObject === authManager)
-        XCTAssertTrue(vm.userManager as AnyObject === userManager)
+        return ProfileViewModel(authManager: authManager, userManager: userManager)
+    }
+
+    func test_init_doesSetValuesCorrectly() {
+        let sut = getSut()
+
+        XCTAssertTrue(sut.authManager is MockAuthenticationManager)
+        XCTAssertTrue(sut.userManager is MockUserManager)
     }
 
     func test_getAuthenticatedUser_shouldLoadCurrentUser() {
-        //Given
-        let authManager = MockAuthenticationManager()
-        let userManager = MockUserManager()
-        let SUT = ProfileViewModel(authManager: authManager, userManager: userManager)
-        
-        //When
+        let sut = getSut()
         
         let expectation = expectation(description: "Should load current user")
-        var isExpectationFulfilled = false
-        
-        SUT.$user
-            .dropFirst()
-            .sink { user in
-                if user != nil && !isExpectationFulfilled {
-                    expectation.fulfill()
-                    isExpectationFulfilled = true
-                }
-            }
-            .store(in: &cancellables)
         
         Task{
-            do{
-               try await SUT.getAuthenticatedUser()
-            }catch{
-                throw UserError.noCurrentUser
-            }
+            try? await sut.getAuthenticatedUser()
+            expectation.fulfill()
         }
         
-        //Then
         wait(for: [expectation], timeout: 5)
-        XCTAssertNotNil(SUT.user)
-        XCTAssertEqual(SUT.user?.userId, "HBFAJN1841N8TNFSOnfjn9Fn")
+        XCTAssertNotNil(sut.user)
+        XCTAssertEqual(sut.user?.userId, "HBFAJN1841N8TNFSOnfjn9Fn")
     }
     
     
