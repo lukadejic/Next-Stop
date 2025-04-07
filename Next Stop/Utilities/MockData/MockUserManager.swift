@@ -1,7 +1,13 @@
 import SwiftUI
 
 class MockUserManager : UserManagerProtocol {
+    var shouldFailToGetUserFromFirebase = false
+    
     func getUser(userId: String) async throws -> DBUser {
+        if shouldFailToGetUserFromFirebase {
+            throw UserError.noFirebaseUser
+        }
+        
         return DBUser(userId: "HBFAJN1841N8TNFSOnfjn9Fn", email: "test@gmail.com", photoURL: nil, displayName: "Luka", dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
     }
     

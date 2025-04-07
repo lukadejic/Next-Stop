@@ -16,9 +16,9 @@ final class ProfileViewModel_Tests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    private func getSut() -> ProfileViewModel {
-        let authManager = MockAuthenticationManager()
-        let userManager = MockUserManager()
+    private func getSut(authManager : MockAuthenticationManager = MockAuthenticationManager(),
+                        userManager : MockUserManager = MockUserManager())
+    -> ProfileViewModel {
         return ProfileViewModel(authManager: authManager, userManager: userManager)
     }
 
@@ -34,7 +34,7 @@ final class ProfileViewModel_Tests: XCTestCase {
         
         let expectation = expectation(description: "Should load current user")
         
-        Task{
+        Task {
             try? await sut.getAuthenticatedUser()
             expectation.fulfill()
         }
@@ -45,8 +45,9 @@ final class ProfileViewModel_Tests: XCTestCase {
     }
     
     func test_getAuthenicatedUser_shouldFailToGetAuthenticatedUser() {
-        let sut = getSut()
-        MockAuthenticationManager.shouldFailToGetAuthenticatedUser = true
+        let authManager = MockAuthenticationManager()
+        authManager.shouldFailToGetAuthenticatedUser = true
+        let sut = getSut(authManager: authManager)
         
         Task {
             do {
@@ -57,7 +58,22 @@ final class ProfileViewModel_Tests: XCTestCase {
                 XCTAssertEqual(error as? UserError, UserError.noCurrentUser)
             }
         }
+    }
     
+    func test_getAuthenicatedUser_shouldFailToGetFirebaseUser() {
+        let userManager = MockUserManager()
+        userManager.shouldFailToGetUserFromFirebase = true
+        let sut = getSut(userManager: userManager)
+        
+        Task {
+            do {
+                try await sut.getAuthenticatedUser()
+                XCTFail("Should throw UserError.noFirebaseUser")
+            } catch {
+                XCTAssertNil(sut.user)
+                XCTAssertEqual(error as? UserError, UserError.noFirebaseUser)
+            }
+        }
     }
     
 }

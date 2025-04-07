@@ -3,7 +3,7 @@ import FirebaseAuth
 
 class MockAuthenticationManager : AuthenticationProtocol {
     
-    static var shouldFailToGetAuthenticatedUser = false
+    var shouldFailToGetAuthenticatedUser = false
     
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         return AuthDataResultModel(uid: "1", email: "test@gmail.com",photoURL: nil, displayName: nil)
@@ -29,7 +29,7 @@ class MockAuthenticationManager : AuthenticationProtocol {
     }
     
     func getAuthenticatedUser() throws -> AuthDataResultModel {
-        if MockAuthenticationManager.shouldFailToGetAuthenticatedUser {
+        if shouldFailToGetAuthenticatedUser {
             throw UserError.noCurrentUser
         }
         
