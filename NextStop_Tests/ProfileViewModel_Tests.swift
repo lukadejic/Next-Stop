@@ -44,6 +44,20 @@ final class ProfileViewModel_Tests: XCTestCase {
         XCTAssertEqual(sut.user?.userId, "HBFAJN1841N8TNFSOnfjn9Fn")
     }
     
+    func test_getAuthenicatedUser_shouldFailToGetAuthenticatedUser() {
+        let sut = getSut()
+        MockAuthenticationManager.shouldFailToGetAuthenticatedUser = true
+        
+        Task {
+            do {
+                try await sut.getAuthenticatedUser()
+                XCTFail("Expected to throw UserError.noCurrentUser")
+            } catch {
+                XCTAssertNil(sut.user)
+                XCTAssertEqual(error as? UserError, UserError.noCurrentUser)
+            }
+        }
     
+    }
     
 }
