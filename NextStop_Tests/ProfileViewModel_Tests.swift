@@ -91,4 +91,12 @@ final class ProfileViewModel_Tests: XCTestCase {
         }
     }
     
+    func test_signOut_userShouldBeNil() {
+        let sut = getSut()
+        sut.user = DBUser(userId: "123", email: "test@example.com", photoURL: nil, displayName: nil, dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
+
+        sut.signOut()
+        
+        XCTAssertNil(sut.user)
+    }
 }
