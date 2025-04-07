@@ -5,6 +5,7 @@ enum UserError : Error {
     case noCurrentUser
     case noFirebaseUser
     case noUserId
+    case cantSignOut
     
     var errorDescription: String {
         switch self {
@@ -16,6 +17,8 @@ enum UserError : Error {
             return "No user in the firebase"
         case .noUserId:
             return "User id is empty"
+        case .cantSignOut:
+            return "Cant sign out user"
         }
         
     }

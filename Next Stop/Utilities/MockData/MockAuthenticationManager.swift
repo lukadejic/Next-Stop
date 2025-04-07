@@ -4,6 +4,7 @@ import FirebaseAuth
 class MockAuthenticationManager : AuthenticationProtocol {
     
     var shouldFailToGetAuthenticatedUser = false
+    var shouldFailToSignOut = false
     
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         return AuthDataResultModel(uid: "1", email: "test@gmail.com",photoURL: nil, displayName: nil)
@@ -50,7 +51,11 @@ class MockAuthenticationManager : AuthenticationProtocol {
     }
     
     func signOut() throws {
+        if shouldFailToSignOut {
+            throw UserError.cantSignOut
+        }
         
+        print("User sign out succesful")
     }
     
     func deleteUser() async throws {

@@ -5,8 +5,6 @@ import Combine
 
 @MainActor
 final class ProfileViewModel_Tests: XCTestCase {
-
-    var cancellables = Set<AnyCancellable>()
     
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -20,6 +18,10 @@ final class ProfileViewModel_Tests: XCTestCase {
                         userManager : MockUserManager = MockUserManager())
     -> ProfileViewModel {
         return ProfileViewModel(authManager: authManager, userManager: userManager)
+    }
+    
+    private func getDBUser() -> DBUser {
+        DBUser(userId: "123", email: "test@example.com", photoURL: nil, displayName: nil, dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
     }
 
     func test_init_doesSetValuesCorrectly() {
@@ -93,8 +95,29 @@ final class ProfileViewModel_Tests: XCTestCase {
     
     func test_signOut_userShouldBeNil() {
         let sut = getSut()
-        sut.user = DBUser(userId: "123", email: "test@example.com", photoURL: nil, displayName: nil, dateCreated: nil, biography: nil, preferences: nil, languages: nil, obsessed: nil, location: nil, work: nil, pets: nil, interests: nil)
+        sut.user = getDBUser()
 
+        sut.signOut()
+        
+        XCTAssertNil(sut.user)
+    }
+    
+    func test_signOut_shouldThrowError() {
+        let authManager = MockAuthenticationManager()
+        authManager.shouldFailToSignOut = true
+        let sut = getSut(authManager: authManager)
+        
+        sut.user = getDBUser()
+        
+        sut.signOut()
+        
+        XCTAssertNotNil(sut.user)
+    }
+    
+    func test_signOut_shouldNotCrashWhenUserIsAlreadyNil() {
+        let sut = getSut()
+        sut.user = nil
+        
         sut.signOut()
         
         XCTAssertNil(sut.user)
