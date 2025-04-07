@@ -4,6 +4,7 @@ enum UserError : Error {
     case emptyEmail
     case noCurrentUser
     case noFirebaseUser
+    case noUserId
     
     var errorDescription: String {
         switch self {
@@ -13,6 +14,8 @@ enum UserError : Error {
             return "No current signed in user"
         case .noFirebaseUser:
             return "No user in the firebase"
+        case .noUserId:
+            return "User id is empty"
         }
         
     }

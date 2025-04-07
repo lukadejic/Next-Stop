@@ -4,6 +4,10 @@ class MockUserManager : UserManagerProtocol {
     var shouldFailToGetUserFromFirebase = false
     
     func getUser(userId: String) async throws -> DBUser {
+        if userId.isEmpty {
+            throw UserError.noUserId
+        }
+        
         if shouldFailToGetUserFromFirebase {
             throw UserError.noFirebaseUser
         }

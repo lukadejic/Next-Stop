@@ -76,4 +76,19 @@ final class ProfileViewModel_Tests: XCTestCase {
         }
     }
     
+    func test_getAuthenicatedUser_shouldFailWithEmptyUserId() {
+        let sut = MockUserManager()
+        var user : DBUser?
+
+        Task {
+            do {
+                user = try await sut.getUser(userId: "")
+                XCTFail("Should throw UserError.noUserId")
+            }catch {
+                XCTAssertNil(user)
+                XCTAssertEqual(error as? UserError, UserError.noUserId)
+            }
+        }
+    }
+    
 }

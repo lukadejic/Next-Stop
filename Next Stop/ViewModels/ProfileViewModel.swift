@@ -150,7 +150,7 @@ extension ProfileViewModel {
     
     //MARK: Firestore
 
-    func loadUserData() {
+    private func loadUserData() {
         loadUserInfoList()
         populateUserEditProfileList()
     }
