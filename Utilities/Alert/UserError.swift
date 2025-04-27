@@ -6,6 +6,7 @@ enum UserError : Error {
     case noFirebaseUser
     case noUserId
     case cantSignOut
+    case cantSignIn
     case cantUpdateEmail
     case cantUpdateUser
     
@@ -25,6 +26,8 @@ enum UserError : Error {
             return "Cant update user email"
         case .cantUpdateUser:
             return "Cant update user"
+        case .cantSignIn:
+            return "Cant sign in"
         }
         
     }

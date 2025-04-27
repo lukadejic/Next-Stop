@@ -1,6 +1,10 @@
 import Foundation
 import MapKit
 
+protocol LocationSearchServiceProtocol {
+    func handleSearchFragment(_ fragment: String)
+}
+
 enum SearchStatus : Equatable {
     case idle
     case searching
@@ -8,7 +12,7 @@ enum SearchStatus : Equatable {
     case result
 }
 @Observable
-class LocationSearchService : NSObject {
+class LocationSearchService : NSObject, LocationSearchServiceProtocol {
     
     var query: String = "" {
         didSet {
@@ -40,7 +44,7 @@ class LocationSearchService : NSObject {
         
         if !fragment.isEmpty {
             self.completer.queryFragment = fragment
-        }else{
+        } else {
             status = .idle
             results = []
         }

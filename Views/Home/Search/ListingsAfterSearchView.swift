@@ -115,9 +115,9 @@ struct ListingsAfterSearchView: View {
 #Preview {
     ListingsAfterSearchView(
         homeVM: HomeViewModel(
-            hotelsService: HotelsService()),
+            hotelsService: HotelsService(networkManager: NetworkManager())),
         vm: SearchDestinationsViewModel(searchService: LocationSearchService()),
         showHomeView: .constant(false),
         showSearchView: .constant(false))
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+    .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }

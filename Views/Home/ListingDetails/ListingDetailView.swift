@@ -101,7 +101,7 @@ struct ListingDetailView: View {
 #Preview {
     ListingDetailView(hotel: MockData.mockHotel,
                       isLiked: .constant(false))
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+    .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }
 
 private extension ListingDetailView {

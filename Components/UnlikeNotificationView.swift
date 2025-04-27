@@ -52,7 +52,7 @@ struct UnlikeNotificationView: View {
 #Preview {
     UnlikeNotificationView(showNotification: .constant(false),
                            hotel: MockData.mockHotel)
-    .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+    .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }
 
 struct notificationViewModifier : ViewModifier {

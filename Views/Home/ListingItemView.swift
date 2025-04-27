@@ -68,5 +68,5 @@ struct ListingItemView: View {
 #Preview {
     ListingItemView(hotel: MockData.mockHotel,
                     isLiked: .constant(false))
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+    .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }

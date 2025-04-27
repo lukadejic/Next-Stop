@@ -30,26 +30,26 @@ struct HomeView: View {
                 .onChange(of: vm.wishlist) { oldValue, newValue in
                     vm.showNotification(oldValue,newValue)
                 }
-//                .onAppear {
-//                    if vm.destinations.isEmpty {
-//                        vm.getDestinations(query: selectedStayOption.querryKeywords)
-//                    }
-//                }
-//                .onChange(of: selectedStayOption) { odlValue, newValue in
-//                    vm.getDestinations(query: newValue.querryKeywords)
-//                }
-//                .onChange(of: vm.destinations) { oldValue,newValue in
-//                    guard !newValue.isEmpty else { return }
-//                    if vm.selectedDestination == nil || !newValue.contains(where: { $0.id == vm.selectedDestination?.id }) {
-//                        vm.selectDestination(for: selectedStayOption.querryKeywords)
-//                    }
-//                }
+                .onAppear {
+                    if vm.destinations.isEmpty {
+                        vm.getDestinations(query: selectedStayOption.querryKeywords)
+                    }
+                }
+                .onChange(of: selectedStayOption) { odlValue, newValue in
+                    vm.getDestinations(query: newValue.querryKeywords)
+                }
+                .onChange(of: vm.destinations) { oldValue,newValue in
+                    guard !newValue.isEmpty else { return }
+                    if vm.selectedDestination == nil || !newValue.contains(where: { $0.id == vm.selectedDestination?.id }) {
+                        vm.selectDestination(for: selectedStayOption.querryKeywords)
+                    }
+                }
                 .overlay(alignment: .bottom) {
                     if let hotel = vm.wishlistChangedHotel {
-                        LikeNotificationView(
+                        LikeNotificationView (
                             showNotification: $vm.showLikeNotification,
                             hotel: hotel)
-                        UnlikeNotificationView(
+                        UnlikeNotificationView (
                             showNotification: $vm.showUnlikeNotification,
                             hotel: hotel)
                     }
@@ -139,5 +139,5 @@ private extension HomeView {
 
 #Preview {
     HomeView()
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }

@@ -92,17 +92,7 @@ private extension LogInView {
             LogInButton(text: "Sign in",
                         backgroundColor: .white,
                         textColor: Color.logInBackground){
-                Task {
-                    do {
-                        try await vm.signIn()
-                        
-                        if vm.succesful {
-                            dismiss()
-                        }
-                    } catch {
-                        print("error: \(error.localizedDescription)")
-                    }
-                }
+                vm.signIn()
             }
             .clipShape(RoundedRectangle(cornerRadius: 20))
             .shadow(radius: 10)

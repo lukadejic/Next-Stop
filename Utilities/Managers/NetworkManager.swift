@@ -1,14 +1,14 @@
 import Foundation
 
-class NetworkManager {
-    
-    static let shared = NetworkManager()
+protocol NetworkManagerProtocol {
+    func fetchData <T: Codable>(endpoint: String, parameters: [String: String]) async throws -> T
+}
+
+class NetworkManager: NetworkManagerProtocol {
     
     private let baseURL = "https://booking-com15.p.rapidapi.com/api/v1/"
     private let APIKey = "7815266853msh448ccee7ce2b5d6p14c668jsn76900ab74af8"
-    
-    private init() {}
-    
+        
     func fetchData <T: Codable>(endpoint:String, parameters: [String: String]) async throws -> T{
         guard var urlComponents = URLComponents(string: baseURL + endpoint) else {
             throw URLError(.badURL)

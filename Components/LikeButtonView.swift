@@ -29,7 +29,7 @@ struct LikeButtonView: View {
 
 #Preview {
     LikeButtonView(isLiked: .constant(false), hotel: MockData.mockHotel)
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }
 
 private extension LikeButtonView {    

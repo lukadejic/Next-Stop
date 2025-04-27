@@ -4,7 +4,7 @@ import GoogleSignInSwift
 
 final class SignInGoogleHelper {
     @MainActor
-    static func signIn() async throws -> GoogleSignInResultModel{
+    static func signIn() async throws -> GoogleSignInResultModel {
         guard let topVC = Utilites.shared.topViewController() else {
             throw URLError(.cannotFindHost)
         }

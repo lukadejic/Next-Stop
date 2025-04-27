@@ -96,5 +96,5 @@ struct WishlistView: View {
 
 #Preview {
     WishlistView()
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }

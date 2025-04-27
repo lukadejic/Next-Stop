@@ -20,26 +20,24 @@ final class LogInViewModel : ObservableObject {
         self.userManager = userManager
     }
     
-    func signIn() async throws {
-        do {
-            try AuthValidator.validateFields(email: email, password: password)
-            
-            try await authManager.signIn(email: email, password: password)
+    func signIn() {
+        validateFields()
 
-            self.succesful = true
-            
-        } catch let error as SignUpError {
-            alertItem = AuthValidator.mapErrorToAlert(error)
-        } catch let error as NSError {
-            if let authErrorCode = AuthErrorCode(rawValue: error.code) {
-                switch authErrorCode {
-                case .invalidCredential:
-                    alertItem = AlertContext.userNotFound
-                default:
-                    alertItem = AlertContext.firebaseError
+        Task {
+            do {
+                try await authManager.signIn(email: email, password: password)
+                self.succesful = true
+            } catch let error as NSError {
+                if let authErrorCode = AuthErrorCode(rawValue: error.code) {
+                    switch authErrorCode {
+                    case .invalidCredential:
+                        alertItem = AlertContext.userNotFound
+                    default:
+                        alertItem = AlertContext.defaultError
+                    }
                 }
+                self.succesful = false
             }
-            self.succesful = false
         }
     }
     
@@ -51,5 +49,17 @@ final class LogInViewModel : ObservableObject {
         let user = DBUser(user: authDataResult)
         
         try await userManager.createNewUser(user: user)
+    }
+    
+    private func validateFields() {
+        do {
+            try AuthValidator.validateFields(email: email, password: password)
+        } catch {
+            if let signUpError = error as? SignUpError {
+                alertItem = AuthValidator.mapErrorToAlert(signUpError)
+            }
+            self.succesful = false
+            return
+        }
     }
 }

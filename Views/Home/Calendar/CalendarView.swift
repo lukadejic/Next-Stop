@@ -67,7 +67,7 @@ struct CalendarView: View {
 
 #Preview {
     CalendarView(hotel: MockData.mockHotel)
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }
 
 private extension CalendarView {

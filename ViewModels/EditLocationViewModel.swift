@@ -26,8 +26,8 @@ class LocationSearchViewModel: NSObject, ObservableObject, MKLocalSearchComplete
     }
     
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        DispatchQueue.main.async {
-            self.searchResults = completer.results
+        DispatchQueue.main.async { [weak self] in
+            self?.searchResults = completer.results
         }
     }
     

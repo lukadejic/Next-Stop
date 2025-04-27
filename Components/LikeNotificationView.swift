@@ -51,5 +51,5 @@ struct LikeNotificationView: View {
 #Preview {
     LikeNotificationView(showNotification: .constant(false),
                          hotel: MockData.mockHotel)
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+    .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }

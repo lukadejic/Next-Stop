@@ -7,13 +7,7 @@ class HomeViewModel : ObservableObject {
     
     @Published var destinations : [Destination] = []
     @Published var hotels : [Hotel] = []
-    @Published var selectedDestination: Destination? {
-        didSet {
-            if oldValue?.id != selectedDestination?.id {
-                fetchHotelsIfNeeded()
-            }
-        }
-    }
+    @Published var selectedDestination: Destination? = nil
     @Published var hotelImages : [Int : [ImageModel]] = [:]
     @Published var hotelDetail : HotelDetailData? = nil
     @Published var hotelDescription: [HotelDescriptionData] = []
@@ -23,7 +17,7 @@ class HomeViewModel : ObservableObject {
     @Published var isLoading : Bool = false
     
     @Published var wishlist: [Hotel] = [] {
-        didSet{
+        didSet {
             saveWishlist()
         }
     }
@@ -32,17 +26,24 @@ class HomeViewModel : ObservableObject {
     @Published var showUnlikeNotification = false
     @Published var wishlistChangedHotel: Hotel?
     
-    private let hotelsService : HotelsService
+    private let hotelsService : HotelsServiceProtocol
     
-    init(hotelsService: HotelsService) {
+    init (hotelsService: HotelsServiceProtocol) {
         self.hotelsService = hotelsService
         loadWishlist()
+    }
+
+    private func didSelectDestination(_ destination: Destination) {
+        if selectedDestination?.id != destination.id {
+            selectedDestination = destination
+            fetchHotelsIfNeeded()
+        }
     }
     
     func getDestinations(query: String) {
         
-        Task{
-            do{
+        Task {
+            do {
                 let fetchedDestinations = try await hotelsService.fetchDestinations(query: query)
                 
                 let destinationsWithAddedQuery = fetchedDestinations.map { destination in
@@ -52,45 +53,45 @@ class HomeViewModel : ObservableObject {
                 }
                 
                 self.destinations = destinationsWithAddedQuery
-                
-            }catch{
-                throw error
+            } catch {
+                throw NetworkErrors.cantGetDestinations
             }
         }
     }
+
+    private func fetchHotelsIfNeeded() {
+        getHotels()
+    }
     
-    
-    func getHotels(){
+    func getHotels() {
         
         guard let destination = selectedDestination else {
             print("No selected destination, cannot fetch hotels")
             return
         }
         
-        Task{
-            do{
+        Task {
+            do {
                 let hotels = try await hotelsService.fetchHotels(for: destination)
                 
-                DispatchQueue.main.async {
-                    self.hotels = hotels
-                }
-            }catch{
-                print("Error while fetching hotels: \(error.localizedDescription)")
+                self.hotels = hotels
+            } catch {
+                throw NetworkErrors.cantGetHotels
             }
         }
     }
     
     func searchHotels(location: String,
                       arrivalDate: Date?,
-                      departureDate:Date?,
+                      departureDate: Date?,
                       adults: Int? ,
                       childredAge: [Int]?,
                       roomQty: Int?) {
-        Task{
-            do{
+        Task {
+            do {
                 isLoading = true
                 guard let destination = try await hotelsService.fetchDestinations(query: location).first else {
-                    return
+                    throw NetworkErrors.cantGetDestinations
                 }
             
                 let arrivalDateToUse = arrivalDate ?? Date()
@@ -99,8 +100,7 @@ class HomeViewModel : ObservableObject {
                 let arrivalDate = CalendarHelpers.convertDateToString(date: arrivalDateToUse)
                 let departureDate = CalendarHelpers.convertDateToString(date: departureDateToUse)
                             
-                
-                let hotels = try await hotelsService.fetchHotelsWithFilters(
+                let hotels = try await hotelsService.fetchHotelsWithFilters (
                     destination: destination,
                     location: location,
                     arrivalDate: arrivalDate,
@@ -109,13 +109,12 @@ class HomeViewModel : ObservableObject {
                     childrenAge: childredAge,
                     roomQty: roomQty)
                 
-                DispatchQueue.main.async {
                     self.hotels = hotels
                     self.isLoading = false
-                }
-            }catch {
-                print("Error while fetching hotels with filters \(error.localizedDescription)")
+                
+            } catch {
                 isLoading = false
+                throw NetworkErrors.cantSearchHotels
             }
         }
        
@@ -123,10 +122,7 @@ class HomeViewModel : ObservableObject {
     
     func selectDestination(for query: String) {
         if let selectedDest = destinations.first(where: { $0.query?.lowercased() == query.lowercased() }) {
-            if selectedDestination?.id != selectedDest.id {
-                self.selectedDestination = selectedDest
-                self.getHotels()
-            }
+            didSelectDestination(selectedDest)
         } else {
             print("Destination not found for query: \(query)")
         }
@@ -135,43 +131,38 @@ class HomeViewModel : ObservableObject {
     func getHotelImages(hotelID: Int) {
         if hotelImages[hotelID] != nil { return }
         
-        Task{
-            do{
+        Task {
+            do {
                 let images = try await hotelsService.fetchHotelImages(hotelID: hotelID)
                 self.hotelImages[hotelID] = images
-                
-            }catch{
-                print("Error while fetching the images for hotelID: \(hotelID) : \(error.localizedDescription)" )
+            } catch {
+                throw NetworkErrors.cantGetImage
             }
         }
     }
     
     func getHotelDetails(hotelId : Int) {
-        Task{
-            do{
+        Task {
+            do {
                 let hotelDetails = try await hotelsService.fetchHotelDetails(hotelId: hotelId)
-                
                 self.hotelDetail = hotelDetails
-            }catch{
+            } catch {
                 print("error while fetching hotel details : \(error.localizedDescription)")
             }
         }
     }
     
     func getHotelDescription(hotelId: Int) {
-        Task{
-            do{
+        Task {
+            do {
                 guard let hotelDescriptions = try await hotelsService.fetchHotelDescription(hotelId: hotelId) else { return }
                 
                 self.hotelDescription = hotelDescriptions
                 
-            }catch{
+            } catch {
                 print("Failed to fetch hotel description data: \(error.localizedDescription)")
             }
         }
-    }
-    private func fetchHotelsIfNeeded() {
-        getHotels()
     }
     
     func saveAvailibilyDate(startDate: Date? , endDate: Date?) {

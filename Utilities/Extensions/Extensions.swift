@@ -349,3 +349,11 @@ extension SearchButtonView {
 extension UserDefaults {
     static let wishlistKey = "wishlist"
 }
+
+extension DateFormatter {
+    static let yyyyMMdd: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+}

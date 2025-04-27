@@ -45,7 +45,7 @@ struct DestinationSearchView: View {
 
 #Preview {
     DestinationSearchView(show: .constant(false))
-        .environmentObject(HomeViewModel(hotelsService: HotelsService()))
+        .environmentObject(HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager())))
 }
 
 struct CollapsedPickerView : View {

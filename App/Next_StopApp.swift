@@ -5,7 +5,7 @@ import Firebase
 struct Next_StopApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
-    @StateObject private var homeVM = HomeViewModel(hotelsService: HotelsService())
+    @StateObject private var homeVM = HomeViewModel(hotelsService: HotelsService(networkManager: NetworkManager()))
     
     var body: some Scene {
         WindowGroup {
