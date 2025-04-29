@@ -27,4 +27,4 @@ The pictures are slightly blurry because I reduced their size; they were too lar
 ![LogedInProfileView2](https://github.com/user-attachments/assets/96e4c77e-44be-4d53-b23f-c5a76a32fdd8)
 ![InterestsView](https://github.com/user-attachments/assets/2acadfa9-20ce-4c7e-8448-18927180c509)
 ![ProfileDetailsView](https://github.com/user-attachments/assets/8af06dc1-ea05-44e4-ba90-da435b4c71cd)
-<img width="1440" alt="Screenshot 2025-04-29 at 7 41 26 PM" src="https://github.com/user-attachments/assets/30e7ac5f-399e-4224-b688-0dfc47496beb" />
+<img width="1440" alt="Screenshot 2025-04-29 at 7 46 59 PM" src="https://github.com/user-attachments/assets/80358844-c0e1-48f4-82cb-b57013a332a0" />
