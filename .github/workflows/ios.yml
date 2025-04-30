@@ -1,0 +1,32 @@
+name: Next Stop CI
+
+on:
+  push:
+    branches: [ "Development" ]
+  pull_request:
+    branches: [ "Develompent" ]
+
+jobs:
+  build-and-test:
+    name: Build and Test on iPhone 16 (iOS 18.2)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build for Testing
+        run: |
+          xcodebuild \
+            -project "Next Stop.xcodeproj" \
+            -scheme "Next Stop" \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
+            build-for-testing
+
+      - name: Run Tests
+        run: |
+          xcodebuild \
+            -project "Next Stop.xcodeproj" \
+            -scheme "Next Stop" \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
+            test-without-building
