@@ -25,7 +25,7 @@ All hotel data is fetched dynamically through **RapidAPI**.
 ## Architecture & Tools 🧠
 
 - **MVVM Pattern** for clear separation of UI and business logic  
--  **Unit Testing** integrated for reliable components  
+-  **Unit Testing** of business logic
 -  **Firebase** for backend services like authentication and data storage  
 -  **RapidAPI** for accessing hotel and destination data  
 
