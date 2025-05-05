@@ -22,7 +22,7 @@ All hotel data is fetched dynamically through **RapidAPI**.
 | **Logic**   | Swift      |
 | **Build**   | Xcode      |
 
-## 🧠 Architecture & Tools
+## Architecture & Tools 🧠
 
 - **MVVM Pattern** for clear separation of UI and business logic  
 -  **Unit Testing** integrated for reliable components  
