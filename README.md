@@ -31,6 +31,19 @@ All hotel data is fetched dynamically through **RapidAPI**.
 
 ---
 
+## Lessons Learned & Challenges 📚
+
+During the development of the NextStop app, I encountered several challenges and learned a lot through them:
+
+- **Firebase Auth & Google Sign-In** – Implementing authentication with Firebase and Google accounts was a learning experience. Securing user sessions was crucial for the app’s integrity.
+- **Dealing with inconsistent API responses** from RapidAPI – Data often didn't come in the expected format, requiring robust error handling and fallback mechanisms.
+- **MVVM architecture** – Applying the MVVM pattern helped me separate the UI from the business logic, making the code more maintainable and testable.
+-  **Unit Testing of Business Logic** – Writing unit tests for core features like filtering, booking flow, and user input validation helped me ensure the app runs smoothly.
+-  **Working with Maps and Geolocation** – Syncing location input with UI updates and displaying data on maps using SwiftUI was challenging but rewarding.
+-  **Managing State and Data Flow** – Learning how to effectively use `@StateObject`, `@Binding`, and `@EnvironmentObject` to manage app state and pass data between views was key to the app's functionality.
+
+---
+
 ## Preview 📸
 
 ### Home & Search 🏠
