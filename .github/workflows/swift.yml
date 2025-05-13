@@ -22,7 +22,7 @@ jobs:
             -project "Next Stop.xcodeproj" \
             -scheme "Next Stop" \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.4" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             BUILD_DIR=$PWD/build
 
       - name: Run Tests
@@ -31,7 +31,7 @@ jobs:
             -project "Next Stop.xcodeproj" \
             -scheme "Next Stop" \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.4" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             | tee result.log | tail -n 20
 
 
