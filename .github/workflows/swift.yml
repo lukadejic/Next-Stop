@@ -31,5 +31,3 @@ jobs:
                      -sdk iphonesimulator \
                      -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
                      test || exit 1
-
-
