@@ -1,4 +1,4 @@
-name: Next Stop Ci
+name: Next Stop CI
 
 on:
   push:
@@ -10,13 +10,15 @@ jobs:
   build_project:
     runs-on: macos-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout-repository
         uses: actions/checkout@v2
-      - name: Build and Test
+        
+      - name: Build-and-Test
         run: |
           xcodebuild \
-           -project Next_Stop \
-           -scheme Next_Stop.xcodeproj \
-           -sdk iphonesimulator \
-           -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
+            -project "Next Stop.xcodeproj" \
+            -scheme "Next Stop" \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
             test || exit 1
+
