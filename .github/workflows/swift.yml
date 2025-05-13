@@ -16,8 +16,8 @@ jobs:
       - name: Build-and-Test
         run: |
           xcodebuild \
-            -project "Next Stop.xcodeproj" \
-            -scheme "Next Stop" \
+            -project "Next Stop" \
+            -scheme "Next Stop.xcodeproj" \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.2' \
             test || exit 1
