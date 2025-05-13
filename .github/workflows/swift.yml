@@ -15,25 +15,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - name: Set Xcode Version
-        run: |
-          sudo xcode-select -s /Applications/Xcode_16.x.app/Contents/Developer
-          
-      - name: Install Dependencies
-        run: |
-          if [ -f "Podfile" ]; then
-            sudo gem install cocoapods
-            pod install
-          fi
-          
+        
       - name: Build Project
         run: |
           xcodebuild clean \
             -project "Next Stop.xcodeproj" \
             -scheme "Next Stop" \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=17" \
             BUILD_DIR=$PWD/build
 
       - name: Run Tests
@@ -42,7 +31,7 @@ jobs:
             -project "Next Stop.xcodeproj" \
             -scheme "Next Stop" \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
+            -destination "platform=iOS Simulator,name=iPhone 16,OS=17" \
             | tee result.log | tail -n 20
 
 
