@@ -13,24 +13,20 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # 2. Set the Xcode version
       - name: Set Xcode Version
         run: |
-          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-
-      # 3. Install dependencies (if needed, such as CocoaPods or other package managers)
+          sudo xcode-select -s /Applications/Xcode_16.x.app/Contents/Developer
+          
       - name: Install Dependencies
         run: |
           if [ -f "Podfile" ]; then
             sudo gem install cocoapods
             pod install
           fi
-
-      # 4. Clean and Build the Xcode project
+          
       - name: Build Project
         run: |
           xcodebuild clean \
@@ -40,7 +36,6 @@ jobs:
             -destination "platform=iOS Simulator,name=iPhone 16,OS=18.2" \
             BUILD_DIR=$PWD/build
 
-      # 5. Run tests
       - name: Run Tests
         run: |
           xcodebuild test \
