@@ -33,12 +33,15 @@ All hotel data is fetched dynamically through **RapidAPI**.
 ---
 
 ## Backend Integration 🌐
-As part of the app’s development, I also built a custom RESTful API using Java, Spring Boot, and JPA to simulate and test hotel data flows. This helped me better understand how to:
+As part of the app’s development, I also built a custom **RESTful API** using  **Java**, **Spring Boot**, and **JPA** to simulate and test hotel data flows. This helped me better understand how to:
 - Design and expose clean and consistent endpoints
 - Use **JPA** for relational data modeling
 - Handle common backend concerns like error handling, status codes, and entity validation
 - Test services and controllers using **JUnit**
  The API was developed using **IntelliJ IDEA** and tested with **Postman**
+<img width="1400" alt="Screenshot 2025-05-23 at 12 02 51 PM" src="https://github.com/user-attachments/assets/ef99d05d-fd45-473b-a610-6107e3b18ab6" />
+<img width="1440" alt="Screenshot 2025-05-23 at 12 14 12 PM" src="https://github.com/user-attachments/assets/2303cd49-cb62-4195-938c-d1b930dd6ab6" />
+
 ---
 ## Lessons Learned & Challenges 📚
 
