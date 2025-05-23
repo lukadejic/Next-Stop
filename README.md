@@ -21,6 +21,7 @@ All hotel data is fetched dynamically through **RapidAPI**.
 | **UI**      | SwiftUI    |
 | **Logic**   | Swift      |
 | **Build**   | Xcode      |
+| **Backend** | InteliJ    |
 
 ## Architecture & Tools 🧠
 
@@ -31,6 +32,14 @@ All hotel data is fetched dynamically through **RapidAPI**.
 
 ---
 
+## Backend Integration 🌐
+As part of the app’s development, I also built a custom RESTful API using Java, Spring Boot, and JPA to simulate and test hotel data flows. This helped me better understand how to:
+- Design and expose clean and consistent endpoints
+- Use **JPA** for relational data modeling
+- Handle common backend concerns like error handling, status codes, and entity validation
+- Test services and controllers using **JUnit**
+ The API was developed using **IntelliJ IDEA** and tested with **Postman**
+---
 ## Lessons Learned & Challenges 📚
 
 During the development of the NextStop app, I encountered several challenges and learned a lot through them:
