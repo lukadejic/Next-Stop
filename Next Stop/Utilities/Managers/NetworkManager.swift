@@ -27,12 +27,12 @@ class NetworkManager: NetworkManagerProtocol {
         request.addValue(APIKey, forHTTPHeaderField: "x-rapidapi-key")
         request.addValue("booking-com15.p.rapidapi.com", forHTTPHeaderField: "x-rapidapi-host")
         
-        let(data,_) = try await URLSession.shared.data(for: request)
+        let (data, _) = try await URLSession.shared.data(for: request)
 
-        do{
+        do {
             let decodedData = try JSONDecoder().decode(T.self, from: data)
             return decodedData
-        }catch{
+        } catch {
             print("Error while decoding response data: \(error.localizedDescription)")
             throw error
         }

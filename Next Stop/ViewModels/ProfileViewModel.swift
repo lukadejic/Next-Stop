@@ -22,7 +22,7 @@ final class ProfileViewModel : ObservableObject {
     init(authManager: AuthenticationProtocol, userManager: UserManagerProtocol) {
         self.authManager = authManager
         self.userManager = userManager
-        //self.getAuthenticatedUser()
+        self.getAuthenticatedUser()
     }
     
     deinit {
